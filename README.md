@@ -3,7 +3,7 @@
 This is a first version of an R package, to access the Survey Solutions RESTful API, it allows you to export data/paradata, manipulate users and 
 questionnaires, as well as to create and manipulate assignments directly out of R. 
 
-The package is not on cran yet, so you have to install it by using 
+The package is not on CRAN yet, so you have to install it by using 
 ```
 devtools::install_github("michael-cw/SurveySolutionsAPI")
 
