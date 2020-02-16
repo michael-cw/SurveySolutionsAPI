@@ -92,9 +92,32 @@ suso_get_api_key <- function(api = c("susoServer", "susoUser", "susoPass")) {
   return(api)
 }
 
-
+# Checks if API credentials are provided
 suso_get_default_key <- function(api = c("susoServer", "susoUser", "susoPass")) {
   key <- getOption("SurveySolutionsAPI")[['suso']][[api]]
   if(is.na(key)) stop("No API credentials available Use either suso_set_key() to set a key, or provide it as a function argument directly")
   return(key)
 }
+
+
+#' Utility function to check if credentials are correct
+#'
+#' This function returns a 200 status if the correct credentials have been provided.
+#'
+#' @export
+suso_PwCheck<-function(server=suso_get_api_key("susoServer"),
+                       apiUser=suso_get_api_key("susoUser"),
+                       apiPass=suso_get_api_key("susoPass")) {
+  ##  Define the api send GET and use response code
+  server<-ifelse(str_count(server, "https://")==1,
+                 server, paste0("https://", server))
+  server=paste0(server, "/api/v1/supervisors")
+
+  test_detail<-tryCatch(
+    {GET(url = paste0(server, "?limit=200"),
+         authenticate(apiUser, apiPass, type = "basic"))},
+    error=function(e) {a<-data.frame(status_code=400); return(a)}
+  )
+  return(test_detail)
+}
+
