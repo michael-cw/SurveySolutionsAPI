@@ -2,12 +2,15 @@
 % Please edit documentation in R/suso_api_Interviews.R
 \name{suso_getAllAnswerInterview}
 \alias{suso_getAllAnswerInterview}
-\title{Get all answers for a specific interview}
+\title{Survey Solutions API call to retrieve all answers for a specific interview}
 \usage{
 suso_getAllAnswerInterview(server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
   apiPass = suso_get_api_key("susoPass"), intID = "")
 }
+\arguments{
+\item{intID}{the \emph{InterviewId} of the interview. To get a list of all interview for a specific questionnaire, execute \code{suso_getAllInterviewQuestionnaire}}
+}
 \description{
-Get all answers for a specific interview
+Returns all responses for a specific interview
 }

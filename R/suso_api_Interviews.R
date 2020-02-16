@@ -1,4 +1,9 @@
-#' Get all interviews for a specific questionnaire
+#' Survey Solutions API call to retrieve all interviews for a specific questionnaire
+#'
+#' Returns all interviews for the specific questionnaire.
+#'
+#' @param questID your Survey Solutions \emph{QuestionnaireId}. Retrieve a list of questionnaires by executing \code{suso_getQuestDetails}
+#' @param version version of the questionnaire
 #'
 #'
 #' @export
@@ -6,7 +11,6 @@ suso_getAllInterviewQuestionnaire <- function(server= suso_get_api_key("susoServ
                                               apiUser=suso_get_api_key("susoUser"),
                                               apiPass=suso_get_api_key("susoPass"),
                                               questID = "e4de521a-6e32-4ab0-93c5-1fa4e11dc12f", version = 2, status = NULL) {
-    ## Load the libraries
     server <- ifelse(str_count(server, "https://") == 1, server, paste0("https://", server))
     ## Define the api
     server = paste0(server, "/api/v1/interviews?")
@@ -37,7 +41,11 @@ suso_getAllInterviewQuestionnaire <- function(server= suso_get_api_key("susoServ
     return(test_json)
 }
 
-#' Get all answers for a specific interview
+#' Survey Solutions API call to retrieve all answers for a specific interview
+#'
+#' Returns all responses for a specific interview
+#'
+#' @param intID the \emph{InterviewId} of the interview. To get a list of all interview for a specific questionnaire, execute \code{suso_getAllInterviewQuestionnaire}
 #'
 #'
 #' @export
@@ -45,7 +53,6 @@ suso_getAllAnswerInterview <- function(server= suso_get_api_key("susoServer"),
                                        apiUser=suso_get_api_key("susoUser"),
                                        apiPass=suso_get_api_key("susoPass"),
                                        intID = "") {
-    ## Load the libraries
     server <- ifelse(str_count(server, "https://") == 1, server, paste0("https://", server))
     ## Define the api
     server = paste0(server, "/api/v1/interviews/")

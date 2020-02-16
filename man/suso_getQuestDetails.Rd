@@ -10,6 +10,13 @@ suso_getQuestDetails(url = suso_get_api_key("susoServer"),
   limit = 40, offset = 0, operation.type = c("list", "statuses",
   "structure", "interviews"))
 }
+\arguments{
+\item{operation.type}{if \emph{list} is specified a list of all questionnaires on the server. If
+\emph{statuses} a vector of all questionnaire statuses. If \emph{structure} is specified, it returns a list
+containing the content of the questionnaire's json string. To make use of it, put the output into
+\code{suso_transform_fullMeta} and receive a data.table with all questionnaire elements. If \emph{interviews}, all interviews
+for a specific questionnaire.}
+}
 \description{
 \code{suso_getQuestDetails} implements all Questionnaire API commands. If \emph{operation.type = structure}
 the return file will be a list, whith the content of the raw json string containing the questionnaire variables

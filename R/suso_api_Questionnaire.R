@@ -4,6 +4,11 @@
 #' \code{suso_getQuestDetails} implements all Questionnaire API commands. If \emph{operation.type = structure}
 #' the return file will be a list, whith the content of the raw json string containing the questionnaire variables
 #'
+#' @param operation.type if \emph{list} is specified a list of all questionnaires on the server. If
+#' \emph{statuses} a vector of all questionnaire statuses. If \emph{structure} is specified, it returns a list
+#' containing the content of the questionnaire's json string. To make use of it, put the output into
+#' \code{suso_transform_fullMeta} and receive a data.table with all questionnaire elements. If \emph{interviews}, all interviews
+#' for a specific questionnaire.
 #' @export
 
 suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_get_api_key("susoUser"), pass = suso_get_api_key("susoPass"),
@@ -53,8 +58,8 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
     } else if (operation.type == "interviews") {
         if (is.null(quid) | is.null(version))
             stop("Quid and/or version missing.")
-        fullUrl <- paste0(url, quid, "/", version, "/interviews?")
-        test_detail <- GET(url = fullUrl, authenticate(usr, pass, type = "basic"), write_disk(aJsonFile, overwrite = T))
+        test_detail <- GET(url = modify_url(url, path = file.path(url$path, quid, version, "interviews")),
+                           authenticate(usr, pass, type = "basic"), write_disk(aJsonFile, overwrite = T))
         test_json <- fromJSON(aJsonFile)
     }
 
@@ -71,7 +76,7 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
 #' with all variable names, types etc.
 #'
 #'
-#' @param list returned by \code{suso_getQuestDetails} structure operation
+#' @param input returned by \code{suso_getQuestDetails} structure operation
 #'
 #' @export
 

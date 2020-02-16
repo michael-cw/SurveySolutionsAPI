@@ -3,9 +3,9 @@
 #'
 #' \code{suso_get_assignments} calls the Survey Solutions assingment API
 #'
-#' @param questID only assignments for questionnaire ID are returned, requires \code{version} being not NULL
+#' @param questID only assignments for \emph{QuestionnaireId} are returned, requires \code{version} being not NULL
 #' @param version version of the questionnaire, only required with \code{questID}
-#' @param AssId if not NULL a list of all assignments on the server, if NULL
+#' @param AssId if NULL a list of all assignments on the server, if not NULL
 #' the assignment details for a specific assignment ID
 #' @param responsibleID the ID of the responsible user (Supervisor or Interviewer).
 #' Retrieves all assignments for this user.
@@ -13,7 +13,7 @@
 #'
 #' @export
 
-suso_get_assignments<-function(questID = "",
+suso_get_assignments<-function(questID = NULL,
                                server = suso_get_api_key("susoServer"),
                                apiUser = suso_get_api_key("susoUser"),
                                apiPass = suso_get_api_key("susoPass"),

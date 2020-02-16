@@ -1,33 +1,47 @@
-#'  Survey Solutions API call to generate and download the data
+#' Survey Solutions API call to generate and download the data
 #'
-#'  It has the following characteristics.
-#'  \itemize{
-#'    \item Function returns a LIST with up to 4 different lists
-#'    \item Number of lists depends on the level of roster nesting
-#'    \item All variable names are transformed to lower case and categorical variables are consistently labeled
-#'    \item Consistent id variables are generated with
+#' Generates and downloads the data from your Survey Solutions server.
+#'
+#' @param workStatus define which statuses the file should inlude (i.e. \emph{Restored,Created,SupervisorAssigned,InterviewerAssigned,
+#' RejectedBySupervisor,ReadyForInterview,
+#' SentToCapi,Restarted,Completed,ApprovedBySupervisor,
+#' RejectedByHeadquarters,ApprovedByHeadquarters,Deleted}), if NULL all is exported
+#' @param reloadTimeDiff time difference in hours between last generated file and now
+#' @param inShinyApp if True, file interacts with shiny progress bar
+#' @param n_id_vars  specify the number of identification variables (not used for now!)
+#'
+#'
+#' @details
+#' \code{suso_export} works as follows:
+#' \itemize{
+#'   \item Function returns a LIST with up to 4 different lists. The list names are:
+#'           \itemize{
+#'              \item \emph{main} Contains the top level data, and (if available interviewer comments)
+#'              \item \emph{R1} All rosters in roster level 1
+#'              \item \emph{R2} All rosters in roster level 2
+#'              \item \emph{R3} All rosters in roster level 3
+#'           }
+#'   \item Number of lists depends on the level of roster nesting
+#'   \item All variable names are transformed to lower case and categorical variables are consistently labeled
+#'   \item Consistent id variables are generated with
 #'          \itemize{
 #'          \item interview__id transformed to id
 #'          \item parent ids consistently number starting from id (questionnairid) to idX (maximum id3)
 #'          }
-#'    \item List elements are returnde as data.tables
-#'    \item Allows for specification of reload time (i.e. generation of new download file)
-#'    }
+#'   \item List elements are returned as data.tables
+#'   \item Allows for specification of reload time (i.e. generation of new download file)
+#'   }
 #'
 #'
-#'    @param workStatus define which statuses the file should inlude, if NULL all is exported
-#'    @param reloadTimeDiff time difference in hours between last generated file and now
-#'    @param inShinyApp if True, file interacts with shiny progress bar
-#'    @param n_id_vars  specify the number of identification variables
 #'
-#'    @export
+#' @export
 
-suso_export<-function(questName="PAPEL - ENCOVI Cuestionario de Listado FINAL",
+suso_export<-function(questName="",
                       server= suso_get_api_key("susoServer"),
                       apiUser=suso_get_api_key("susoUser"),
                       apiPass=suso_get_api_key("susoPass"),
-                      questID="e4de521a-6e32-4ab0-93c5-1fa4e11dc12f",
-                      version=2,
+                      questID="",
+                      version=1,
                       workStatus="Completed",
                       reloadTimeDiff=1,
                       inShinyApp=F,

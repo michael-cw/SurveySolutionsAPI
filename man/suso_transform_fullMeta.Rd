@@ -7,7 +7,7 @@
 suso_transform_fullMeta(input = NULL)
 }
 \arguments{
-\item{list}{returned by \code{suso_getQuestDetails} structure operation}
+\item{input}{returned by \code{suso_getQuestDetails} structure operation}
 }
 \description{
 \code{suso_transform_fullMeta} transforms the list containing the structure (\emph{operation.type = structure})

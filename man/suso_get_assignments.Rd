@@ -4,7 +4,7 @@
 \alias{suso_get_assignments}
 \title{Survey Solutions API call for assignment list}
 \usage{
-suso_get_assignments(questID = "",
+suso_get_assignments(questID = NULL,
   server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
   apiPass = suso_get_api_key("susoPass"), AssId = NULL,
@@ -13,9 +13,9 @@ suso_get_assignments(questID = "",
   supervisorId = NULL, quantity = NULL)
 }
 \arguments{
-\item{questID}{only assignments for questionnaire ID are returned, requires \code{version} being not NULL}
+\item{questID}{only assignments for \emph{QuestionnaireId} are returned, requires \code{version} being not NULL}
 
-\item{AssId}{if not NULL a list of all assignments on the server, if NULL
+\item{AssId}{if NULL a list of all assignments on the server, if not NULL
 the assignment details for a specific assignment ID}
 
 \item{version}{version of the questionnaire, only required with \code{questID}}

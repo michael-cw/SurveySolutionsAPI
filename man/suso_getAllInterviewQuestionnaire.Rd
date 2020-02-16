@@ -2,7 +2,7 @@
 % Please edit documentation in R/suso_api_Interviews.R
 \name{suso_getAllInterviewQuestionnaire}
 \alias{suso_getAllInterviewQuestionnaire}
-\title{Get all interviews for a specific questionnaire}
+\title{Survey Solutions API call to retrieve all interviews for a specific questionnaire}
 \usage{
 
   suso_getAllInterviewQuestionnaire(server = suso_get_api_key("susoServer"),
@@ -11,6 +11,11 @@
   questID = "e4de521a-6e32-4ab0-93c5-1fa4e11dc12f", version = 2,
   status = NULL)
 }
+\arguments{
+\item{questID}{your Survey Solutions \emph{QuestionnaireId}. Retrieve a list of questionnaires by executing \code{suso_getQuestDetails}}
+
+\item{version}{version of the questionnaire}
+}
 \description{
-Get all interviews for a specific questionnaire
+Returns all interviews for the specific questionnaire.
 }
