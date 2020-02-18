@@ -2,7 +2,7 @@
 % Please edit documentation in R/suso_api_user.R
 \name{suso_getINT_log}
 \alias{suso_getINT_log}
-\title{Survey Solutions API call for aucit log on interviewers}
+\title{Survey Solutions API call for audit log on interviewers}
 \usage{
 suso_getINT_log(url = suso_get_api_key("susoServer"),
   usr = suso_get_api_key("susoUser"),

@@ -4,7 +4,7 @@ Title: API access to Survey Solutions Server
 Version: 0.1.0
 Author: Michael Wild
 Maintainer: Michael Wild <mwild@worldbank.org>
-Description: This packages contains several utility function to use the Survey Solutions API. Details on the api can be found by opening [servername].mysurvey.solutions///apidocs/index#
+Description: This packages implements the Survey Solutions API.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true

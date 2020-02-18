@@ -10,5 +10,8 @@ suso_createASS(df = UPLOADdataCHECK,
   pass = suso_get_api_key("susoPass"), QUID = NULL, version = NULL)
 }
 \description{
-ATTENTION: NOT CHECKED YET
+ATTENTION: CURRENTLY ONLY TESTED WITHOUT PREFILLED DATA
+}
+\details{
+df must be with the following columns: \emph{ResponsibleName, Quantity, [variables]}
 }

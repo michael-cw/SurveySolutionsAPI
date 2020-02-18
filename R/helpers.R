@@ -1,6 +1,6 @@
-# Check hex colours
+# Check status code
 #
-# Checks for valid hexadecimal value
+# Check for required http response status.
 #
 # @param response response from \code{httr::GET()}
 # @param status valid status, i.e. 200, 300

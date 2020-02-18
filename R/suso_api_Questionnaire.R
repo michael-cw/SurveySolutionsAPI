@@ -65,7 +65,10 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
                            authenticate(usr, pass, type = "basic"), write_disk(aJsonFile, overwrite = T))
         test_json <- fromJSON(aJsonFile)
     }
-
+    # Only data.table of interviews is returned
+    test_json<-data.table(test_json$Questionnaires)
+    # Set date time to utc with lubridate
+    test_json[,LastEntryDate:=as_datetime(LastEntryDate)][]
     return(test_json)
     ########################## F I N#########################################################
 }

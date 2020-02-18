@@ -92,7 +92,7 @@ suso_getINT_info<-function(url=suso_get_api_key("susoServer"), usr = suso_get_ap
 }
 
 
-#' Survey Solutions API call for aucit log on interviewers
+#' Survey Solutions API call for audit log on interviewers
 #'
 #'
 #' Get log of interviewer
