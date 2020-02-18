@@ -7,8 +7,23 @@
 suso_export_paradata(server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
   apiPass = suso_get_api_key("susoPass"),
-  questID = "xxxx-xxx-xxxx-xxx-xxx", version = 1,
-  format_para = "Paradata", user = user(), inShinyServer = FALSE)
+  questID = "xxxx-xxx-xxxx-xxx-xxx", version = 1, user = user(),
+  inShinyServer = FALSE)
+}
+\arguments{
+\item{server}{Survey Solutions server address}
+
+\item{apiUser}{Survey Solutions API user}
+
+\item{apiPass}{Survey Solutions API password}
+
+\item{questID}{\emph{QuestionnaireId} for which the paradata should be generated}
+
+\item{version}{questionnnaire version}
+
+\item{user}{only for specific user}
+
+\item{inShinyServer}{if TRUE communicates with shiny server progress bar}
 }
 \description{
 Exports Survey Solutions Paradata, and returns a data.table.

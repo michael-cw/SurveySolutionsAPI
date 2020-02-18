@@ -2,6 +2,12 @@
 #'
 #' Generates and downloads the data from your Survey Solutions server.
 #'
+#' @param questName Name of the questionnaire
+#' @param server Survey Solutions server address
+#' @param questID Questionnaire ID
+#' @param version Questionnaire version
+#' @param apiUser Survey Solutions API user
+#' @param apiPass Survey Solutions API password
 #' @param workStatus define which statuses the file should inlude (i.e. \emph{Restored,Created,SupervisorAssigned,InterviewerAssigned,
 #' RejectedBySupervisor,ReadyForInterview,
 #' SentToCapi,Restarted,Completed,ApprovedBySupervisor,

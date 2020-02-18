@@ -7,7 +7,7 @@
 suso_keys()
 }
 \description{
-(this function has been inspired by the googleway package \link{https://github.com/SymbolixAU/googleway},
+(this function has been inspired by the googleway package \link[https://github.com/SymbolixAU/googleway]{https://github.com/SymbolixAU/googleway},
 an excellent package to use google geo-spatial API)
 Retrieves the list of Survey Solutions credentials that have been set.
 }

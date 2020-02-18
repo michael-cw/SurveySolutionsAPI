@@ -6,6 +6,12 @@
 \usage{
 suso_get_api_key(api = c("susoServer", "susoUser", "susoPass"))
 }
+\arguments{
+\item{api}{One of susoServer, susoUser, susoPass}
+}
 \description{
 Get API credentials
+}
+\details{
+Get credentials, used as input in API calls
 }

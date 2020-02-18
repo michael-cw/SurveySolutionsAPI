@@ -7,10 +7,19 @@
 suso_getQuestDetails(url = suso_get_api_key("susoServer"),
   usr = suso_get_api_key("susoUser"),
   pass = suso_get_api_key("susoPass"), quid = NULL, version = NULL,
-  limit = 40, offset = 0, operation.type = c("list", "statuses",
-  "structure", "interviews"))
+  operation.type = c("list", "statuses", "structure", "interviews"))
 }
 \arguments{
+\item{url}{Survey Solutions server address}
+
+\item{usr}{Survey Solutions API user}
+
+\item{pass}{Survey Solutions API password}
+
+\item{quid}{\emph{QuestionnaireId} for which details should be exported}
+
+\item{version}{questionnaire version}
+
 \item{operation.type}{if \emph{list} is specified a list of all questionnaires on the server. If
 \emph{statuses} a vector of all questionnaire statuses. If \emph{structure} is specified, it returns a list
 containing the content of the questionnaire's json string. To make use of it, put the output into

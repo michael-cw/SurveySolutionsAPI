@@ -8,6 +8,13 @@ suso_PwCheck(server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
   apiPass = suso_get_api_key("susoPass"))
 }
+\arguments{
+\item{server}{Survey Solutions Server}
+
+\item{apiUser}{API user}
+
+\item{apiPass}{API password}
+}
 \description{
 This function returns a 200 status if the correct credentials have been provided.
 }

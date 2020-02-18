@@ -11,6 +11,18 @@ suso_export(questName = "", server = suso_get_api_key("susoServer"),
   n_id_vars = 11)
 }
 \arguments{
+\item{questName}{Name of the questionnaire}
+
+\item{server}{Survey Solutions server address}
+
+\item{apiUser}{Survey Solutions API user}
+
+\item{apiPass}{Survey Solutions API password}
+
+\item{questID}{Questionnaire ID}
+
+\item{version}{Questionnaire version}
+
 \item{workStatus}{define which statuses the file should inlude (i.e. \emph{Restored,Created,SupervisorAssigned,InterviewerAssigned,
 RejectedBySupervisor,ReadyForInterview,
 SentToCapi,Restarted,Completed,ApprovedBySupervisor,

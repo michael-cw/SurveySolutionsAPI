@@ -6,6 +6,15 @@
 #'  \code{suso_export_paradata} returns a data.table. Calculates the response time
 #'  and separtes multiple responses into individual columns. It also creates a variable
 #'  \emph{counter} which preserves the sequence of events.
+#'
+#'
+#' @param server Survey Solutions server address
+#' @param apiUser Survey Solutions API user
+#' @param apiPass Survey Solutions API password
+#' @param questID \emph{QuestionnaireId} for which the paradata should be generated
+#' @param version questionnnaire version
+#' @param user only for specific user
+#' @param inShinyServer if TRUE communicates with shiny server progress bar
 #' @export
 
 
@@ -15,10 +24,10 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
                             apiPass=suso_get_api_key("susoPass"),
                             questID="xxxx-xxx-xxxx-xxx-xxx",
                             version=1,
-                            format_para="Paradata",
                             user=user(),
                             inShinyServer=FALSE){
   ##  1. Libs
+  format_para="Paradata"
   options(warn = -1)
   ##  2. TEMP file
   aJsonFile<-tempfile(fileext = ".json")

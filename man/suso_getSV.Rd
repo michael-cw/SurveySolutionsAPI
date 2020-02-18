@@ -8,6 +8,13 @@ suso_getSV(url = suso_get_api_key("susoServer"),
   usr = suso_get_api_key("susoUser"),
   pass = suso_get_api_key("susoPass"))
 }
+\arguments{
+\item{url}{Survey Solutions server address}
+
+\item{usr}{Survey Solutions API user}
+
+\item{pass}{Survey Solutions API password}
+}
 \description{
-Survey Solutions API call for list of supervisors
+Gets list of supervisors
 }

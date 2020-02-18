@@ -12,5 +12,5 @@ suso_transform_fullMeta(input = NULL)
 \description{
 \code{suso_transform_fullMeta} transforms the list containing the structure (\emph{operation.type = structure})
 is transformed into a single data.table
-with all variable names, types etc.
+with all variable names, types etc.. This also works with json strings manually exported from the server.
 }

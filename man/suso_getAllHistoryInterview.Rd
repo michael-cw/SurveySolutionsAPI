@@ -8,6 +8,15 @@ suso_getAllHistoryInterview(server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
   apiPass = suso_get_api_key("susoPass"), intID = "")
 }
+\arguments{
+\item{server}{Survey Solutions server address}
+
+\item{apiUser}{Survey Solutions API user}
+
+\item{apiPass}{Survey Solutions API password}
+
+\item{intID}{the \emph{InterviewId} of the interview.}
+}
 \description{
 Get all history for a specific interview
 }

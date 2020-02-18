@@ -3,10 +3,16 @@
 #' This function retrieves the details from last file creation and can be used to modify
 #' download file creation behavior.
 #'
+#' @param url Survey Solutions server address
+#' @param usr Survey Solutions API user
+#' @param pass Survey Solutions API password
+#' @param quid Questionnaire ID
+#' @param version Questionnaire version
+#' @param format one of Tab, Csv or Excel
+#'
 #' @export
 
-suso_details_lastexport <- function(url=suso_get_api_key("susoServer"), usr = suso_get_api_key("susoUser"), pass = suso_get_api_key("susoPass"), quid = "", version = 1, format = "STATA",
-    q_name = "questionnaire name") {
+suso_details_lastexport <- function(url=suso_get_api_key("susoServer"), usr = suso_get_api_key("susoUser"), pass = suso_get_api_key("susoPass"), quid = "", version = 1, format = "STATA") {
     ## BASE URL
     url <- parse_url(url)
     url$scheme <- "https"

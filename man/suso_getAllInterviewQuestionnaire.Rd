@@ -12,9 +12,17 @@
   status = NULL)
 }
 \arguments{
+\item{server}{Survey Solutions server address}
+
+\item{apiUser}{Survey Solutions API user}
+
+\item{apiPass}{Survey Solutions API password}
+
 \item{questID}{your Survey Solutions \emph{QuestionnaireId}. Retrieve a list of questionnaires by executing \code{suso_getQuestDetails}}
 
 \item{version}{version of the questionnaire}
+
+\item{status}{which status, i.e. completed, ...}
 }
 \description{
 Returns all interviews for the specific questionnaire.

@@ -3,6 +3,10 @@
 #'
 #' \code{suso_get_assignments} calls the Survey Solutions assingment API
 #'
+#'
+#' @param server Survey Solutions server address
+#' @param apiUser Survey Solutions API user
+#' @param apiPass Survey Solutions API password
 #' @param questID only assignments for \emph{QuestionnaireId} are returned, requires \code{version} being not NULL
 #' @param version version of the questionnaire, only required with \code{questID}
 #' @param AssId if NULL a list of all assignments on the server, if not NULL
@@ -22,15 +26,13 @@ suso_get_assignments<-function(questID = NULL,
                                responsibleID = NULL,
                                order.by=c("Id,ResponsibleId,ResponsibleName,QuestionnaireId,InterviewsCount,
                                           Quantity,Archived,CreatedAtUtc,UpdatedAtUtc,
-                                          IdentifyingQuestions,Email,Password,WebMode"),
-                               supervisorId=NULL,
-                               quantity = NULL) {
+                                          IdentifyingQuestions,Email,Password,WebMode")) {
   ############
   # 1. create variables
   ##  BASE URL
   url<-httr::parse_url(paste0(server))
   url$scheme<-"https"
-  url$path<-paste0("/api/v1/assignments")
+  url$path<-file.path("api", "v1", "assignments")
   usr<-apiUser
   pass<-apiPass
   ###########
@@ -115,6 +117,13 @@ suso_get_assignments<-function(questID = NULL,
 #' recording settings, as well as archiving assignments.
 #' ATTENTION: still under development.
 #'
+#' @param server Survey Solutions server address
+#' @param apiUser Survey Solutions API user
+#' @param apiPass Survey Solutions API password
+#' @param AssId if NULL a list of all assignments on the server, if not NULL
+#' the assignment details for a specific assignment ID
+#' @param responsibleID the ID of the responsible user (Supervisor or Interviewer).
+#' Retrieves all assignments for this user.
 #'
 #' @export
 

@@ -9,11 +9,16 @@ suso_get_assignments(questID = NULL,
   apiUser = suso_get_api_key("susoUser"),
   apiPass = suso_get_api_key("susoPass"), AssId = NULL,
   version = NULL, responsibleID = NULL,
-  order.by = c("Id,ResponsibleId,ResponsibleName,QuestionnaireId,InterviewsCount,\\n                                          Quantity,Archived,CreatedAtUtc,UpdatedAtUtc,\\n                                          IdentifyingQuestions,Email,Password,WebMode"),
-  supervisorId = NULL, quantity = NULL)
+  order.by = c("Id,ResponsibleId,ResponsibleName,QuestionnaireId,InterviewsCount,\\n                                          Quantity,Archived,CreatedAtUtc,UpdatedAtUtc,\\n                                          IdentifyingQuestions,Email,Password,WebMode"))
 }
 \arguments{
 \item{questID}{only assignments for \emph{QuestionnaireId} are returned, requires \code{version} being not NULL}
+
+\item{server}{Survey Solutions server address}
+
+\item{apiUser}{Survey Solutions API user}
+
+\item{apiPass}{Survey Solutions API password}
 
 \item{AssId}{if NULL a list of all assignments on the server, if not NULL
 the assignment details for a specific assignment ID}

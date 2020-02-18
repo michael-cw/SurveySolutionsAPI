@@ -9,6 +9,17 @@ suso_patchRejectInterview(server = suso_get_api_key("susoServer"),
   apiPass = suso_get_api_key("susoPass"), intID = "",
   comment = "Please check errors and re-submit!")
 }
+\arguments{
+\item{server}{Survey Solutions server address}
+
+\item{apiUser}{Survey Solutions API user}
+
+\item{apiPass}{Survey Solutions API password}
+
+\item{intID}{the \emph{InterviewId} of the interview.}
+
+\item{comment}{comment which should be sent with the questionnaire}
+}
 \description{
-Reject interview
+N.B. under development
 }

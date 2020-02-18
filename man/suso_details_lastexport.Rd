@@ -7,7 +7,20 @@
 suso_details_lastexport(url = suso_get_api_key("susoServer"),
   usr = suso_get_api_key("susoUser"),
   pass = suso_get_api_key("susoPass"), quid = "", version = 1,
-  format = "STATA", q_name = "questionnaire name")
+  format = "STATA")
+}
+\arguments{
+\item{url}{Survey Solutions server address}
+
+\item{usr}{Survey Solutions API user}
+
+\item{pass}{Survey Solutions API password}
+
+\item{quid}{Questionnaire ID}
+
+\item{version}{Questionnaire version}
+
+\item{format}{one of Tab, Csv or Excel}
 }
 \description{
 This function retrieves the details from last file creation and can be used to modify

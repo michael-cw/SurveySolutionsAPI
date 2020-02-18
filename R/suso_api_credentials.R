@@ -1,7 +1,7 @@
 #' Survey Solutions API credentials
 #'
 #'
-#' (this function has been inspired by the googleway package \link{https://github.com/SymbolixAU/googleway},
+#' (this function has been inspired by the googleway package \link[https://github.com/SymbolixAU/googleway]{https://github.com/SymbolixAU/googleway},
 #' an excellent package to use google geo-spatial API)
 #' Retrieves the list of Survey Solutions credentials that have been set.
 #'
@@ -9,7 +9,6 @@
 suso_keys <- function() getOption("SurveySolutionsAPI")
 
 
-#' @export
 print.suso_api <- function(x, ...) {
 
   for (i in 1:length(x)) {
@@ -81,6 +80,10 @@ suso_clear_keys <- function() {
 #'
 #' Get API credentials
 #'
+#' Get credentials, used as input in API calls
+#'
+#' @param api One of susoServer, susoUser, susoPass
+#'
 #' @export
 suso_get_api_key <- function(api = c("susoServer", "susoUser", "susoPass")) {
 
@@ -92,10 +95,16 @@ suso_get_api_key <- function(api = c("susoServer", "susoUser", "susoPass")) {
   return(api)
 }
 
-# Checks if API credentials are provided
+#' Checks if credentials are present
+#'
+#' Helper function
+#'
+#' @param api one of susoServer, susoUser or susoPass
+#'
+#' @export
 suso_get_default_key <- function(api = c("susoServer", "susoUser", "susoPass")) {
   key <- getOption("SurveySolutionsAPI")[['suso']][[api]]
-  if(is.na(key)) stop("No API credentials available Use either suso_set_key() to set a key, or provide it as a function argument directly")
+  if(is.na(key)) stop("No API credentials available Use either suso_set_key() to set a key, or provide it as a function argument directly", call. = F)
   return(key)
 }
 
@@ -103,6 +112,10 @@ suso_get_default_key <- function(api = c("susoServer", "susoUser", "susoPass")) 
 #' Utility function to check if credentials are correct
 #'
 #' This function returns a 200 status if the correct credentials have been provided.
+#'
+#' @param server Survey Solutions Server
+#' @param apiUser API user
+#' @param apiPass API password
 #'
 #' @export
 suso_PwCheck<-function(server=suso_get_api_key("susoServer"),

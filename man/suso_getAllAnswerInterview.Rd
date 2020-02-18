@@ -9,6 +9,12 @@ suso_getAllAnswerInterview(server = suso_get_api_key("susoServer"),
   apiPass = suso_get_api_key("susoPass"), intID = "")
 }
 \arguments{
+\item{server}{Survey Solutions server address}
+
+\item{apiUser}{Survey Solutions API user}
+
+\item{apiPass}{Survey Solutions API password}
+
 \item{intID}{the \emph{InterviewId} of the interview. To get a list of all interview for a specific questionnaire, execute \code{suso_getAllInterviewQuestionnaire}}
 }
 \description{

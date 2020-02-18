@@ -9,6 +9,19 @@ suso_set_assignments(server = suso_get_api_key("susoServer"),
   apiPass = suso_get_api_key("susoPass"), AssId = NULL,
   responsibleID = NULL)
 }
+\arguments{
+\item{server}{Survey Solutions server address}
+
+\item{apiUser}{Survey Solutions API user}
+
+\item{apiPass}{Survey Solutions API password}
+
+\item{AssId}{if NULL a list of all assignments on the server, if not NULL
+the assignment details for a specific assignment ID}
+
+\item{responsibleID}{the ID of the responsible user (Supervisor or Interviewer).
+Retrieves all assignments for this user.}
+}
 \description{
 \code{suso_set_assignments} allows to (re-)assign, change limits or audio
 recording settings, as well as archiving assignments.

@@ -3,7 +3,11 @@
 #'
 #' \code{suso_getQuestDetails} implements all Questionnaire API commands. If \emph{operation.type = structure}
 #' the return file will be a list, whith the content of the raw json string containing the questionnaire variables
-#'
+#' @param url Survey Solutions server address
+#' @param usr Survey Solutions API user
+#' @param pass Survey Solutions API password
+#' @param quid \emph{QuestionnaireId} for which details should be exported
+#' @param version questionnaire version
 #' @param operation.type if \emph{list} is specified a list of all questionnaires on the server. If
 #' \emph{statuses} a vector of all questionnaire statuses. If \emph{structure} is specified, it returns a list
 #' containing the content of the questionnaire's json string. To make use of it, put the output into
@@ -12,7 +16,7 @@
 #' @export
 
 suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_get_api_key("susoUser"), pass = suso_get_api_key("susoPass"),
-    quid = NULL, version = NULL, limit = 40, offset = 0, operation.type = c("list", "statuses", "structure", "interviews")) {
+    quid = NULL, version = NULL, operation.type = c("list", "statuses", "structure", "interviews")) {
     ## Set temporary file
     aJsonFile <- tempfile(fileext = ".json")
     ## Define the api
@@ -22,13 +26,13 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
     ## Default operation type is 'list'
     operation.type = ifelse(is.null(operation.type), "list", operation.type)
 
-    ################################################################################ 1. Get all Questionnaires on the server
+    # 1. Get all Questionnaires on the server
     if (operation.type == "list") {
         url$query <- list(limit = 40)
         test_detail <- GET(url = build_url(url), authenticate(usr, pass, type = "basic"), write_disk(aJsonFile, overwrite = T))
         test_json <- fromJSON(aJsonFile)
         qTot <- test_json$TotalCount
-        ## 2. Check if more than 40, append rest
+        ## 1.1. Check if more than 40, append rest
         if (qTot > 40) {
             qTotRest <- qTot
             repCalls <- ceiling(qTotRest/40)
@@ -40,21 +44,20 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
             }
         }
 
-        ################################################################################ 2. Get all STATUS on server
+        # 2. Get all STATUS on server
     } else if (operation.type == "statuses") {
         test_detail <- GET(url = modify_url(url, path = file.path(url$path, "statuses")), authenticate(usr, pass, type = "basic"),
             write_disk(aJsonFile, overwrite = T))
         test_json <- fromJSON(aJsonFile)
 
-        ################################################################################ 4. Get Questionnaire JSON string -->contains all sections/variables/rosters -->to get final dataframe use
-        ################################################################################ suso_transform_full_Meta()
+        # 3. Get Questionnaire JSON string as list
     } else if (operation.type == "structure") {
         if (is.null(quid) | is.null(version))
             stop("Quid and/or version missing.")
         test_detail <- GET(url = modify_url(url, path = file.path(url$path, quid, version, "document")), authenticate(usr,
             pass, type = "basic"), write_disk(aJsonFile, overwrite = T))
         test_json <- jsonlite::fromJSON(aJsonFile)  #, flatten = T, simplifyDataFrame = T)
-        ################################################################################ 5. INTERVIEWS
+        # 4. Get INTERVIEWS for specific questionnaires
     } else if (operation.type == "interviews") {
         if (is.null(quid) | is.null(version))
             stop("Quid and/or version missing.")
@@ -73,10 +76,11 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
 #'
 #' \code{suso_transform_fullMeta} transforms the list containing the structure (\emph{operation.type = structure})
 #' is transformed into a single data.table
-#' with all variable names, types etc.
+#' with all variable names, types etc.. This also works with json strings manually exported from the server.
 #'
 #'
 #' @param input returned by \code{suso_getQuestDetails} structure operation
+#'
 #'
 #' @export
 
