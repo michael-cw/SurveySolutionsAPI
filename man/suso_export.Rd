@@ -4,15 +4,13 @@
 \alias{suso_export}
 \title{Survey Solutions API call to generate and download the data}
 \usage{
-suso_export(questName = "", server = suso_get_api_key("susoServer"),
+suso_export(server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
   apiPass = suso_get_api_key("susoPass"), questID = "", version = 1,
   workStatus = "Completed", reloadTimeDiff = 1, inShinyApp = F,
   n_id_vars = 11)
 }
 \arguments{
-\item{questName}{Name of the questionnaire}
-
 \item{server}{Survey Solutions server address}
 
 \item{apiUser}{Survey Solutions API user}
@@ -38,9 +36,10 @@ RejectedByHeadquarters,ApprovedByHeadquarters,Deleted}), if NULL all is exported
 Generates and downloads the data from your Survey Solutions server.
 }
 \details{
-\code{suso_export} works as follows:
+This API call uses the STATA export format to retrieve the categorical variables and labels.The result
+has the following characteristics:
 \itemize{
-  \item Function returns a LIST with up to 4 different lists. The list names are:
+  \item it is returned as a LIST with up to 4 different lists. The list names are:
           \itemize{
              \item \emph{main} Contains the top level data, and (if available interviewer comments)
              \item \emph{R1} All rosters in roster level 1
@@ -56,5 +55,6 @@ Generates and downloads the data from your Survey Solutions server.
          }
   \item List elements are returned as data.tables
   \item Allows for specification of reload time (i.e. generation of new download file)
+  \item PRESERVES categorical labels \emph{and} values.
   }
 }

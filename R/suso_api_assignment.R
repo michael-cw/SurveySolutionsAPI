@@ -126,6 +126,7 @@ suso_get_assignments<-function(questID = NULL,
 #' Retrieves all assignments for this user.
 #'
 #' @export
+#' @import data.table
 
 suso_set_assignments<-function(server = suso_get_api_key("susoServer"),
                                apiUser = suso_get_api_key("susoUser"),

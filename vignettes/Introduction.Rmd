@@ -1,0 +1,210 @@
+---
+title: "Introduction To the Survey Solutions API package"
+author: "Michael Wild"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{css, echo=FALSE}
+    body .main-container {
+      max-width: 1280px !important;
+      width: 1280px !important;
+    }
+    body {
+      max-width: 1280px !important;
+    }
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE, tidy=TRUE,
+  comment = "#>"
+)
+
+library("zip")
+```
+## Why this package
+
+The World Bank's Computer Assisted Survey System (CASS) **Survey Solutions** is a powerful tool for high quality data collection and used in many statistical offices around the world. Besides the standard GUI, it also comes with a powerful REST API. For details see [https://support.mysurvey.solutions/](https://support.mysurvey.solutions/)
+
+To further facilitate its integration in a fully automated workflow we have developed this R package, which covers almost all of the available API calls. With this vignette you get a first overview on the different functions, further vignettes are available on survey management, paradata analysis and shiny integration.
+
+The package can be considered as being a API "bare bone", as it implements the basic [Survey Solutions API](https://demo.mysurvey.solutions//apidocs/index#!) calls without substantial modification. However, this is not true for the data export function as well as for the 
+paradata. Modification was necessary to facilitate workflow integration. See the details in the corresponding documentation.
+
+Please be aware, that this package makes heavy use of data.table, and this is also continued in this vignette. In case you are not familiar with it yet, you should probably have a look a this [introduction](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html).
+
+## API credentials
+
+To use the API you first need to set-up the API user on your Survey Solutions server. See [here](https://support.mysurvey.solutions/headquarters/api/) for details. After this done, you can use the *suso_set_key()* function, to provide your credentials. 
+
+```{r credentials, echo=TRUE, message=FALSE, warning=FALSE}
+library(SurveySolutionsAPI)
+suso_clear_keys()
+suso_set_key("https://xxx.mysurvey.solutions", "xxxxxx", "xxxxxxx")
+suso_keys()
+```
+
+```{r trueCredentials, echo=FALSE, include=FALSE}
+suso_clear_keys()
+credentials<-read_rds(path = "/srv/shiny-server/SuSo_ListingCheck/helpers/surveysolutionsAPI_testcode/credentials.rds")
+suso_set_key(credentials$server, credentials$user, credentials$pass)
+```
+
+After this is done, there is no need to provide the credentials for every API call again. They are stored until the end of your current session. There is also a function to check if your credentials work.
+
+```{r checkCred, echo=T, include=T}
+suso_PwCheck()
+```
+
+It calls the supervisor API, and returns the response. If the return value is 200, then your connection and credentials are OK.
+
+## User Management
+
+These functions are particularly useful for survey management, and more details can be found in the corresponding vignette on survey management. Lets start with getting a list of all supervisors on the server.
+
+```{r svlist, echo=T, include=T}
+sv<-suso_getSV() 
+print(sv)
+```
+
+Your will receive a list of supervisors currently active (not archived) on the server. If you take one of the supervisor's *id* and use the *suso_getINT* function, you will receive all the interviewers in the team.
+
+```{r intlist, echo=T, include=T}
+int<-suso_getINT(sv_id = sv[3, UserId])
+print(int)
+```
+
+To receive more information about a particular user, use the *suso_getINT_info* function:
+
+```{r intinfo, echo=T, include=T}
+intinfo<-suso_getINT_info(int_id = int[1, UserId])
+print(intinfo)
+```
+
+To get information about any particular user, you can also use the more general function *suso_getUSR*.
+
+```{r usrinfo, echo=T, include=T}
+usrinfo_int<-suso_getUSR(uid = sv[3, UserId])
+print(usrinfo_int)
+
+usrinfo_int<-suso_getUSR(uid = int[1, UserId])
+print(usrinfo_int)
+```
+
+
+## Questionnaire
+
+The basic questionnaire API calls are handled through the *suso_getQuestDetails* function.
+
+If no input is provided, the function returns a list of all questionnaires on the server:
+
+```{r questlist, echo=T, include=T}
+questlist<-suso_getQuestDetails()
+print(questlist)
+```
+
+Specifying *operation.type = status*, you receive a list of statuses. 
+
+```{r statlist, echo=T, include=T}
+statlist<-suso_getQuestDetails(operation.type = "statuses")
+print(statlist)
+```
+
+By taking a particular *QuestionnaireId* and specifying the *operation.type *you can execute further requests. For example,
+
+```{r questionnaire, echo=T, include=T}
+questionnaire<-suso_getQuestDetails(operation.type = "structure", 
+                                    quid = questlist[2, QuestionnaireId], version = questlist[2, Version])
+questionnaire<-questionnaire[,.(VariableName, type, QuestionText, Featured, PublicKey)]
+questionnaire<-questionnaire[!is.na(QuestionText)]
+head(questionnaire, 19L)
+```
+
+Gives you a data.table which contains all the questions, question texts, etc. which you can use for further processing i.e to render a user manual with rmarkdown. Find details in the manual on questionnaire creation.
+
+You can also get a list of all interviews done for the specific questionnaire.
+```{r interviews, echo=T, include=T}
+interviews<-suso_getQuestDetails(operation.type = "interviews", 
+                                 quid = questlist[2, QuestionnaireId], version = questlist[2, Version])
+interviews<-interviews[,.(InterviewId, AssignmentId, ResponsibleId, ErrorsCount, Status)]
+head(interviews, 20L)
+```
+
+## Quick statistics
+
+To monitor variables of interest, you can use the *suso_get_stats* function.
+
+```{r statquest, echo=T, include=T, message=F}
+statquest<-suso_get_stats(questID = questlist[2, QuestionnaireId], 
+                          version = questlist[2, Version], qQuest = questionnaire[13, PublicKey])
+print(statquest)
+```
+
+
+## Full data export
+
+To export the data collected in Survey Solutions, you use *suso_export*. 
+
+```{r, export, echo=F, include=T, message=F}
+allData<-suso_export(questID = questlist[2, QuestionnaireId], 
+                            version = questlist[2, Version], reloadTimeDiff = 24)
+
+```
+
+Its return value is a list with the following elememts: `r names(allData)`, with
+- **main** containing the files: `r names(allData$main)`
+- **R1** containing all rosters at the first level
+- **R2** containing all rosters at the second level
+- **R3** containing all rosters at the third level
+
+through the harmonized ID, main and rosterfiles can easily be put together. More on this in the specific vignette.
+
+
+## Paradata
+
+To retrieve the paradata for a particular interview you use *suso_export_paradata*
+```{r para_short, echo=T, include=T}
+system.time(
+para1<-suso_export_paradata(questID = questlist[2, QuestionnaireId], 
+                           version = questlist[2, Version], reloadTimeDiff = 24, onlyActiveEvents = F, allResponses = T)
+)
+```
+
+This will return a list of data table, separated by events. Please bear in mind, that paradata files can be fairly big, and processing it may require a large working memory. To decrease the load there are also 3 parameters you can change, these are:
+
+- **onlyActiveEvents**, if TRUE it processes only the active events initiated by users.
+- **allResponses**, if FALSE, does not process all response values, nevertheless they are still included in a single column. Otherwise, they are separated by column.
+
+Running the same call again without passive events and without all responses processed, reduces processing time significantly.
+
+```{r, para_long, echo=T, include=T, message=F}
+system.time(
+para2<-suso_export_paradata(questID = questlist[2, QuestionnaireId], 
+                           version = questlist[2, Version], reloadTimeDiff = 24, onlyActiveEvents = T, allResponses = F)
+)
+```
+
+As you see from the system timings, changing these parameters reduces processing time significantly. More details on how to work with paradata can be found in the corresponding vignette. The paradata export is returned as a list, with the following elements:
+
+- **full data**: `r names(para1)`
+- **reduced data**: `r names(para2)`
+
+There are also tables already inclduded in the file, like: 
+```{r, para_user, echo=T, include=T, message=F}
+para2[["userDistr"]]
+```
+
+which gives the distribution of events by user, or: 
+```{r, para_action, echo=T, include=T, message=F}
+para2[["actionDistr"]]
+```
+which gives the distribution by event type.
+
+We hope that gave you a short overview on the available functions. For more details on how to use the output, please read the specific vignettes.
+
+

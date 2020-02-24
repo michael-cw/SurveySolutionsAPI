@@ -2,7 +2,6 @@
 #'
 #' Generates and downloads the data from your Survey Solutions server.
 #'
-#' @param questName Name of the questionnaire
 #' @param server Survey Solutions server address
 #' @param questID Questionnaire ID
 #' @param version Questionnaire version
@@ -18,9 +17,11 @@
 #'
 #'
 #' @details
-#' \code{suso_export} works as follows:
+#'
+#' This API call uses the STATA export format to retrieve the categorical variables and labels.The result
+#' has the following characteristics:
 #' \itemize{
-#'   \item Function returns a LIST with up to 4 different lists. The list names are:
+#'   \item it is returned as a LIST with up to 4 different lists. The list names are:
 #'           \itemize{
 #'              \item \emph{main} Contains the top level data, and (if available interviewer comments)
 #'              \item \emph{R1} All rosters in roster level 1
@@ -36,14 +37,23 @@
 #'          }
 #'   \item List elements are returned as data.tables
 #'   \item Allows for specification of reload time (i.e. generation of new download file)
+#'   \item PRESERVES categorical labels \emph{and} values.
 #'   }
 #'
 #'
 #'
 #' @export
+#'
+#' @import zip
+#' @import data.table
+#' @import haven
+#' @import httr
+#' @import jsonlite
+#' @import lubridate
+#' @import readr
+#' @import readstata13
 
-suso_export<-function(questName="",
-                      server= suso_get_api_key("susoServer"),
+suso_export<-function(server= suso_get_api_key("susoServer"),
                       apiUser=suso_get_api_key("susoUser"),
                       apiPass=suso_get_api_key("susoPass"),
                       questID="",
@@ -53,13 +63,18 @@ suso_export<-function(questName="",
                       inShinyApp=F,
                       n_id_vars=11){
   #######################################
-  ## Load the libraries
-  ##  - all required packages are loaded as dependencies at start-up (-->DESCRIPTION file)
+  ## Check arguments
+  ##  - workStatus
+  margs<-suso_getQuestDetails(operation.type = "statuses")
+  workStatus<-match.arg(workStatus, margs)
 
   ########################################
   ## BASE SET-UP
   ##  OPTIONS: i) No scientific notation
   options("scipen"=100, "digits"=4)
+  ## Base file
+  dataPath<-file.path(tempdir(),"application_data.zip")
+  if (file.exists(dataPath)) file.remove(dataPath)
   ##  BASE URL
   url<-parse_url((server))
   url$scheme<-"https"
@@ -72,7 +87,7 @@ suso_export<-function(questName="",
 
 
   ######################################################################################
-  ##  GET QUESTIONNAIRE DETAILS
+  ##  GET QUESTIONNAIRE NAME FOR FILE SELECTION
   ######################################################################################
   url_quest<-parse_url(server)
   url_quest$path<-"/api/v1/questionnaires"
@@ -90,13 +105,12 @@ suso_export<-function(questName="",
   ###############################################
   ##          CHECK TIME OF LAST FILE
   ###############################################
-  time_limit<-strptime(suso_details(url=server,
-                                      usr=apiUser,
-                                      pass=apiPass,
-                                      quid=questID,
-                                      version = version,
-                                      format="STATA",
-                                      q_name=questName)$LastUpdateDate, format = "%Y-%m-%dT%H:%M:%S")
+  time_limit<-strptime(suso_details_lastexport(url=server,
+                                               usr=apiUser,
+                                               pass=apiPass,
+                                               quid=questID,
+                                               version = version,
+                                               format="STATA")$LastUpdateDate, format = "%Y-%m-%dT%H:%M:%S")
   ###############################################################################
   ##          START FILE CREATION
   ##              -IFF time diff is larger than treshold,
@@ -104,9 +118,10 @@ suso_export<-function(questName="",
   ###############################################################################
   ##  1. START FILE CREATION --> file is only created when time difference is larger then reloadTimeDiff
   current_time<-strptime(Sys.time(), format = "%Y-%m-%d %H:%M:%S")
-  dataPath<-file.path(tempdir(),"application_data.zip")
-  print(difftime(current_time, time_limit, units = "hours"))
+  timeDiff<-difftime(current_time, time_limit, units = "hours")
+  cat("The last file has been created", timeDiff, "hours ago.")
   if(difftime(current_time, time_limit, units = "hours")>reloadTimeDiff){
+    cat("A new file will be generated. This may take a while.\n")
     url_start<-modify_url(url, path = file.path(url$path, "start"))
     test_post<-httr::POST(url = url_start, authenticate(usr, pass, type = "basic"))
     stop_for_status(test_post, "Request Failed")
@@ -114,25 +129,23 @@ suso_export<-function(questName="",
 
     ##########################
     ##  2. STATUS CHECK
-    test_json<-suso_details(url=server,
-                              usr=apiUser,
-                              pass=apiPass,
-                              quid=questID,
-                              version = version,
-                              format="STATA",
-                              q_name=questName)
+    test_json<-suso_details_lastexport(url=server,
+                                       usr=apiUser,
+                                       pass=apiPass,
+                                       quid=questID,
+                                       version = version,
+                                       format="STATA")
 
 
     ## 2.1. Wait until finished
     while (!is.null(test_json$RunningProcess)) {
-      print(paste0(test_json$RunningProcess$ProgressInPercents, "%"))
-      test_json<-suso_details(url=server,
-                                usr=apiUser,
-                                pass=apiPass,
-                                quid=questID,
-                                version = version,
-                                format="STATA",
-                                q_name=questName)
+      cat(test_json$RunningProcess$ProgressInPercents, "%\n")
+      test_json<-suso_details_lastexport(url=server,
+                                         usr=apiUser,
+                                         pass=apiPass,
+                                         quid=questID,
+                                         version = version,
+                                         format="STATA")
       Sys.sleep(10)
     }
   }
@@ -147,9 +160,13 @@ suso_export<-function(questName="",
                   unrestricted_auth = 0L,                    # but not pass auth to redirects
                   tcp_keepalive = 1L
                 ))
-  ## 3.1. Separate by STATUS CODE (302 means data is in s3 bucket)
-  if (status_code(test_exp)==302)
-    download.file(headers(test_exp)$url, dataPath, quiet = F)
+
+  ## 3.1. Stop by status code
+  if (status_code(test_exp)!=200) stop(
+    cat("Not data for download.", "Did you specify the correct questionnaire and version?",
+        paste0("Status: ", status_code(test_exp)), sep = "\n"),
+    call. = F
+  )
 
 
 
@@ -164,14 +181,14 @@ suso_export<-function(questName="",
   ###################################################################################################
   ## Load the data
   uploadFile<-dataPath
-  file_list<-tryCatch(unzip(uploadFile, list=T), error=function(e) return("No File Found!"))
+  file_list<-tryCatch(utils::unzip(uploadFile, list=T), error=function(e) return("No File Found!"))
 
 
 
   #########################################
   ## Extracting files with loop
   files<-file_list[file_list$Length>0,1]
-  files<-files[files!="export__readme.txt"]
+  files<-files[grep(pattern = ".dta$", files)]
 
   ##  Functions for files
   file_collector<-list()
@@ -200,14 +217,13 @@ suso_export<-function(questName="",
   ##    - all from tmp dir
   ##    - checks roster by id
   ##    - USE haven stata, as else file corrupted
-  CHECKlist<-list()
   for (file_zip in files) {
     name<-strsplit(file_zip, ".dta")[[1]]
-    #CHECKlist[[name]]<-read.dta13(file = paste0(tmp_zip_dir,"/", file_zip), fromEncoding = "UTF-8", convert.factors = T, generate.factors = T)
     if (exists("tmp_file")) tmp_file<-NULL
     tmp_file <-tryCatch(data.table(haven::read_dta(file.path(tmp_zip_dir, file_zip), encoding = 'latin1')),
                         error=function(e) return(NULL))
     if(is.null(tmp_file)) {print(paste("ERROR in dta file:", file_zip));next()}
+
     ######################################################################
     ##  LABELS
     ##  1. Value Labels (single select)
@@ -222,19 +238,19 @@ suso_export<-function(questName="",
     }
     ##  2. Multi Select
     ms<-grep("__[0-9]*$",names(tmp_file), perl=T)
-    CHECKlist[[name]]<-tmp_file
     ######################################################################
     ##  READING THE FILES
-    ##  1. MAIN FILE (defined by user)
+    ##  1. MAIN FILE (by questionnaire variable identification)
     if (name==questName){
       tmpName<-tolower(names(tmp_file))
       names(tmp_file)<-tmpName
+
       MAINparIDcol<-grep(pattern = "^.+__id$", tmpName)
       main_file<-copy(tmp_file)
-      setkeyv(main_file, tmpName[MAINparIDcol])
       setnames(main_file,c("interview__id"),"id")
       attributes(tmp_file)$rosterlevel<-"main"
-
+      setkeyv(main_file, c("id", "interview__key"))
+      setkeyv(statusControl, c("id", "interview__key"))
       main_file<-main_file[statusControl, nomatch=0]
       setnames(main_file,"id",c("interview__id"))
       file_collector.main[[paste(name)]]<-main_file
@@ -253,11 +269,13 @@ suso_export<-function(questName="",
       names(tmp_file)<-tmpName
       tmp.parIDcol<-grep(pattern = "__id", names(tmp_file))
       nesting<-length(tmp.parIDcol)-1
+      print(name)
+      print(nesting)
+      print("****")
       if (nesting==1 & length(tmp.parIDcol)==2 & nrow(tmp_file)!=0){
         ##  4.1. ROSTER LEVEL 1
         tmp.parIDcol<-names(tmp_file)[tmp.parIDcol]
-        id<-paste0(name, "__id")
-        parentid1<-tmp.parIDcol[tmp.parIDcol!=id & tmp.parIDcol!="interview__id"]
+        id<-paste0(tolower(name), "__id")
         names(tmp_file)<-tolower(names(tmp_file))
         tmp_file<-plyr::rename(tmp_file, replace=c("interview__id"="id", setNames("id1", id)))
         tmpName<-tolower(names(tmp_file))
@@ -265,7 +283,10 @@ suso_export<-function(questName="",
         r1id<-grep(pattern = "^id1$", tmpName)
         tmp_file<-data.table(tmp_file, key=tmpName[MAINparIDcol])
 
-        tmp_file<-merge(tmp_file, statusControl, by=c("id", "interview__key"), allow.cartesian=F)
+        setkeyv(tmp_file, c("id", "interview__key"))
+        setkeyv(statusControl, c("id", "interview__key"))
+        tmp_file<-tmp_file[statusControl, nomatch=0]
+
         setkeyv(tmp_file, c(tmpName[MAINparIDcol], tmpName[r1id]) )
         file_collector.rost.L1[[paste(name)]]<-tmp_file
       } else if (nesting==1.5 & length(tmp.parIDcol)==2& nrow(tmp_file)!=0){
@@ -281,7 +302,7 @@ suso_export<-function(questName="",
       } else if (nesting==2& nrow(tmp_file)!=0) {
         ##  4.2. ROSTER LEVEL 2
         tmp.parIDcol<-names(tmp_file)[tmp.parIDcol]
-        id<-paste0(name, "__id")
+        id<-paste0(tolower(name), "__id")
         parentid1<-tmp.parIDcol[tmp.parIDcol!=id & tmp.parIDcol!="interview__id"]
         tmp_file<-plyr::rename(tmp_file, replace=c("interview__id"="id", setNames("id1", parentid1), setNames("id2", id)))
         tmpName<-tolower(names(tmp_file))
@@ -292,7 +313,7 @@ suso_export<-function(questName="",
         tmp_file<-merge(tmp_file, statusControl, by=c("id", "interview__key"), allow.cartesian=TRUE)
         setkeyv(tmp_file, c(tmpName[MAINparIDcol], tmpName[r1id], tmpName[r2id]))
         file_collector.rost.L2[[paste(name)]]<-tmp_file
-      } else if (nesting==2& nrow(tmp_file)!=0) {
+      } else if (nesting==2.5& nrow(tmp_file)!=0) {
         ##  4.3. ROSTER LEVEL 2
         tmp_file<-plyr::rename(tmp_file, replace=c("parentid3"="id", "parentid2"="id1", "parentid3"="id2", "id"="id3"))
         tmpName<-tolower(names(tmp_file))
@@ -315,30 +336,13 @@ suso_export<-function(questName="",
   ##    i) By Section for Nested roster
   ##    ii) Exclude the nested rosters by using is.numeric
   ##  1. Split of section identifier, must be by "_"
-  sectionR1<-sapply(names(file_collector.rost.L1), function(x) strsplit(x, "_")[[1]][1], simplify = T)
-  attributes(sectionR1)<-NULL
-  sectionR2<-sapply(names(file_collector.rost.L2), function(x) strsplit(x, "_")[[1]][1], simplify = T)
-  attributes(sectionR2)<-NULL
 
-  ##  2. Merge them
-  if(is.matrix(sectionR1) & is.matrix(sectionR2)){
-    R1inR2<-as.data.frame(stringdistmatrix(sectionR1, sectionR2, method = "osa"))
-    if (nrow(R1inR2)!=0){
-      R1inR2match<-lapply(1:length(R1inR2[,1]), function(i) which(R1inR2[i,]==0) )
-      for (i in 1:length(file_collector.rost.L1)){
-        if (length(R1inR2match[[i]])!=0){
-          for (k in R1inR2match[[i]]) {
-            file_collector.rost.L1[[i]]<-plyr::join(file_collector.rost.L1[[i]], file_collector.rost.L2[[k]],
-                                                    by=c("id", "id1"))
-          }
-        }
-      }
-    }} else if (is.matrix(sectionR1)) {
-      for (i in 1:length(file_collector.rost.L1)){
-        file_collector.rost.L1[[i]]<-file_collector.rost.L1[[i]]
-      }
 
-    }
+
+  #TO DO#
+
+
+
   ######################################################################
   ##  COLLECTING THE LISTS
   ##  1. MAIN (always exists, no check)
@@ -353,7 +357,6 @@ suso_export<-function(questName="",
   ##  4. ROSTER LEVEL 3
   if(exists("file_collector.rost.L3")){
     file_collector[["R3"]]<-file_collector.rost.L3}
-  #return(CHECKlist)
   return(file_collector)
 
 

@@ -3,8 +3,16 @@
 #'
 #' ATTENTION: CURRENTLY ONLY TESTED WITHOUT PREFILLED DATA
 #'
+#' @param df dataframe with upload data
+#' @param url Survey Solutions server address
+#' @param user Survey Solutions API user
+#' @param pass Survey Solutions API password
 #' @details df must be with the following columns: \emph{ResponsibleName, Quantity, [variables]}
 #' @export
+#'
+#'
+#' @import data.table
+
 
 suso_createASS <- function(df = UPLOADdataCHECK, url = suso_get_api_key("susoServer"),
                            usr = suso_get_api_key("susoUser"),

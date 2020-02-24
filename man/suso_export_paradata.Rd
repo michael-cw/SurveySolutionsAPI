@@ -7,8 +7,10 @@
 suso_export_paradata(server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
   apiPass = suso_get_api_key("susoPass"),
-  questID = "xxxx-xxx-xxxx-xxx-xxx", version = 1, user = user(),
-  inShinyServer = FALSE)
+  questID = "xxxx-xxx-xxxx-xxx-xxx", version = 1, reloadTimeDiff = 1,
+  inShinyServer = FALSE, multiCore = NULL, onlyActiveEvents = FALSE,
+  allResponses = TRUE, gpsVarName = NA, verbose = T,
+  showProgress = F)
 }
 \arguments{
 \item{server}{Survey Solutions server address}
@@ -21,9 +23,22 @@ suso_export_paradata(server = suso_get_api_key("susoServer"),
 
 \item{version}{questionnnaire version}
 
-\item{user}{only for specific user}
+\item{reloadTimeDiff}{time difference in hours between last generated file and now}
 
-\item{inShinyServer}{if TRUE communicates with shiny server progress bar}
+\item{multiCore}{if not NULL, an integer number specifying the number of cores to use}
+
+\item{onlyActiveEvents}{if TRUE only active events are exported, decreases processing time and memory requirements}
+
+\item{allResponses}{if TRUE all responses will be extracted. Setting it to FALSE may decrease processing time and
+memory requirements}
+
+\item{verbose}{if TRUE, shows messages about the operation carried out. Can be useful for longrunning operations.}
+
+\item{showProgress}{also display the progress bars.}
+
+\item{inShinyApp}{if True, file interacts with shiny progress bar}
+
+\item{provide}{GPS variable name. If not provided, identification is attempted by lookin for a variable containing gps in its name.}
 }
 \description{
 Exports Survey Solutions Paradata, and returns a data.table.
@@ -32,4 +47,14 @@ Exports Survey Solutions Paradata, and returns a data.table.
 \code{suso_export_paradata} returns a data.table. Calculates the response time
  and separtes multiple responses into individual columns. It also creates a variable
  \emph{counter} which preserves the sequence of events.
+
+The return value is a list with a separate list element for each event. If any of the variable
+names contains \emph{gps} this function also attempts to identify (and extract) the geo-reference location. In case of multiple gps variables,
+it identifies the first variable, with not all missing values. This in turn
+facilitates the creation of paradata maps (see vignette on paradata). In addition it also returns all the variables and responses in separate columns and
+as factors.
+Exporting \emph{onlyActiveEvents} substantially decrease processing time. The events may be sufficient for most of the paradata analysis.
+
+To further decrease the processing time, one could set \emph{allResponses} to FALSE. Doing so will still export all the data, however it will
+not attempt to extract all responses and setting them to factors.
 }

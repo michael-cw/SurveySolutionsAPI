@@ -11,6 +11,8 @@
 #' @param qQuest provide \emph{QuestionnaireId} and \emph{version} to receive all questions and responses for a specific questionnaire
 #'
 #' @export
+#'
+#' @import data.table
 
 suso_get_stats <- function(server = suso_get_api_key("susoServer"), apiUser = suso_get_api_key("susoUser"), apiPass = suso_get_api_key("susoPass"),
     questID = "", version = "", qQuest = "") {
@@ -54,6 +56,11 @@ suso_get_stats <- function(server = suso_get_api_key("susoServer"), apiUser = su
 #'
 #' @export
 #'
+#' @import data.table
+#' @import httr
+#' @import jsonlite
+#' @import lubridate
+#' @import readr
 suso_getQuestionsQuestionnaire <- function(server = suso_get_api_key("susoServer"), apiUser = suso_get_api_key("susoUser"), apiPass = suso_get_api_key("susoPass"),
     questID = NULL, version = NULL) {
     ## stop if input is missing

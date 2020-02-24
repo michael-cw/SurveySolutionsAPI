@@ -12,6 +12,8 @@
 #'
 #'
 #' @export
+#'
+#' @import data.table
 suso_getAllInterviewQuestionnaire <- function(server= suso_get_api_key("susoServer"),
                                               apiUser=suso_get_api_key("susoUser"),
                                               apiPass=suso_get_api_key("susoPass"),
@@ -62,6 +64,8 @@ suso_getAllInterviewQuestionnaire <- function(server= suso_get_api_key("susoServ
 #'
 #'
 #' @export
+#'
+#' @import data.table
 suso_getAllAnswerInterview <- function(server= suso_get_api_key("susoServer"),
                                        apiUser=suso_get_api_key("susoUser"),
                                        apiPass=suso_get_api_key("susoPass"),
@@ -122,6 +126,7 @@ suso_getAllHistoryInterview <- function(server= suso_get_api_key("susoServer"),
 #'
 #' @export
 #'
+#' @import data.table
 suso_patchRejectInterview <- function(server= suso_get_api_key("susoServer"),
                                       apiUser=suso_get_api_key("susoUser"),
                                       apiPass=suso_get_api_key("susoPass"),

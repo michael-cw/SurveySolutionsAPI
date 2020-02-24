@@ -2,7 +2,7 @@
 % Please edit documentation in R/suso_api_Questionnaire.R
 \name{suso_transform_fullMeta}
 \alias{suso_transform_fullMeta}
-\title{Transforms list of questionnair structure to single data.table with all variables}
+\title{Helper function to transform list of questionnair structure to single data.table with all variables}
 \usage{
 suso_transform_fullMeta(input = NULL)
 }
@@ -10,6 +10,9 @@ suso_transform_fullMeta(input = NULL)
 \item{input}{returned by \code{suso_getQuestDetails} structure operation}
 }
 \description{
+Uses tidyjson package
+}
+\details{
 \code{suso_transform_fullMeta} transforms the list containing the structure (\emph{operation.type = structure})
 is transformed into a single data.table
 with all variable names, types etc.. This also works with json strings manually exported from the server.

@@ -1,17 +1,17 @@
 Package: SurveySolutionsAPI
 Type: Package
 Title: API access to Survey Solutions Server
-Version: 0.1.0
+Version: 0.2.0
 Author: Michael Wild
 Maintainer: Michael Wild <mwild@worldbank.org>
 Description: This packages implements the Survey Solutions API.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-Imports: data.table
+Imports: tidyjson, zip, future, doFuture, foreach, progressr, data.table
 Depends: 
     httr, 
-    jsonlite, 
+    jsonlite,
     haven, 
     plyr, 
     dplyr, 
@@ -21,3 +21,7 @@ Depends:
     readstata13,
     lubridate
 RoxygenNote: 6.1.1
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

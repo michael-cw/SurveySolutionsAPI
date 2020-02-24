@@ -9,6 +9,15 @@ suso_createASS(df = UPLOADdataCHECK,
   usr = suso_get_api_key("susoUser"),
   pass = suso_get_api_key("susoPass"), QUID = NULL, version = NULL)
 }
+\arguments{
+\item{df}{dataframe with upload data}
+
+\item{url}{Survey Solutions server address}
+
+\item{pass}{Survey Solutions API password}
+
+\item{user}{Survey Solutions API user}
+}
 \description{
 ATTENTION: CURRENTLY ONLY TESTED WITHOUT PREFILLED DATA
 }

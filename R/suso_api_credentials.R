@@ -85,6 +85,7 @@ suso_clear_keys <- function() {
 #' @param api One of susoServer, susoUser, susoPass
 #'
 #' @export
+#' @import data.table
 suso_get_api_key <- function(api = c("susoServer", "susoUser", "susoPass")) {
 
 
