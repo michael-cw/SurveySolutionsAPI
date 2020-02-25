@@ -11,8 +11,6 @@
 #' @export
 #'
 #'
-#' @import data.table
-
 
 suso_createASS <- function(df = UPLOADdataCHECK, url = suso_get_api_key("susoServer"),
                            usr = suso_get_api_key("susoUser"),

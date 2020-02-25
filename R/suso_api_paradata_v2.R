@@ -39,13 +39,8 @@
 #' @import future
 #' @import doFuture
 #' @import foreach
-#' @import progressr
-#' @import zip
-#' @import data.table
-#' @import httr
-#' @import jsonlite
-#' @import lubridate
-#' @import readr
+#' @importFrom progressr progressor
+#' @importFrom progressr with_progress
 
 
 suso_export_paradata<-function(server= suso_get_api_key("susoServer"),

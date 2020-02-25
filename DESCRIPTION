@@ -8,20 +8,28 @@ Description: This packages implements the Survey Solutions API.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-Imports: tidyjson, zip, future, doFuture, foreach, progressr, data.table
-Depends: 
-    httr, 
-    jsonlite,
-    haven, 
+Imports: 
+    tidyjson, 
     plyr, 
-    dplyr, 
+    dplyr,
+    httptest (>= 3.0.0),
     stringdist, 
     stringr, 
     readr, 
-    readstata13,
     lubridate
+Depends:
+    R (>= 3.3.0),
+    httr,
+    jsonlite,
+    data.table
 RoxygenNote: 6.1.1
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    haven,
+    readstata13,
+    zip, future, 
+    doFuture, 
+    foreach, 
+    progressr
 VignetteBuilder: knitr

@@ -6,6 +6,8 @@
 #' Retrieves the list of Survey Solutions credentials that have been set.
 #'
 #' @export
+#' @import readr
+#' @import stringr
 suso_keys <- function() getOption("SurveySolutionsAPI")
 
 
@@ -39,6 +41,9 @@ print.suso_api <- function(x, ...) {
 #'
 #'
 #' @export
+#'
+
+
 suso_set_key <- function(
   suso_server = "",
   suso_user = "",
@@ -123,7 +128,7 @@ suso_PwCheck<-function(server=suso_get_api_key("susoServer"),
                        apiUser=suso_get_api_key("susoUser"),
                        apiPass=suso_get_api_key("susoPass")) {
   ##  Define the api send GET and use response code
-  server<-ifelse(str_count(server, "https://")==1,
+  server<-ifelse(stringr::str_count(server, "https://")==1,
                  server, paste0("https://", server))
   server=paste0(server, "/api/v1/supervisors")
 

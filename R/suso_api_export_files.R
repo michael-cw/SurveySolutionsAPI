@@ -45,14 +45,8 @@
 #' @export
 #'
 #' @import zip
-#' @import data.table
 #' @import haven
-#' @import httr
-#' @import jsonlite
-#' @import lubridate
-#' @import readr
 #' @import readstata13
-
 suso_export<-function(server= suso_get_api_key("susoServer"),
                       apiUser=suso_get_api_key("susoUser"),
                       apiPass=suso_get_api_key("susoPass"),

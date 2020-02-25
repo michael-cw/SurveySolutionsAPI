@@ -104,7 +104,6 @@ suso_getINT_info<-function(url=suso_get_api_key("susoServer"), usr = suso_get_ap
 #'
 #' @export
 #'
-#' @import data.table
 #'
 suso_getINT_log<-function(url=suso_get_api_key("susoServer"), usr = suso_get_api_key("susoUser"), pass = suso_get_api_key("susoPass"),
                            int_id = NULL) {

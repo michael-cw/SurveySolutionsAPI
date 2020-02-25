@@ -5,11 +5,10 @@
 # @param response response from \code{httr::GET()}
 # @param status valid status, i.e. 200, 300
 
-#' @import dplyr
-#' @import haven
+
 #' @import httr
 #' @import jsonlite
-#' @import lubridate
+#' @importFrom  lubridate hms
 #' @import readr
 check_response <- function(response = test_detail, status = 200){
   if (status_code(response)!=status) {

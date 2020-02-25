@@ -15,7 +15,7 @@
 #' for a specific questionnaire.
 #' @export
 #'
-#' @import data.table
+#'
 
 suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_get_api_key("susoUser"), pass = suso_get_api_key("susoPass"),
                                  quid = NULL, version = NULL, operation.type = c("list", "statuses", "structure", "interviews")) {
@@ -31,8 +31,11 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
     # 1. Get all Questionnaires on the server
     if (operation.type == "list") {
         url$query <- list(limit = 40)
-        test_detail <- GET(url = build_url(url), authenticate(usr, pass, type = "basic"), write_disk(aJsonFile, overwrite = T))
-        test_json <- fromJSON(aJsonFile)
+        test_detail <- GET(url = build_url(url),
+                           authenticate(usr, pass, type = "basic"),
+                           httr::write_disk(aJsonFile, overwrite = T))
+        check_response(test_detail)
+        test_json <- jsonlite::fromJSON(aJsonFile)
         qTot <- test_json$TotalCount
         ## 1.1. Check if more than 40, append rest
         if (qTot > 40) {
@@ -41,7 +44,7 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
             for (i in 2:repCalls) {
                 url$query <- list(limit = 40, offset = i)
                 test_detail <- GET(url = build_url(url), authenticate(usr, pass, type = "basic"), write_disk(aJsonFile, overwrite = T))
-                test_json_tmp <- fromJSON(aJsonFile)
+                test_json_tmp <- jsonlite::fromJSON(aJsonFile)
                 test_json$Questionnaires <- rbind(test_json$Questionnaires, test_json_tmp$Questionnaires)
             }
         }
@@ -54,7 +57,8 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
     } else if (operation.type == "statuses") {
         test_detail <- GET(url = modify_url(url, path = file.path(url$path, "statuses")), authenticate(usr, pass, type = "basic"),
                            write_disk(aJsonFile, overwrite = T))
-        test_json <- fromJSON(aJsonFile)
+        check_response(test_detail)
+        test_json <- jsonlite::fromJSON(aJsonFile)
 
         # 3. Get Questionnaire JSON string as list
     } else if (operation.type == "structure") {
@@ -62,6 +66,7 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
             stop("Quid and/or version missing.")
         test_detail <- GET(url = modify_url(url, path = file.path(url$path, quid, version, "document")), authenticate(usr,
                                                                                                                       pass, type = "basic"), write_disk(aJsonFile, overwrite = T))
+        check_response(test_detail)
         test_json <- tidyjson::read_json(aJsonFile)
         test_json <- suso_transform_fullMeta(test_json)
         # 4. Get INTERVIEWS for specific questionnaires
@@ -71,7 +76,8 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
         url$query <- list(limit = 40)
         test_detail <- GET(url = modify_url(url, path = file.path(url$path, quid, version, "interviews")),
                            authenticate(usr, pass, type = "basic"), write_disk(aJsonFile, overwrite = T))
-        test_json <- fromJSON(aJsonFile)
+        check_response(test_detail)
+        test_json <- jsonlite::fromJSON(aJsonFile)
         qTot <- test_json$TotalCount
         ## 1.1. Check if more than 40, append rest
         if (qTot > 40) {
@@ -81,7 +87,7 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
                 url$query <- list(limit = 40, offset = i)
                 test_detail <- GET(url = modify_url(url, path = file.path(url$path, quid, version, "interviews")),
                                    authenticate(usr, pass, type = "basic"), write_disk(aJsonFile, overwrite = T))
-                test_json_tmp <- fromJSON(aJsonFile)
+                test_json_tmp <- jsonlite::fromJSON(aJsonFile)
                 test_json$Interviews <- rbind(test_json$Interviews, test_json_tmp$Interviews)
             }
         }
@@ -108,9 +114,8 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
 #'
 #'
 #' @export
-#' @import tidyjson
-#'
-#' @import data.table
+#' @importFrom tidyjson jstring jnumber jlogical
+#' @importFrom tidyjson bind_rows spread_values enter_object gather_array
 
 suso_transform_fullMeta <- function(input = NULL) {
     ##########################################
@@ -235,7 +240,7 @@ suso_transform_fullMeta <- function(input = NULL) {
                 Featured = jlogical("Featured")
             )
         ###########################################################
-    ) %>% select_if(col_selector)
+    ) %>% dplyr::select_if(col_selector)
     qfinal<-data.table(qfinal)
     qfinal<-qfinal[,document.id:=NULL][]
     return(qfinal)
