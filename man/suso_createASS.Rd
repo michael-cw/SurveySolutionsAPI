@@ -14,9 +14,13 @@ suso_createASS(df = UPLOADdataCHECK,
 
 \item{url}{Survey Solutions server address}
 
+\item{usr}{Survey Solutions API user}
+
 \item{pass}{Survey Solutions API password}
 
-\item{user}{Survey Solutions API user}
+\item{QUID}{the questionnaire id}
+
+\item{version}{the questionnaire version}
 }
 \description{
 ATTENTION: CURRENTLY ONLY TESTED WITHOUT PREFILLED DATA

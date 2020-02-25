@@ -16,20 +16,20 @@ Imports:
     stringdist, 
     stringr, 
     readr, 
-    lubridate
-Depends:
-    R (>= 3.3.0),
+    lubridate,
     httr,
     jsonlite,
-    data.table
-RoxygenNote: 6.1.1
-Suggests: 
-    knitr,
-    rmarkdown,
+    data.table,
     haven,
     readstata13,
     zip, future, 
     doFuture, 
     foreach, 
     progressr
+Depends:
+    R (>= 3.3.0)
+RoxygenNote: 6.1.1
+Suggests: 
+    knitr,
+    rmarkdown
 VignetteBuilder: knitr

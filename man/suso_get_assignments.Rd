@@ -8,11 +8,11 @@ suso_get_assignments(questID = NULL,
   server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
   apiPass = suso_get_api_key("susoPass"), AssId = NULL,
-  version = NULL, responsibleID = NULL,
-  order.by = c("Id,ResponsibleId,ResponsibleName,QuestionnaireId,InterviewsCount,\\n                                          Quantity,Archived,CreatedAtUtc,UpdatedAtUtc,\\n                                          IdentifyingQuestions,Email,Password,WebMode"))
+  version = NULL, responsibleID = NULL, order.by = "")
 }
 \arguments{
-\item{questID}{only assignments for \emph{QuestionnaireId} are returned, requires \code{version} being not NULL}
+\item{questID}{only assignments for \emph{QuestionnaireId} are returned,
+requires \code{version} being not NULL}
 
 \item{server}{Survey Solutions server address}
 

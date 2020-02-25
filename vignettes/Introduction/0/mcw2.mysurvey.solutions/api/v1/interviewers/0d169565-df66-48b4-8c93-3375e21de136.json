@@ -1,0 +1,14 @@
+{
+    "SupervisorName": "Team_2101",
+    "SupervisorId": "8f01a8a6-4f7c-49f1-a276-2af4ea7636bb",
+    "IsLockedBySupervisor": false,
+    "IsLockedByHeadquarters": false,
+    "IsArchived": false,
+    "UserId": "0d169565-df66-48b4-8c93-3375e21de136",
+    "UserName": "Int1_2101",
+    "Roles": [
+        "Interviewer"
+    ],
+    "IsLocked": false,
+    "CreationDate": "2019-07-26T03:16:47.83264"
+}

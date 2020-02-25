@@ -14,12 +14,12 @@
 #' @param questID \emph{QuestionnaireId} for which the paradata should be generated
 #' @param version questionnnaire version
 #' @param reloadTimeDiff time difference in hours between last generated file and now
-#' @param inShinyApp if True, file interacts with shiny progress bar
+#' @param inShinyServer if True, file interacts with shiny progress bar
 #' @param multiCore if not NULL, an integer number specifying the number of cores to use
 #' @param onlyActiveEvents if TRUE only active events are exported, decreases processing time and memory requirements
 #' @param allResponses if TRUE all responses will be extracted. Setting it to FALSE may decrease processing time and
 #' memory requirements
-#' @param provide GPS variable name. If not provided, identification is attempted by lookin for a variable containing gps in its name.
+#' @param gpsVarName provide GPS variable name. If not provided, identification is attempted by lookin for a variable containing gps in its name.
 #' @param verbose if TRUE, shows messages about the operation carried out. Can be useful for longrunning operations.
 #' @param showProgress also display the progress bars.
 #'

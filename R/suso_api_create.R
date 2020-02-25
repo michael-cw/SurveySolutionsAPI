@@ -5,8 +5,10 @@
 #'
 #' @param df dataframe with upload data
 #' @param url Survey Solutions server address
-#' @param user Survey Solutions API user
+#' @param usr Survey Solutions API user
 #' @param pass Survey Solutions API password
+#' @param QUID the questionnaire id
+#' @param version the questionnaire version
 #' @details df must be with the following columns: \emph{ResponsibleName, Quantity, [variables]}
 #' @export
 #'

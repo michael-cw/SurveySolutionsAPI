@@ -1,0 +1,1309 @@
+{
+    "Id": "08cf16c20618403f99873cfeb08c50c5",
+    "Revision": 0,
+    "Children": [
+        {
+            "$type": "Group",
+            "Children": [
+                {
+                    "$type": "StaticText",
+                    "Children": [
+
+                    ],
+                    "PublicKey": "0abca9cc-149a-3e47-08eb-3bcf5e9c41ea",
+                    "Text": "<blockquote><big><font color=\"#00BFFF\"><b>BAHAMAS CENSUS 2020<\/b><\/font><\/big><br><br><\/blockquote>",
+                    "AttachmentName": "Census2020",
+                    "ValidationConditions": [
+
+                    ],
+                    "HideIfDisabled": false
+                },
+                {
+                    "$type": "StaticText",
+                    "Children": [
+
+                    ],
+                    "PublicKey": "b5f114af-a7d9-e71c-f329-057319ebec30",
+                    "Text": "<font color=\"#00BFFF\">\nA population and housing census is the single most extensive, complicated and expensive statistical operation that will ever be undertaken by a statistical office.  It is a snapshot or portrait of a country’s population at a particular point in time.  This point in time is called Census Day, which is \n<\/font>\n<font color=\"red\">Monday, May 4, 2020.<\/font>\n<font color=\"#00BFFF\">\nThe census is the main source of nationwide statistics.\n<br><br>\nFor the First time in the history of The Bahamas, the 2020 Census will be conducted electronically.  Many Caribbean Countries are embracing this new initiative for the 2020 Round of Censuses. \n<br><br>\nYou have been appointed as a Census Enumerator for the 2020 Census of Population and Housing of the Commonwealth of The Bahamas.\n<br><br>\n<big>\n________________________________________<br>\nThis is a very big responsibility, which has been given to you, and of great importance to the whole Commonwealth. For this reason, you are requested to perform the tasks assigned to you with the utmost care.\n________________________________________\n<\/big>\n<\/font>",
+                    "AttachmentName": "",
+                    "ValidationConditions": [
+
+                    ],
+                    "HideIfDisabled": false
+                },
+                {
+                    "$type": "TextQuestion",
+                    "Mask": "",
+                    "Answers": [
+
+                    ],
+                    "Children": [
+
+                    ],
+                    "ConditionExpression": "",
+                    "HideIfDisabled": false,
+                    "Featured": true,
+                    "Properties": {
+                        "HideInstructions": false,
+                        "UseFormatting": false,
+                        "OptionsFilterExpression": ""
+                    },
+                    "PublicKey": "9c1df13b-ebd9-c948-c1f6-3d494baed6c7",
+                    "QuestionScope": 0,
+                    "QuestionText": "Island-Supervisory District-Enumeration District",
+                    "QuestionType": 7,
+                    "StataExportCaption": "Isl_SupEnum_Dist",
+                    "VariableLabel": "ISL-SUP-ENUM-DIST",
+                    "IsTimestamp": false,
+                    "ValidationConditions": [
+
+                    ],
+                    "VariableName": "Isl_SupEnum_Dist"
+                },
+                {
+                    "$type": "GpsCoordinateQuestion",
+                    "AnswerOrder": 2,
+                    "Answers": [
+
+                    ],
+                    "Children": [
+
+                    ],
+                    "ConditionExpression": "",
+                    "HideIfDisabled": true,
+                    "Featured": false,
+                    "Instructions": "Please store the GPS coordinates at the start of your census data collection in this Enumeration District.",
+                    "Properties": {
+                        "HideInstructions": true,
+                        "UseFormatting": false,
+                        "OptionsFilterExpression": ""
+                    },
+                    "PublicKey": "a28e8db7-6c8d-41ac-b21f-5fd14263c202",
+                    "QuestionScope": 0,
+                    "QuestionText": "I01. <big>GPS<\/big> of the <big>START<\/big> of the Enumeration District",
+                    "QuestionType": 6,
+                    "StataExportCaption": "gps_start",
+                    "VariableLabel": "gps_start",
+                    "IsTimestamp": false,
+                    "ValidationConditions": [
+
+                    ],
+                    "VariableName": "gps_start"
+                },
+                {
+                    "$type": "DateTimeQuestion",
+                    "Answers": [
+
+                    ],
+                    "Children": [
+
+                    ],
+                    "ConditionExpression": "",
+                    "HideIfDisabled": true,
+                    "Featured": false,
+                    "Instructions": "Please store the Date and Time at the start of your census data collection in this Enumeration District.",
+                    "Properties": {
+                        "HideInstructions": true,
+                        "UseFormatting": false,
+                        "OptionsFilterExpression": ""
+                    },
+                    "PublicKey": "72546856-f6eb-4808-99c9-e5c3b8be7f52",
+                    "QuestionScope": 0,
+                    "QuestionText": "I02. <big>DATE and TIME<\/big> at the <big>START<\/big> of Census data collection.",
+                    "QuestionType": 5,
+                    "StataExportCaption": "date_start",
+                    "VariableLabel": "Start time",
+                    "IsTimestamp": true,
+                    "ValidationConditions": [
+
+                    ],
+                    "VariableName": "date_start"
+                }
+            ],
+            "ConditionExpression": "",
+            "HideIfDisabled": false,
+            "IsFlatMode": false,
+            "IsPlainMode": false,
+            "DisplayMode": 0,
+            "Enabled": true,
+            "Description": "",
+            "VariableName": "HEF_id",
+            "IsRoster": false,
+            "RosterSizeSource": 0,
+            "FixedRosterTitles": [
+
+            ],
+            "PublicKey": "3b39162a-5715-3670-8bd4-db04c0cb935d",
+            "Title": "Household Enumeration Form - Information & Identification"
+        },
+        {
+            "$type": "Group",
+            "Children": [
+                {
+                    "$type": "StaticText",
+                    "Children": [
+
+                    ],
+                    "PublicKey": "24f13440-ef97-6655-ff03-7a90831fa07e",
+                    "Text": "<font color=\"#CC0066\"><big>\n________________________________________<br>\nIsland-Supervisory District Summary:<\/big>\n<br>\n<br>\nEnumeration District: <\/font><br><i>%Isl_SupEnum_Dist%<\/i>\n<br><br><font color=\"#CC0066\">\nCensus Reference Date: <\/font><br>Monday, May 4, 2020\n<br><br><font color=\"#CC0066\">\nEnumeration Start Date & Time:<\/font> <br>%date_start%\n<br><br><font color=\"#CC0066\">\n________________________________________<br>\n<\/font>",
+                    "ValidationConditions": [
+
+                    ],
+                    "ConditionExpression": "",
+                    "HideIfDisabled": true
+                },
+                {
+                    "$type": "AreaQuestion",
+                    "AnswerOrder": 2,
+                    "Answers": [
+
+                    ],
+                    "Children": [
+
+                    ],
+                    "HideIfDisabled": false,
+                    "Featured": false,
+                    "Instructions": "PLEASE MARKE ALL THE BUILDINGS IN THE SAME SEQUENCE AS YOU ARE PLANNING TO ENUMERATE THEM. THIS IS IMPORTANT, AS IT HELPS YOU TO IDENTIFY THE HOUSEHOLD LATER ON FOR THE DATA COLLECTION. \nYOU CAN DO THIS EITHER AT THE BEGINNING, OR UPON ARRIVAL AT EACH BUILDING.\nTHE NUMBER OF POINTS PROVIDED, MUST CORRESPOND TO THE NUMBER OF BUILDINGS ENUMERATED.\n\nTO ASSIST YOU FURTHER IN THE IDENTIFICATION, YOU ARE STILL REQUIRED TO COLLECT A SEPARATE GPS POSITION IN FRONT OF EACH BUILDING.",
+                    "Properties": {
+                        "HideInstructions": false,
+                        "UseFormatting": false,
+                        "OptionsFilterExpression": "",
+                        "GeometryType": 3
+                    },
+                    "PublicKey": "2a2e758d-6ffb-269a-d713-0727cef6a26c",
+                    "QuestionScope": 0,
+                    "QuestionText": "Please mark all the buildings in your Enumeration District!",
+                    "QuestionType": 12,
+                    "StataExportCaption": "mainMap",
+                    "VariableLabel": "Map with locations",
+                    "IsTimestamp": false,
+                    "ValidationConditions": [
+                        {
+                            "Expression": "self.PointsCount<=60",
+                            "Message": "Only 60 buildings can be marked in a single roster. Please start another one!",
+                            "Severity": 0
+                        }
+                    ],
+                    "VariableName": "mainMap"
+                },
+                {
+                    "$type": "Variable",
+                    "Label": "counts points in map for further use",
+                    "PublicKey": "6ff93c5e-b3a2-0c5c-0ac9-3656aeaa544e",
+                    "Type": 1,
+                    "Name": "mainMapCount",
+                    "Expression": "mainMap.PointsCount",
+                    "Children": [
+
+                    ],
+                    "VariableName": "mainMapCount"
+                },
+                {
+                    "$type": "TextListQuestion",
+                    "MaxAnswerCount": 60,
+                    "AnswerOrder": 2,
+                    "Answers": [
+
+                    ],
+                    "Children": [
+
+                    ],
+                    "ConditionExpression": "",
+                    "HideIfDisabled": false,
+                    "Featured": false,
+                    "Instructions": "The BUILDING NUMBER must be the same as used in the map. Point 1 = Building 1, Point 2 = Building 2. You must specify exactly as many building numbers as you have points on your map. Currently you have marked %mainMapCount%",
+                    "Properties": {
+                        "HideInstructions": false,
+                        "UseFormatting": false,
+                        "OptionsFilterExpression": ""
+                    },
+                    "PublicKey": "16141bf7-7953-4094-83f0-4a23b0c4af23",
+                    "QuestionScope": 0,
+                    "QuestionText": "Please give the BUILDING number",
+                    "QuestionType": 9,
+                    "StataExportCaption": "id_str",
+                    "VariableLabel": "Serial  number of building",
+                    "IsTimestamp": false,
+                    "ValidationConditions": [
+                        {
+                            "Expression": "$checkNum",
+                            "Message": "Please enter the correct serial number, the serial number should be:\n%test1%",
+                            "Severity": 0
+                        },
+                        {
+                            "Expression": "self.Count()==1 ?\nself.Select(x => decimal.Parse(x.Item2)).ToArray()[0]==1 :\ntrue",
+                            "Message": "Start with Serial Number 1!",
+                            "Severity": 0
+                        },
+                        {
+                            "Expression": "self.Count()<=mainMapCount",
+                            "Message": "You must only create as many data entry rows as you have building in your map. Please check!",
+                            "Severity": 0
+                        }
+                    ],
+                    "VariableName": "id_str"
+                },
+                {
+                    "$type": "Variable",
+                    "Label": "Current serial number",
+                    "PublicKey": "8bdb456f-a525-520d-b565-e09f26975649",
+                    "Type": 1,
+                    "Name": "test1",
+                    "Expression": "id_str.Count()",
+                    "Children": [
+
+                    ],
+                    "VariableName": "test1"
+                },
+                {
+                    "$type": "StaticText",
+                    "Children": [
+
+                    ],
+                    "PublicKey": "ef566e95-bbe9-4489-aec8-523a10fafcaf",
+                    "Text": "You have to create a total of <font color=\"red\">%mainMapCount%<\/font> building data forms! <br>\nPlease START the enumeration of BUILDINGS with Serial Number:\n<br>\n<br>\n<big><font color=\"blue\"> 1 <\/font><\/big>",
+                    "ValidationConditions": [
+
+                    ],
+                    "ConditionExpression": "!IsAnswered(id_str)",
+                    "HideIfDisabled": true
+                },
+                {
+                    "$type": "Variable",
+                    "Label": "Next serial number",
+                    "PublicKey": "6ce118ad-6222-4773-8354-4dd16946aca1",
+                    "Type": 1,
+                    "Name": "test2",
+                    "Expression": "id_str.Count()+1",
+                    "Children": [
+
+                    ],
+                    "VariableName": "test2"
+                },
+                {
+                    "$type": "StaticText",
+                    "Children": [
+
+                    ],
+                    "PublicKey": "398924bc-e70e-47ae-9cc8-d0fa3c076195",
+                    "Text": "The next BUILDING number is: <br>\n<br>\n<br>\n<big><font color=\"red\"> %test2% <\/font><\/big>",
+                    "ValidationConditions": [
+
+                    ],
+                    "ConditionExpression": "id_str.Count()>0 && id_str.Count()<mainMapCount",
+                    "HideIfDisabled": true
+                },
+                {
+                    "$type": "StaticText",
+                    "Children": [
+
+                    ],
+                    "PublicKey": "5ab2c5e9-a7f4-451b-9507-15b142dd5764",
+                    "Text": "<font color=\"#CC0066\">You have created data entry rows for each building in your map, if you require more, you need to mark the buildings on the map.<\/font>",
+                    "ValidationConditions": [
+
+                    ],
+                    "ConditionExpression": "id_str.Count()==mainMapCount",
+                    "HideIfDisabled": true
+                },
+                {
+                    "$type": "Group",
+                    "Children": [
+                        {
+                            "$type": "GpsCoordinateQuestion",
+                            "AnswerOrder": 2,
+                            "Answers": [
+
+                            ],
+                            "Children": [
+
+                            ],
+                            "HideIfDisabled": false,
+                            "Featured": false,
+                            "Instructions": "Please be in front of the building to record the GPS signal",
+                            "Properties": {
+                                "HideInstructions": false,
+                                "UseFormatting": false,
+                                "OptionsFilterExpression": ""
+                            },
+                            "PublicKey": "27164c96-3beb-45a1-aa72-82e7f738bf9e",
+                            "QuestionScope": 0,
+                            "QuestionText": "B1. GPS of <font color=\"blue\">BUILDING NR. %str_list%<\/font>",
+                            "QuestionType": 6,
+                            "StataExportCaption": "gps_struc",
+                            "VariableLabel": "gps_structure",
+                            "IsTimestamp": false,
+                            "ValidationConditions": [
+
+                            ],
+                            "VariableName": "gps_struc"
+                        },
+                        {
+                            "$type": "TextQuestion",
+                            "Answers": [
+
+                            ],
+                            "Children": [
+
+                            ],
+                            "HideIfDisabled": false,
+                            "Featured": false,
+                            "Properties": {
+                                "HideInstructions": false,
+                                "UseFormatting": false,
+                                "OptionsFilterExpression": ""
+                            },
+                            "PublicKey": "3db0373c-324f-a413-de79-55d9fc7d5d5e",
+                            "QuestionScope": 0,
+                            "QuestionText": "B2. Address of <font color=\"blue\">BUILDING NR. %str_list%<\/font>",
+                            "QuestionType": 7,
+                            "StataExportCaption": "address",
+                            "VariableLabel": "Address of the BUILDING",
+                            "IsTimestamp": false,
+                            "ValidationConditions": [
+
+                            ],
+                            "VariableName": "address"
+                        },
+                        {
+                            "$type": "TextListQuestion",
+                            "MaxAnswerCount": 60,
+                            "AnswerOrder": 2,
+                            "Answers": [
+
+                            ],
+                            "Children": [
+
+                            ],
+                            "ConditionExpression": "",
+                            "HideIfDisabled": false,
+                            "Featured": false,
+                            "Instructions": "",
+                            "Properties": {
+                                "HideInstructions": false,
+                                "UseFormatting": false,
+                                "OptionsFilterExpression": ""
+                            },
+                            "PublicKey": "7753608c-d771-42af-822e-7132e6a5bd61",
+                            "QuestionScope": 0,
+                            "QuestionText": "Serial Number of the DWELLING inside <font color=\"blue\">BUILDING NR. %str_list%<\/font>",
+                            "QuestionType": 9,
+                            "StataExportCaption": "id_dwe",
+                            "VariableLabel": "Serial Number of DWELLING in the structure",
+                            "IsTimestamp": false,
+                            "ValidationConditions": [
+                                {
+                                    "Expression": "$checkNum",
+                                    "Message": "Please enter the correct serial number, the NEXT serial number is:\n%test3_1%",
+                                    "Severity": 0
+                                },
+                                {
+                                    "Expression": "self.Count()==1 ?\nself.Select(x => decimal.Parse(x.Item2)).ToArray()[0]==1 :\ntrue",
+                                    "Message": "Start with Serial Number 1!",
+                                    "Severity": 0
+                                }
+                            ],
+                            "VariableName": "id_dwe"
+                        },
+                        {
+                            "$type": "StaticText",
+                            "Children": [
+
+                            ],
+                            "PublicKey": "59f70e80-9532-4275-8c2f-2017c1a91ab7",
+                            "Text": "Please START the listing of DWELLINGS with Serial Number:\n<br>\n<br>\n<big><font color=\"green\"> 1 <\/font><\/big>",
+                            "ValidationConditions": [
+
+                            ],
+                            "ConditionExpression": "!IsAnswered(id_dwe)",
+                            "HideIfDisabled": true
+                        },
+                        {
+                            "$type": "StaticText",
+                            "Children": [
+
+                            ],
+                            "PublicKey": "c3a39340-466c-447d-812a-3331498981e4",
+                            "Text": "The next DWELLING serial number is: <br>\n<br>\n<br>\n<big><font color=\"green\"> %test3% <\/font><\/big>",
+                            "ValidationConditions": [
+
+                            ],
+                            "ConditionExpression": "id_dwe.Count()>0",
+                            "HideIfDisabled": true
+                        },
+                        {
+                            "$type": "Variable",
+                            "Label": "Current dwelling serial number",
+                            "PublicKey": "367f433d-8e09-8e94-fa89-6efeb5aeb612",
+                            "Type": 1,
+                            "Name": "test3_1",
+                            "Expression": "id_dwe.Count()",
+                            "Children": [
+
+                            ],
+                            "VariableName": "test3_1"
+                        },
+                        {
+                            "$type": "Variable",
+                            "Label": "Next dwelling serial number",
+                            "PublicKey": "5b85e17a-4970-4864-b5ff-2031d09456d2",
+                            "Type": 1,
+                            "Name": "test3",
+                            "Expression": "id_dwe.Count()+1",
+                            "Children": [
+
+                            ],
+                            "VariableName": "test3"
+                        },
+                        {
+                            "$type": "Group",
+                            "Children": [
+                                {
+                                    "$type": "TextQuestion",
+                                    "Answers": [
+
+                                    ],
+                                    "Children": [
+
+                                    ],
+                                    "HideIfDisabled": false,
+                                    "Featured": false,
+                                    "Properties": {
+                                        "HideInstructions": false,
+                                        "UseFormatting": false,
+                                        "OptionsFilterExpression": ""
+                                    },
+                                    "PublicKey": "a0e8659f-3059-66e6-3f54-f7b1736b4632",
+                                    "QuestionScope": 0,
+                                    "QuestionText": "Please provide brief description of <font color=\"green\">DWELLING NR. %dwe_list%<\/font>. (Apt.No., colour, other physical attributes fencing/gates, two-story,duplex.tri-plex etc)",
+                                    "QuestionType": 7,
+                                    "StataExportCaption": "Desc_Dwelling",
+                                    "VariableLabel": "Description of dwelling",
+                                    "IsTimestamp": false,
+                                    "ValidationConditions": [
+
+                                    ],
+                                    "VariableName": "Desc_Dwelling"
+                                },
+                                {
+                                    "$type": "TextQuestion",
+                                    "Answers": [
+
+                                    ],
+                                    "Children": [
+
+                                    ],
+                                    "HideIfDisabled": false,
+                                    "Featured": false,
+                                    "Properties": {
+                                        "HideInstructions": false,
+                                        "UseFormatting": false,
+                                        "OptionsFilterExpression": ""
+                                    },
+                                    "PublicKey": "8c84a470-f87d-bf7d-756b-9d37e5f49f77",
+                                    "QuestionScope": 0,
+                                    "QuestionText": "Please state building name and floor number for <font color=\"green\">DWELLING NR. %dwe_list%<\/font>: (For highrise buildings only e.g Bayroc, Lucayan Towers)",
+                                    "QuestionType": 7,
+                                    "StataExportCaption": "Bldg_Name",
+                                    "VariableLabel": "Building Name",
+                                    "IsTimestamp": false,
+                                    "ValidationConditions": [
+
+                                    ],
+                                    "VariableName": "Bldg_Name"
+                                },
+                                {
+                                    "$type": "SingleQuestion",
+                                    "ShowAsList": false,
+                                    "Answers": [
+                                        {
+                                            "AnswerText": "Private dwelling",
+                                            "AnswerValue": "0"
+                                        },
+                                        {
+                                            "AnswerText": "Institution",
+                                            "AnswerValue": "1"
+                                        },
+                                        {
+                                            "AnswerText": "Vacant dwelling",
+                                            "AnswerValue": "2"
+                                        },
+                                        {
+                                            "AnswerText": "Abandoned/Dilapidated",
+                                            "AnswerValue": "3"
+                                        }
+                                    ],
+                                    "Children": [
+
+                                    ],
+                                    "HideIfDisabled": false,
+                                    "Featured": false,
+                                    "Instructions": "NOTE TO ENUMERATOR: Generally speaking, the answer to this question should be obtained from your observation. However in case of doubt, please inquire.",
+                                    "Properties": {
+                                        "HideInstructions": false,
+                                        "UseFormatting": false,
+                                        "OptionsFilterExpression": ""
+                                    },
+                                    "PublicKey": "038e98bc-1b23-076b-23de-52b8114cb69f",
+                                    "QuestionScope": 0,
+                                    "QuestionText": "HL1a. Is <font color=\"green\">DWELLING NR. %dwe_list%<\/font> a private dwelling, an institution, or a vacant dwelling?",
+                                    "QuestionType": 0,
+                                    "StataExportCaption": "HL1a_PrivDwel_Inst",
+                                    "VariableLabel": "Private or institution",
+                                    "IsFilteredCombobox": false,
+                                    "IsTimestamp": false,
+                                    "ValidationConditions": [
+
+                                    ],
+                                    "VariableName": "HL1a_PrivDwel_Inst"
+                                },
+                                {
+                                    "$type": "SingleQuestion",
+                                    "ShowAsList": false,
+                                    "Answers": [
+                                        {
+                                            "AnswerText": "Yes",
+                                            "AnswerValue": "1"
+                                        },
+                                        {
+                                            "AnswerText": "No",
+                                            "AnswerValue": "2"
+                                        }
+                                    ],
+                                    "Children": [
+
+                                    ],
+                                    "ConditionExpression": "HL1a_PrivDwel_Inst==000",
+                                    "HideIfDisabled": true,
+                                    "Featured": false,
+                                    "Properties": {
+                                        "HideInstructions": false,
+                                        "UseFormatting": false,
+                                        "OptionsFilterExpression": ""
+                                    },
+                                    "PublicKey": "d96bd046-c7be-a174-f52d-ca5dd0b2c74e",
+                                    "QuestionScope": 0,
+                                    "QuestionText": "HL1b. Is this private <font color=\"green\">DWELLING NR. %dwe_list%<\/font> located on the property of an institution?",
+                                    "QuestionType": 0,
+                                    "StataExportCaption": "HL1b_InstOn_Prop",
+                                    "VariableLabel": "On property",
+                                    "IsFilteredCombobox": false,
+                                    "IsTimestamp": false,
+                                    "ValidationConditions": [
+
+                                    ],
+                                    "VariableName": "HL1b_InstOn_Prop"
+                                },
+                                {
+                                    "$type": "TextQuestion",
+                                    "Answers": [
+
+                                    ],
+                                    "Children": [
+
+                                    ],
+                                    "ConditionExpression": "HL1b_InstOn_Prop==1",
+                                    "HideIfDisabled": true,
+                                    "Featured": false,
+                                    "Properties": {
+                                        "HideInstructions": false,
+                                        "UseFormatting": false,
+                                        "OptionsFilterExpression": ""
+                                    },
+                                    "PublicKey": "2458d797-f5a6-d4c7-52dd-020bbc88bf88",
+                                    "QuestionScope": 0,
+                                    "QuestionText": "HL1c. Give the name of this institution <font color=\"green\">DWELLING NR. %dwe_list%<\/font> is located on.",
+                                    "QuestionType": 7,
+                                    "StataExportCaption": "HL1c_Dwel_Name",
+                                    "VariableLabel": "Dwelling name",
+                                    "IsTimestamp": false,
+                                    "ValidationConditions": [
+
+                                    ],
+                                    "VariableName": "HL1c_Dwel_Name"
+                                },
+                                {
+                                    "$type": "SingleQuestion",
+                                    "ShowAsList": false,
+                                    "Answers": [
+                                        {
+                                            "AnswerText": "Single Detached",
+                                            "AnswerValue": "1"
+                                        },
+                                        {
+                                            "AnswerText": "Single Attached (Dwelling Units Only)",
+                                            "AnswerValue": "2"
+                                        },
+                                        {
+                                            "AnswerText": "Part of A Private Dwelling",
+                                            "AnswerValue": "3"
+                                        },
+                                        {
+                                            "AnswerText": "Apartment/Flat (Dwelling units only)",
+                                            "AnswerValue": "4"
+                                        },
+                                        {
+                                            "AnswerText": "Dwelling attached to business",
+                                            "AnswerValue": "5"
+                                        },
+                                        {
+                                            "AnswerText": "Other (specify)",
+                                            "AnswerValue": "6"
+                                        }
+                                    ],
+                                    "Children": [
+
+                                    ],
+                                    "ConditionExpression": "HL1a_PrivDwel_Inst.InList(0,2)",
+                                    "HideIfDisabled": true,
+                                    "Featured": false,
+                                    "Properties": {
+                                        "HideInstructions": false,
+                                        "UseFormatting": false,
+                                        "OptionsFilterExpression": ""
+                                    },
+                                    "PublicKey": "42ac223f-d5f9-6ff6-a2c2-af4ab55aa446",
+                                    "QuestionScope": 0,
+                                    "QuestionText": "H1. What type is <font color=\"green\">DWELLING NR. %dwe_list%<\/font>?",
+                                    "QuestionType": 0,
+                                    "StataExportCaption": "H1_Typ_Dwell",
+                                    "VariableLabel": "Type Dwelling",
+                                    "IsFilteredCombobox": false,
+                                    "IsTimestamp": false,
+                                    "ValidationConditions": [
+
+                                    ],
+                                    "VariableName": "H1_Typ_Dwell"
+                                },
+                                {
+                                    "$type": "TextQuestion",
+                                    "Answers": [
+
+                                    ],
+                                    "Children": [
+
+                                    ],
+                                    "ConditionExpression": "HL1a_PrivDwel_Inst==1",
+                                    "HideIfDisabled": true,
+                                    "Featured": false,
+                                    "Properties": {
+                                        "HideInstructions": false,
+                                        "UseFormatting": false,
+                                        "OptionsFilterExpression": ""
+                                    },
+                                    "PublicKey": "eb84fde3-e67f-5511-3d90-7de54766af8c",
+                                    "QuestionScope": 0,
+                                    "QuestionText": "HL1a1. Give the name of this institution.",
+                                    "QuestionType": 7,
+                                    "StataExportCaption": "HL1a1_Inst_Name",
+                                    "VariableLabel": "Name of institution",
+                                    "IsTimestamp": false,
+                                    "ValidationConditions": [
+
+                                    ],
+                                    "VariableName": "HL1a1_Inst_Name"
+                                },
+                                {
+                                    "$type": "SingleQuestion",
+                                    "ShowAsList": false,
+                                    "Answers": [
+                                        {
+                                            "AnswerText": "Hospital",
+                                            "AnswerValue": "2"
+                                        },
+                                        {
+                                            "AnswerText": "Children's Home/Orphanage",
+                                            "AnswerValue": "3"
+                                        },
+                                        {
+                                            "AnswerText": "Old People's Home",
+                                            "AnswerValue": "4"
+                                        },
+                                        {
+                                            "AnswerText": "Bahamas Department of Correctional Services",
+                                            "AnswerValue": "5"
+                                        },
+                                        {
+                                            "AnswerText": "Military",
+                                            "AnswerValue": "6"
+                                        },
+                                        {
+                                            "AnswerText": "Halfway Home",
+                                            "AnswerValue": "7"
+                                        },
+                                        {
+                                            "AnswerText": "Religious Institution",
+                                            "AnswerValue": "8"
+                                        },
+                                        {
+                                            "AnswerText": "Other Institutions",
+                                            "AnswerValue": "11"
+                                        },
+                                        {
+                                            "AnswerText": "Homeless Shelter",
+                                            "AnswerValue": "12"
+                                        },
+                                        {
+                                            "AnswerText": "Penal Institutions (Williemae Pratt Centre for Girls)",
+                                            "AnswerValue": "15"
+                                        },
+                                        {
+                                            "AnswerText": "Refusal",
+                                            "AnswerValue": "999"
+                                        }
+                                    ],
+                                    "Children": [
+
+                                    ],
+                                    "ConditionExpression": "HL1a_PrivDwel_Inst==1",
+                                    "HideIfDisabled": true,
+                                    "Featured": false,
+                                    "Properties": {
+                                        "HideInstructions": false,
+                                        "UseFormatting": false,
+                                        "OptionsFilterExpression": ""
+                                    },
+                                    "PublicKey": "4116e001-ba0d-6ed7-1878-ccc689079874",
+                                    "QuestionScope": 0,
+                                    "QuestionText": "HL1a2. Which type of institution is this?",
+                                    "QuestionType": 0,
+                                    "StataExportCaption": "HL1a2_Type_Instit",
+                                    "IsFilteredCombobox": false,
+                                    "IsTimestamp": false,
+                                    "ValidationConditions": [
+
+                                    ],
+                                    "VariableName": "HL1a2_Type_Instit"
+                                },
+                                {
+                                    "$type": "SingleQuestion",
+                                    "ShowAsList": false,
+                                    "Answers": [
+                                        {
+                                            "AnswerText": "Winter residences",
+                                            "AnswerValue": "1"
+                                        },
+                                        {
+                                            "AnswerText": "Secondary Residence (domestic)",
+                                            "AnswerValue": "2"
+                                        },
+                                        {
+                                            "AnswerText": "For rent",
+                                            "AnswerValue": "3"
+                                        },
+                                        {
+                                            "AnswerText": "For sale",
+                                            "AnswerValue": "4"
+                                        },
+                                        {
+                                            "AnswerText": "Other (specify)",
+                                            "AnswerValue": "5"
+                                        }
+                                    ],
+                                    "Children": [
+
+                                    ],
+                                    "ConditionExpression": "HL1a_PrivDwel_Inst==2",
+                                    "HideIfDisabled": true,
+                                    "Featured": false,
+                                    "Properties": {
+                                        "HideInstructions": false,
+                                        "UseFormatting": false,
+                                        "OptionsFilterExpression": ""
+                                    },
+                                    "PublicKey": "f8922061-4b57-a236-cf67-60e4adafdf73",
+                                    "QuestionScope": 0,
+                                    "QuestionText": "V1. Indicate the status of this vacant <font color=\"green\">DWELLING NR. %dwe_list%<\/font>.",
+                                    "QuestionType": 0,
+                                    "StataExportCaption": "V1_Vac_Dwel",
+                                    "VariableLabel": "vacant dwelling",
+                                    "IsFilteredCombobox": false,
+                                    "IsTimestamp": false,
+                                    "ValidationConditions": [
+
+                                    ],
+                                    "VariableName": "V1_Vac_Dwel"
+                                },
+                                {
+                                    "$type": "TextQuestion",
+                                    "Answers": [
+
+                                    ],
+                                    "Children": [
+
+                                    ],
+                                    "ConditionExpression": "V1_Vac_Dwel==5",
+                                    "HideIfDisabled": true,
+                                    "Featured": false,
+                                    "Properties": {
+                                        "HideInstructions": false,
+                                        "UseFormatting": false,
+                                        "OptionsFilterExpression": ""
+                                    },
+                                    "PublicKey": "74abf42b-6ab9-0024-05ef-4b06500438df",
+                                    "QuestionScope": 0,
+                                    "QuestionText": "V1s. Please specify vacant dwelling status.",
+                                    "QuestionType": 7,
+                                    "StataExportCaption": "V1s_Spec_Stat",
+                                    "VariableLabel": "Specify dwellin status",
+                                    "IsTimestamp": false,
+                                    "ValidationConditions": [
+
+                                    ],
+                                    "VariableName": "V1s_Spec_Stat"
+                                },
+                                {
+                                    "$type": "TextQuestion",
+                                    "Answers": [
+
+                                    ],
+                                    "Children": [
+
+                                    ],
+                                    "ConditionExpression": "H1_Typ_Dwell==6",
+                                    "HideIfDisabled": true,
+                                    "Featured": false,
+                                    "Properties": {
+                                        "HideInstructions": false,
+                                        "UseFormatting": false,
+                                        "OptionsFilterExpression": ""
+                                    },
+                                    "PublicKey": "3f6b09ac-4aa8-9f13-935b-5bffce085946",
+                                    "QuestionScope": 0,
+                                    "QuestionText": "H1s. Please specify \"other\" type of <font color=\"green\">DWELLING NR. %dwe_list%<\/font>.",
+                                    "QuestionType": 7,
+                                    "StataExportCaption": "H1s_Type_Dwell_Specify",
+                                    "VariableLabel": "Specify  type of dwelling",
+                                    "IsTimestamp": false,
+                                    "ValidationConditions": [
+
+                                    ],
+                                    "VariableName": "H1s_Type_Dwell_Specify"
+                                }
+                            ],
+                            "ConditionExpression": "",
+                            "HideIfDisabled": true,
+                            "IsFlatMode": false,
+                            "IsPlainMode": false,
+                            "DisplayMode": 0,
+                            "Enabled": true,
+                            "Description": "",
+                            "VariableName": "dwe_list",
+                            "IsRoster": true,
+                            "RosterSizeQuestionId": "7753608c-d771-42af-822e-7132e6a5bd61",
+                            "RosterSizeSource": 0,
+                            "FixedRosterTitles": [
+
+                            ],
+                            "PublicKey": "276b7f53-bf45-4f9d-872b-d3e5763b3e20",
+                            "Title": "List of Dwellings"
+                        }
+                    ],
+                    "ConditionExpression": "",
+                    "HideIfDisabled": false,
+                    "IsFlatMode": false,
+                    "IsPlainMode": false,
+                    "DisplayMode": 0,
+                    "Enabled": true,
+                    "Description": "",
+                    "VariableName": "str_list",
+                    "IsRoster": true,
+                    "RosterSizeQuestionId": "16141bf7-7953-4094-83f0-4a23b0c4af23",
+                    "RosterSizeSource": 0,
+                    "FixedRosterTitles": [
+
+                    ],
+                    "PublicKey": "811301b4-951d-4301-bceb-058f009d58f2",
+                    "Title": "List of buildings"
+                }
+            ],
+            "ConditionExpression": "",
+            "HideIfDisabled": false,
+            "IsFlatMode": false,
+            "IsPlainMode": false,
+            "DisplayMode": 0,
+            "Enabled": true,
+            "Description": "",
+            "VariableName": "HEF_reg",
+            "IsRoster": false,
+            "RosterSizeSource": 0,
+            "FixedRosterTitles": [
+
+            ],
+            "PublicKey": "eae43710-e068-6512-a8ee-fefe502ad483",
+            "Title": "Household Enumeration Form - Registration of Buildings, Dwellings & Households"
+        },
+        {
+            "$type": "Group",
+            "Children": [
+                {
+                    "$type": "DateTimeQuestion",
+                    "Answers": [
+
+                    ],
+                    "Children": [
+
+                    ],
+                    "ConditionExpression": "IsAnswered(id_str)",
+                    "HideIfDisabled": true,
+                    "Featured": false,
+                    "Properties": {
+                        "HideInstructions": false,
+                        "UseFormatting": false,
+                        "OptionsFilterExpression": ""
+                    },
+                    "PublicKey": "d755aa6a-dae2-4cae-a236-6c916fa6beb6",
+                    "QuestionScope": 0,
+                    "QuestionText": "Q14. <big>DATE AND TIME<\/big> OF THE <big>END<\/big> OF THE ENUMERATION",
+                    "QuestionType": 5,
+                    "StataExportCaption": "date_end",
+                    "VariableLabel": "End time of the enumeration",
+                    "IsTimestamp": true,
+                    "ValidationConditions": [
+
+                    ],
+                    "VariableName": "date_end"
+                },
+                {
+                    "$type": "GpsCoordinateQuestion",
+                    "AnswerOrder": 2,
+                    "Answers": [
+
+                    ],
+                    "Children": [
+
+                    ],
+                    "ConditionExpression": "IsAnswered(id_str)",
+                    "HideIfDisabled": true,
+                    "Featured": false,
+                    "Properties": {
+                        "HideInstructions": false,
+                        "UseFormatting": false,
+                        "OptionsFilterExpression": ""
+                    },
+                    "PublicKey": "2901b3f6-4eb8-4de9-82dc-fe2e4ceaea10",
+                    "QuestionScope": 0,
+                    "QuestionText": "Q13. <big>GPS<\/big> AT THE <big>END<\/big> OF THE ENUMERATION",
+                    "QuestionType": 6,
+                    "StataExportCaption": "gps_end",
+                    "VariableLabel": "GPS end",
+                    "IsTimestamp": false,
+                    "ValidationConditions": [
+
+                    ],
+                    "VariableName": "gps_end"
+                }
+            ],
+            "ConditionExpression": "IsAnswered(id_str)",
+            "HideIfDisabled": true,
+            "IsFlatMode": false,
+            "IsPlainMode": false,
+            "DisplayMode": 0,
+            "Enabled": true,
+            "Description": "",
+            "VariableName": "HEF_result",
+            "IsRoster": false,
+            "RosterSizeSource": 0,
+            "FixedRosterTitles": [
+
+            ],
+            "PublicKey": "1f949736-beb1-dd10-6451-561b7799c99c",
+            "Title": "Household Enumeration Form - Results & Conclusion"
+        }
+    ],
+    "Macros": {
+        "7d1b6fbb-0556-1e2d-cfcf-7183bac84dc7": {
+            "Name": "checkNum",
+            "Description": "Checks that the serial number entered is correct",
+            "Content": "self.Sum(x => int.Parse(x.Item2)) * 2  ==\n int.Parse(self.Last()?.Item2) * (int.Parse(self.Last()?.Item2) + 1)"
+        }
+    },
+    "LookupTables": {
+
+    },
+    "Attachments": [
+        {
+            "AttachmentId": "71b2a191-6f17-0d57-3f02-f5e5d722651c",
+            "Name": "Census2020",
+            "ContentId": "D76849DF456037191D5CA1920C6D7C5A5DA31BD4"
+        }
+    ],
+    "Translations": [
+
+    ],
+    "Categories": [
+
+    ],
+    "ConditionExpression": "",
+    "HideIfDisabled": true,
+    "CreationDate": "2019-07-05T18:15:16.6524486Z",
+    "LastEntryDate": "2019-07-30T18:45:53.6690133Z",
+    "IsDeleted": false,
+    "CreatedBy": "2fd91dbe-9567-44b8-8ce7-79734f58721f",
+    "IsPublic": false,
+    "PublicKey": "420791eb-bd1e-4786-8ce4-e27b098c34f8",
+    "Title": "BahamasCensus2020 - Mini Pilot",
+    "VariableName": "BAH_MiniPilot",
+    "IsRoster": false,
+    "DisplayMode": 0,
+    "RosterSizeSource": 0,
+    "FixedRosterTitles": [
+
+    ],
+    "LastEventSequence": 81,
+    "IsUsingExpressionStorage": true,
+    "ExpressionsPlayOrder": [
+        "eae43710-e068-6512-a8ee-fefe502ad483",
+        "16141bf7-7953-4094-83f0-4a23b0c4af23",
+        "811301b4-951d-4301-bceb-058f009d58f2",
+        "7753608c-d771-42af-822e-7132e6a5bd61",
+        "276b7f53-bf45-4f9d-872b-d3e5763b3e20",
+        "038e98bc-1b23-076b-23de-52b8114cb69f",
+        "f8922061-4b57-a236-cf67-60e4adafdf73",
+        "74abf42b-6ab9-0024-05ef-4b06500438df",
+        "4116e001-ba0d-6ed7-1878-ccc689079874",
+        "eb84fde3-e67f-5511-3d90-7de54766af8c",
+        "42ac223f-d5f9-6ff6-a2c2-af4ab55aa446",
+        "3f6b09ac-4aa8-9f13-935b-5bffce085946",
+        "d96bd046-c7be-a174-f52d-ca5dd0b2c74e",
+        "2458d797-f5a6-d4c7-52dd-020bbc88bf88",
+        "8c84a470-f87d-bf7d-756b-9d37e5f49f77",
+        "a0e8659f-3059-66e6-3f54-f7b1736b4632",
+        "5b85e17a-4970-4864-b5ff-2031d09456d2",
+        "367f433d-8e09-8e94-fa89-6efeb5aeb612",
+        "c3a39340-466c-447d-812a-3331498981e4",
+        "59f70e80-9532-4275-8c2f-2017c1a91ab7",
+        "3db0373c-324f-a413-de79-55d9fc7d5d5e",
+        "27164c96-3beb-45a1-aa72-82e7f738bf9e",
+        "1f949736-beb1-dd10-6451-561b7799c99c",
+        "2901b3f6-4eb8-4de9-82dc-fe2e4ceaea10",
+        "d755aa6a-dae2-4cae-a236-6c916fa6beb6",
+        "6ce118ad-6222-4773-8354-4dd16946aca1",
+        "ef566e95-bbe9-4489-aec8-523a10fafcaf",
+        "8bdb456f-a525-520d-b565-e09f26975649",
+        "2a2e758d-6ffb-269a-d713-0727cef6a26c",
+        "6ff93c5e-b3a2-0c5c-0ac9-3656aeaa544e",
+        "5ab2c5e9-a7f4-451b-9507-15b142dd5764",
+        "398924bc-e70e-47ae-9cc8-d0fa3c076195",
+        "24f13440-ef97-6655-ff03-7a90831fa07e",
+        "3b39162a-5715-3670-8bd4-db04c0cb935d",
+        "72546856-f6eb-4808-99c9-e5c3b8be7f52",
+        "a28e8db7-6c8d-41ac-b21f-5fd14263c202",
+        "9c1df13b-ebd9-c948-c1f6-3d494baed6c7",
+        "b5f114af-a7d9-e71c-f329-057319ebec30",
+        "0abca9cc-149a-3e47-08eb-3bcf5e9c41ea"
+    ],
+    "DependencyGraph": {
+        "038e98bc-1b23-076b-23de-52b8114cb69f": [
+            "d96bd046-c7be-a174-f52d-ca5dd0b2c74e",
+            "42ac223f-d5f9-6ff6-a2c2-af4ab55aa446",
+            "eb84fde3-e67f-5511-3d90-7de54766af8c",
+            "4116e001-ba0d-6ed7-1878-ccc689079874",
+            "f8922061-4b57-a236-cf67-60e4adafdf73"
+        ],
+        "0abca9cc-149a-3e47-08eb-3bcf5e9c41ea": [
+
+        ],
+        "16141bf7-7953-4094-83f0-4a23b0c4af23": [
+            "8bdb456f-a525-520d-b565-e09f26975649",
+            "ef566e95-bbe9-4489-aec8-523a10fafcaf",
+            "6ce118ad-6222-4773-8354-4dd16946aca1",
+            "398924bc-e70e-47ae-9cc8-d0fa3c076195",
+            "5ab2c5e9-a7f4-451b-9507-15b142dd5764",
+            "1f949736-beb1-dd10-6451-561b7799c99c",
+            "d755aa6a-dae2-4cae-a236-6c916fa6beb6",
+            "2901b3f6-4eb8-4de9-82dc-fe2e4ceaea10",
+            "811301b4-951d-4301-bceb-058f009d58f2"
+        ],
+        "1f949736-beb1-dd10-6451-561b7799c99c": [
+            "d755aa6a-dae2-4cae-a236-6c916fa6beb6",
+            "2901b3f6-4eb8-4de9-82dc-fe2e4ceaea10"
+        ],
+        "2458d797-f5a6-d4c7-52dd-020bbc88bf88": [
+
+        ],
+        "24f13440-ef97-6655-ff03-7a90831fa07e": [
+
+        ],
+        "27164c96-3beb-45a1-aa72-82e7f738bf9e": [
+
+        ],
+        "276b7f53-bf45-4f9d-872b-d3e5763b3e20": [
+            "a0e8659f-3059-66e6-3f54-f7b1736b4632",
+            "8c84a470-f87d-bf7d-756b-9d37e5f49f77",
+            "038e98bc-1b23-076b-23de-52b8114cb69f",
+            "d96bd046-c7be-a174-f52d-ca5dd0b2c74e",
+            "2458d797-f5a6-d4c7-52dd-020bbc88bf88",
+            "42ac223f-d5f9-6ff6-a2c2-af4ab55aa446",
+            "eb84fde3-e67f-5511-3d90-7de54766af8c",
+            "4116e001-ba0d-6ed7-1878-ccc689079874",
+            "f8922061-4b57-a236-cf67-60e4adafdf73",
+            "74abf42b-6ab9-0024-05ef-4b06500438df",
+            "3f6b09ac-4aa8-9f13-935b-5bffce085946"
+        ],
+        "2901b3f6-4eb8-4de9-82dc-fe2e4ceaea10": [
+
+        ],
+        "2a2e758d-6ffb-269a-d713-0727cef6a26c": [
+            "6ff93c5e-b3a2-0c5c-0ac9-3656aeaa544e"
+        ],
+        "367f433d-8e09-8e94-fa89-6efeb5aeb612": [
+
+        ],
+        "398924bc-e70e-47ae-9cc8-d0fa3c076195": [
+
+        ],
+        "3b39162a-5715-3670-8bd4-db04c0cb935d": [
+            "0abca9cc-149a-3e47-08eb-3bcf5e9c41ea",
+            "b5f114af-a7d9-e71c-f329-057319ebec30",
+            "9c1df13b-ebd9-c948-c1f6-3d494baed6c7",
+            "a28e8db7-6c8d-41ac-b21f-5fd14263c202",
+            "72546856-f6eb-4808-99c9-e5c3b8be7f52"
+        ],
+        "3db0373c-324f-a413-de79-55d9fc7d5d5e": [
+
+        ],
+        "3f6b09ac-4aa8-9f13-935b-5bffce085946": [
+
+        ],
+        "4116e001-ba0d-6ed7-1878-ccc689079874": [
+
+        ],
+        "42ac223f-d5f9-6ff6-a2c2-af4ab55aa446": [
+            "3f6b09ac-4aa8-9f13-935b-5bffce085946"
+        ],
+        "59f70e80-9532-4275-8c2f-2017c1a91ab7": [
+
+        ],
+        "5ab2c5e9-a7f4-451b-9507-15b142dd5764": [
+
+        ],
+        "5b85e17a-4970-4864-b5ff-2031d09456d2": [
+
+        ],
+        "6ce118ad-6222-4773-8354-4dd16946aca1": [
+
+        ],
+        "6ff93c5e-b3a2-0c5c-0ac9-3656aeaa544e": [
+            "398924bc-e70e-47ae-9cc8-d0fa3c076195",
+            "5ab2c5e9-a7f4-451b-9507-15b142dd5764"
+        ],
+        "72546856-f6eb-4808-99c9-e5c3b8be7f52": [
+
+        ],
+        "74abf42b-6ab9-0024-05ef-4b06500438df": [
+
+        ],
+        "7753608c-d771-42af-822e-7132e6a5bd61": [
+            "59f70e80-9532-4275-8c2f-2017c1a91ab7",
+            "c3a39340-466c-447d-812a-3331498981e4",
+            "367f433d-8e09-8e94-fa89-6efeb5aeb612",
+            "5b85e17a-4970-4864-b5ff-2031d09456d2",
+            "276b7f53-bf45-4f9d-872b-d3e5763b3e20"
+        ],
+        "811301b4-951d-4301-bceb-058f009d58f2": [
+            "27164c96-3beb-45a1-aa72-82e7f738bf9e",
+            "3db0373c-324f-a413-de79-55d9fc7d5d5e",
+            "7753608c-d771-42af-822e-7132e6a5bd61",
+            "59f70e80-9532-4275-8c2f-2017c1a91ab7",
+            "c3a39340-466c-447d-812a-3331498981e4",
+            "367f433d-8e09-8e94-fa89-6efeb5aeb612",
+            "5b85e17a-4970-4864-b5ff-2031d09456d2",
+            "276b7f53-bf45-4f9d-872b-d3e5763b3e20"
+        ],
+        "8bdb456f-a525-520d-b565-e09f26975649": [
+
+        ],
+        "8c84a470-f87d-bf7d-756b-9d37e5f49f77": [
+
+        ],
+        "9c1df13b-ebd9-c948-c1f6-3d494baed6c7": [
+
+        ],
+        "a0e8659f-3059-66e6-3f54-f7b1736b4632": [
+
+        ],
+        "a28e8db7-6c8d-41ac-b21f-5fd14263c202": [
+
+        ],
+        "b5f114af-a7d9-e71c-f329-057319ebec30": [
+
+        ],
+        "c3a39340-466c-447d-812a-3331498981e4": [
+
+        ],
+        "d755aa6a-dae2-4cae-a236-6c916fa6beb6": [
+
+        ],
+        "d96bd046-c7be-a174-f52d-ca5dd0b2c74e": [
+            "2458d797-f5a6-d4c7-52dd-020bbc88bf88"
+        ],
+        "eae43710-e068-6512-a8ee-fefe502ad483": [
+            "24f13440-ef97-6655-ff03-7a90831fa07e",
+            "2a2e758d-6ffb-269a-d713-0727cef6a26c",
+            "6ff93c5e-b3a2-0c5c-0ac9-3656aeaa544e",
+            "16141bf7-7953-4094-83f0-4a23b0c4af23",
+            "8bdb456f-a525-520d-b565-e09f26975649",
+            "ef566e95-bbe9-4489-aec8-523a10fafcaf",
+            "6ce118ad-6222-4773-8354-4dd16946aca1",
+            "398924bc-e70e-47ae-9cc8-d0fa3c076195",
+            "5ab2c5e9-a7f4-451b-9507-15b142dd5764",
+            "811301b4-951d-4301-bceb-058f009d58f2"
+        ],
+        "eb84fde3-e67f-5511-3d90-7de54766af8c": [
+
+        ],
+        "ef566e95-bbe9-4489-aec8-523a10fafcaf": [
+
+        ],
+        "f8922061-4b57-a236-cf67-60e4adafdf73": [
+            "74abf42b-6ab9-0024-05ef-4b06500438df"
+        ]
+    },
+    "ValidationDependencyGraph": {
+        "6ff93c5e-b3a2-0c5c-0ac9-3656aeaa544e": [
+            "16141bf7-7953-4094-83f0-4a23b0c4af23"
+        ]
+    },
+    "EntitiesIdMap": {
+        "3b39162a-5715-3670-8bd4-db04c0cb935d": 170,
+        "eae43710-e068-6512-a8ee-fefe502ad483": 171,
+        "1f949736-beb1-dd10-6451-561b7799c99c": 172,
+        "0abca9cc-149a-3e47-08eb-3bcf5e9c41ea": 173,
+        "b5f114af-a7d9-e71c-f329-057319ebec30": 174,
+        "9c1df13b-ebd9-c948-c1f6-3d494baed6c7": 175,
+        "a28e8db7-6c8d-41ac-b21f-5fd14263c202": 176,
+        "72546856-f6eb-4808-99c9-e5c3b8be7f52": 177,
+        "24f13440-ef97-6655-ff03-7a90831fa07e": 178,
+        "2a2e758d-6ffb-269a-d713-0727cef6a26c": 179,
+        "6ff93c5e-b3a2-0c5c-0ac9-3656aeaa544e": 180,
+        "16141bf7-7953-4094-83f0-4a23b0c4af23": 181,
+        "8bdb456f-a525-520d-b565-e09f26975649": 182,
+        "ef566e95-bbe9-4489-aec8-523a10fafcaf": 183,
+        "6ce118ad-6222-4773-8354-4dd16946aca1": 184,
+        "398924bc-e70e-47ae-9cc8-d0fa3c076195": 185,
+        "5ab2c5e9-a7f4-451b-9507-15b142dd5764": 186,
+        "811301b4-951d-4301-bceb-058f009d58f2": 187,
+        "d755aa6a-dae2-4cae-a236-6c916fa6beb6": 188,
+        "2901b3f6-4eb8-4de9-82dc-fe2e4ceaea10": 189,
+        "27164c96-3beb-45a1-aa72-82e7f738bf9e": 190,
+        "3db0373c-324f-a413-de79-55d9fc7d5d5e": 191,
+        "7753608c-d771-42af-822e-7132e6a5bd61": 192,
+        "59f70e80-9532-4275-8c2f-2017c1a91ab7": 193,
+        "c3a39340-466c-447d-812a-3331498981e4": 194,
+        "367f433d-8e09-8e94-fa89-6efeb5aeb612": 195,
+        "5b85e17a-4970-4864-b5ff-2031d09456d2": 196,
+        "276b7f53-bf45-4f9d-872b-d3e5763b3e20": 197,
+        "a0e8659f-3059-66e6-3f54-f7b1736b4632": 198,
+        "8c84a470-f87d-bf7d-756b-9d37e5f49f77": 199,
+        "038e98bc-1b23-076b-23de-52b8114cb69f": 200,
+        "d96bd046-c7be-a174-f52d-ca5dd0b2c74e": 201,
+        "2458d797-f5a6-d4c7-52dd-020bbc88bf88": 202,
+        "42ac223f-d5f9-6ff6-a2c2-af4ab55aa446": 203,
+        "eb84fde3-e67f-5511-3d90-7de54766af8c": 204,
+        "4116e001-ba0d-6ed7-1878-ccc689079874": 205,
+        "f8922061-4b57-a236-cf67-60e4adafdf73": 206,
+        "74abf42b-6ab9-0024-05ef-4b06500438df": 207,
+        "3f6b09ac-4aa8-9f13-935b-5bffce085946": 208
+    }
+}

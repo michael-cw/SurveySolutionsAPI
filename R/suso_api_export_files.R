@@ -47,6 +47,7 @@
 #' @import zip
 #' @import haven
 #' @import readstata13
+#'
 suso_export<-function(server= suso_get_api_key("susoServer"),
                       apiUser=suso_get_api_key("susoUser"),
                       apiPass=suso_get_api_key("susoPass"),

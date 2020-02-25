@@ -25,6 +25,8 @@ suso_export_paradata(server = suso_get_api_key("susoServer"),
 
 \item{reloadTimeDiff}{time difference in hours between last generated file and now}
 
+\item{inShinyServer}{if True, file interacts with shiny progress bar}
+
 \item{multiCore}{if not NULL, an integer number specifying the number of cores to use}
 
 \item{onlyActiveEvents}{if TRUE only active events are exported, decreases processing time and memory requirements}
@@ -32,13 +34,11 @@ suso_export_paradata(server = suso_get_api_key("susoServer"),
 \item{allResponses}{if TRUE all responses will be extracted. Setting it to FALSE may decrease processing time and
 memory requirements}
 
+\item{gpsVarName}{provide GPS variable name. If not provided, identification is attempted by lookin for a variable containing gps in its name.}
+
 \item{verbose}{if TRUE, shows messages about the operation carried out. Can be useful for longrunning operations.}
 
 \item{showProgress}{also display the progress bars.}
-
-\item{inShinyApp}{if True, file interacts with shiny progress bar}
-
-\item{provide}{GPS variable name. If not provided, identification is attempted by lookin for a variable containing gps in its name.}
 }
 \description{
 Exports Survey Solutions Paradata, and returns a data.table.

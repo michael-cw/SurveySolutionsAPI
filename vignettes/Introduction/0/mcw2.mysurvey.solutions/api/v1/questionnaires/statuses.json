@@ -1,0 +1,15 @@
+[
+    "Restored",
+    "Created",
+    "SupervisorAssigned",
+    "InterviewerAssigned",
+    "RejectedBySupervisor",
+    "ReadyForInterview",
+    "SentToCapi",
+    "Restarted",
+    "Completed",
+    "ApprovedBySupervisor",
+    "RejectedByHeadquarters",
+    "ApprovedByHeadquarters",
+    "Deleted"
+]
