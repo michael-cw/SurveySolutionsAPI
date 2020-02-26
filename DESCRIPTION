@@ -1,7 +1,7 @@
 Package: SurveySolutionsAPI
 Type: Package
 Title: API access to Survey Solutions Server
-Version: 0.2.0
+Version: 0.2.1
 Author: Michael Wild
 Maintainer: Michael Wild <mwild@worldbank.org>
 Description: This packages implements the Survey Solutions API.

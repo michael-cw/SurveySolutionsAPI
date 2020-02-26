@@ -5,26 +5,29 @@
 \title{Survey Solutions API call for Assignment Creation}
 \usage{
 suso_createASS(df = UPLOADdataCHECK,
-  url = suso_get_api_key("susoServer"),
-  usr = suso_get_api_key("susoUser"),
-  pass = suso_get_api_key("susoPass"), QUID = NULL, version = NULL)
+  server = suso_get_api_key("susoServer"),
+  apiUser = suso_get_api_key("susoUser"),
+  apiPass = suso_get_api_key("susoPass"), QUID = NULL,
+  version = NULL)
 }
 \arguments{
 \item{df}{dataframe with upload data}
 
-\item{url}{Survey Solutions server address}
+\item{server}{Survey Solutions server address}
 
-\item{usr}{Survey Solutions API user}
+\item{apiUser}{Survey Solutions API user}
 
-\item{pass}{Survey Solutions API password}
+\item{apiPass}{Survey Solutions API password}
 
 \item{QUID}{the questionnaire id}
 
 \item{version}{the questionnaire version}
 }
 \description{
-ATTENTION: CURRENTLY ONLY TESTED WITHOUT PREFILLED DATA
+Creates assignment with prefilled data.
 }
 \details{
-df must be with the following columns: \emph{ResponsibleName, Quantity, [variables]}
+Dataframe needs to be provided with columns
+for prefilling data, as well as \emph{Quantity} and \emph{ResponsibleName}. Return value is a data.table,
+with the prefilling data, if successful
 }
