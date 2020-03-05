@@ -56,6 +56,7 @@ if(getRversion() >= "3.3.0")  {
     "response",
     "responsible",
     "role",
-    "dateTime","tz","wDAY","mDAY","MONTH", "WEEK"
+    "dateTime","tz","wDAY","mDAY","MONTH", "WEEK",
+    "UpdatedAtUtc", "InterviewDuration"
   ))
 }

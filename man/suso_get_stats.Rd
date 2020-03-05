@@ -7,7 +7,7 @@
 suso_get_stats(server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
   apiPass = suso_get_api_key("susoPass"), questID = "", version = "",
-  qQuest = "")
+  qQuest = "", byTeam = TRUE)
 }
 \arguments{
 \item{server}{Survey Solutions server address}
@@ -21,6 +21,8 @@ suso_get_stats(server = suso_get_api_key("susoServer"),
 \item{version}{version of the questionnaire, only required with \code{questID}}
 
 \item{qQuest}{provide \emph{QuestionnaireId} and \emph{version} to receive all questions and responses for a specific questionnaire}
+
+\item{byTeam}{should the table contain reports by team}
 }
 \description{
 Returns summary tables for individual questions. If no responses had been provided, an empty table will be returned

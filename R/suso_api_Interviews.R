@@ -23,7 +23,7 @@ suso_getAllInterviewQuestionnaire <- function(server= suso_get_api_key("susoServ
     server$scheme<-"https"
     server$path<-file.path("api", "v1", "interviews")
     server$query<-list(questionnaireId = questID,
-                    questionnaireVersion = version)
+                       questionnaireVersion = version)
     if (!is.null(status))
         server$query<-append(url$query, c(status = status))
     test_detail <- GET(url = modify_url(server, query = c(server$query, page = 1)), authenticate(apiUser, apiPass, type = "basic"), progress())
@@ -93,9 +93,9 @@ suso_getAllAnswerInterview <- function(server= suso_get_api_key("susoServer"),
 #'
 #' @export
 suso_getAllHistoryInterview <- function(server= suso_get_api_key("susoServer"),
-                                   apiUser=suso_get_api_key("susoUser"),
-                                   apiPass=suso_get_api_key("susoPass"),
-                                   intID = "") {
+                                        apiUser=suso_get_api_key("susoUser"),
+                                        apiPass=suso_get_api_key("susoPass"),
+                                        intID = "") {
     ## Define API
     server<-httr::parse_url(paste0(server))
     server$scheme<-"https"
@@ -111,6 +111,52 @@ suso_getAllHistoryInterview <- function(server= suso_get_api_key("susoServer"),
     # Set date time to utc with lubridate
     test_json[,Timestamp:=as_datetime(Timestamp)]
     return(test_json)
+}
+
+
+#' Get statistics for interview
+#'
+#' @param server Survey Solutions server address
+#' @param apiUser Survey Solutions API user
+#' @param apiPass Survey Solutions API password
+#' @param intID a single or multiple \emph{InterviewId}.
+#'
+#' @export
+
+
+
+suso_get_stats_interview<-function(server= suso_get_api_key("susoServer"),
+                                   apiUser=suso_get_api_key("susoUser"),
+                                   apiPass=suso_get_api_key("susoPass"),
+                                   intID = "") {
+    ## Define API
+    server<-httr::parse_url(paste0(server))
+    server$scheme<-"https"
+    tj<-list()
+    for(id in intID){
+        server$path<-NULL
+        server$path<-file.path("api", "v1", "interviews", id, "stats")
+        ## Call
+        test_detail <- GET(url = build_url(server), authenticate(apiUser, apiPass, type = "basic"))
+        if (status_code(test_detail)!=200){
+            warning(paste0("No data for interview: " , id,". Did you specify the correct ID?"), call. = F)
+            print(id)
+            next()
+        }
+        aJsonFile <- tempfile()
+        writeBin(content(test_detail, "raw"), aJsonFile)
+        test_json <- fromJSON(aJsonFile)
+        test_json<-as.data.table(t(unlist(test_json)))
+        tj[[id]]<-test_json
+    }
+    tj<-rbindlist(tj, fill = T)
+    # to numeric conversion of counts
+    names_col<-names(tj)[c(1:9,15:17)]
+    for (col in names_col) set(tj, j=col, value=as.numeric(tj[[col]]))
+    ## date conversion
+    tj[,UpdatedAtUtc:=as_datetime(UpdatedAtUtc)]
+    tj[,InterviewDuration:=as.POSIXct(InterviewDuration, format = "%H:%M:%OS")][]
+    return(tj)
 }
 
 #' Reject interview

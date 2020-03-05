@@ -9,12 +9,12 @@
 #' @param questID only assignments for \emph{QuestionnaireId} are returned, requires \code{version} being not NULL
 #' @param version version of the questionnaire, only required with \code{questID}
 #' @param qQuest provide \emph{QuestionnaireId} and \emph{version} to receive all questions and responses for a specific questionnaire
-#'
+#' @param byTeam should the table contain reports by team
 #' @export
 #'
 
 suso_get_stats <- function(server = suso_get_api_key("susoServer"), apiUser = suso_get_api_key("susoUser"), apiPass = suso_get_api_key("susoPass"),
-    questID = "", version = "", qQuest = "") {
+    questID = "", version = "", qQuest = "", byTeam = TRUE) {
 
     # Csv structure is exported
     qExp <- "Csv"
@@ -34,7 +34,7 @@ suso_get_stats <- function(server = suso_get_api_key("susoServer"), apiUser = su
                        query.question = qQuest,
                        query.exportType = qExp,
                        query.pivot = "false",
-                       query.expandTeams = "true")
+                       query.expandTeams = ifelse(byTeam,"true","false"))
     test_detail <- GET(url = build_url(server), authenticate(apiUser, apiPass, type = "basic"))
     writeBin(test_detail$content, aJsonFile)
     # also empty file is returned
@@ -79,8 +79,6 @@ suso_getQuestionsQuestionnaire <- function(server = suso_get_api_key("susoServer
     return(test_json)
 }
 
-# a<-getQuestionsQuestionnaire('mcw2.mysurvey.solutions', 'bahamaAPI0202', 'Bahamas2020',
-# '420791ebbd1e47868ce4e27b098c34f8', 3)
 
 ########################################### EXTRACT table from site
 
