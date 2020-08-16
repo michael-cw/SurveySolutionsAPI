@@ -4,6 +4,7 @@ Title: API access to Survey Solutions Server
 Version: 0.2.1
 Author: Michael Wild
 Maintainer: Michael Wild <mwild@worldbank.org>
+Repository: MCWconnect
 Description: This packages implements the Survey Solutions API.
 License: GPL-2
 Encoding: UTF-8
