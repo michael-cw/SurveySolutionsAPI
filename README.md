@@ -25,9 +25,8 @@ As the package is under active development, some variables may change and new fu
 
 
 To find information on the World Bank's Survey Solutions CASS have a look on these pages:
-- Survey Solutions Support Page: https://support.mysurvey.solutions/
-- Survey Solutions Server request: https://mysurvey.solutions/
+- Survey Solutions Documentation: https://docs.mysurvey.solutions/
 
 To find information on the API syntax, visit your own servers API documentation or got to:
-- https://demo.mysurvey.solutions//apidocs/index#!
+- https://demo.mysurvey.solutions/apidocs/
 
