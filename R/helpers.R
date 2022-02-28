@@ -27,7 +27,18 @@ checkNum<-function(x) {
   # if (!is.numeric(x)) stop("Number of cores needs to be NULL or an integer!")
 }
 
-
+## workspace default check
+.ws_default<-function(ws=NULL){
+  ## workspace default
+  if(!is.null(ws)) {
+    # margs<-suso_getWorkspace()$Name
+    # workspace<-match.arg(workspace, margs)
+    ws<-ws
+  } else {
+    ws<-"primary"
+  }
+  return(ws)
+}
 
 
 # PARADATA ONLY ##########################################################
@@ -109,4 +120,75 @@ unpack<-function(fp, allResponses, inShinyServer){
   prog<-prog+1
 }
 
+### FOR QUESTIONNAIRE STRUCTURE #########################
+.suso_transform_fullValid <- function(input = NULL) {
+  valfinal <-bind_rows(
+    ######################################################
+    ## VALIDATIONS (Start with L0)
+    ######################################################
+    input %>% enter_object("Children") %>% gather_array("L0") %>%
+      enter_object("Children") %>% gather_array("L1") %>%
+      enter_object("ValidationConditions") %>% gather_array("val1") %>%
+      spread_all(),
+    ## third
+    input %>% enter_object("Children") %>% gather_array("L0") %>%
+      enter_object("Children") %>% gather_array("L1") %>%
+      enter_object("Children") %>% gather_array("L2") %>%
+      enter_object("ValidationConditions") %>% gather_array("val1") %>%
+      spread_all(),
+    ## fourth
+    input %>% enter_object("Children") %>% gather_array("L0") %>%
+      enter_object("Children") %>% gather_array("L1") %>%
+      enter_object("Children") %>% gather_array("L2") %>%
+      enter_object("Children") %>% gather_array("L3") %>%
+      enter_object("ValidationConditions") %>% gather_array("val1") %>%
+      spread_all(),
+    ## fifth
+    input %>% enter_object("Children") %>% gather_array("L0") %>%
+      enter_object("Children") %>% gather_array("L1") %>%
+      enter_object("Children") %>% gather_array("L2") %>%
+      enter_object("Children") %>% gather_array("L3") %>%
+      enter_object("Children") %>% gather_array("L4") %>%
+      enter_object("ValidationConditions") %>% gather_array("val1") %>%
+      spread_all(),
+    ## sixth
+    input %>% enter_object("Children") %>% gather_array("L0") %>%
+      enter_object("Children") %>% gather_array("L1") %>%
+      enter_object("Children") %>% gather_array("L2") %>%
+      enter_object("Children") %>% gather_array("L3") %>%
+      enter_object("Children") %>% gather_array("L4") %>%
+      enter_object("Children") %>% gather_array("L5") %>%
+      enter_object("ValidationConditions") %>% gather_array("val1") %>%
+      spread_all(),
+    ## seventh
+    input %>% enter_object("Children") %>% gather_array("L0") %>%
+      enter_object("Children") %>% gather_array("L1") %>%
+      enter_object("Children") %>% gather_array("L2") %>%
+      enter_object("Children") %>% gather_array("L3") %>%
+      enter_object("Children") %>% gather_array("L4") %>%
+      enter_object("Children") %>% gather_array("L5") %>%
+      enter_object("Children") %>% gather_array("L6") %>%
+      enter_object("ValidationConditions") %>% gather_array("val1") %>%
+      spread_all(),
+    ## eight
+    input %>% enter_object("Children") %>% gather_array("L0") %>%
+      enter_object("Children") %>% gather_array("L1") %>%
+      enter_object("Children") %>% gather_array("L2") %>%
+      enter_object("Children") %>% gather_array("L3") %>%
+      enter_object("Children") %>% gather_array("L4") %>%
+      enter_object("Children") %>% gather_array("L5") %>%
+      enter_object("Children") %>% gather_array("L6") %>%
+      enter_object("Children") %>% gather_array("L7") %>%
+      enter_object("ValidationConditions") %>% gather_array("val1") %>%
+      spread_all()
+    ###########################################################
+  ) %>% dplyr::select_if(col_selector)
 
+
+  valfinal<-data.table(valfinal)
+  if(nrow(valfinal)==0) {
+    return(NULL)
+  } else {
+    return(valfinal)
+  }
+}

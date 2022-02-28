@@ -33,26 +33,33 @@ print.suso_api <- function(x, ...) {
 #' @param suso_server Survey Solutions server address
 #' @param suso_user Survey Solutions API user
 #' @param suso_password Survey Solutions API password
+#' @param suso_token If Survey Solutions server token is provided \emph{suso_user} and \emph{suso_password} will be ignored
 #'
 #' @details
 #' Use \code{suso_set_key} to make API keys available for all the \code{suso_}
 #' functions, so you don't need to specify the credentials parameter within those
-#' functions.
+#' functions. The server address can be provided with or without https:\\ suffix,
+#' nevertheless if it is missing, then the suffix will be added.
+#'
+#' In case \emph{suso_token} is provided, only token authentication will be attempted. For details on token authentication
+#' in Survey Solutions please see \url{https://docs.mysurvey.solutions/headquarters/accounts/token-based-authentication/}.
 #'
 #'
 #'
 #' @export
 #'
-
-
 suso_set_key <- function(
   suso_server = "",
   suso_user = "",
-  suso_password = ""
+  suso_password = "",
+  suso_token = ""
 ) {
-
+  # get options
   options <- getOption("SurveySolutionsAPI")
-
+  # sanitize string to ssl (http?)
+  suso_server<-ifelse(stringr::str_count(suso_server, "https://")==1,
+                      suso_server, paste0("https://", suso_server))
+  # add to object
   options[['suso']][['susoServer']] <- suso_server
   options[['suso']][['susoUser']] <- suso_user
   options[['suso']][['susoPass']] <- suso_password
@@ -90,8 +97,10 @@ suso_clear_keys <- function() {
 #'
 #' @param api One of susoServer, susoUser, susoPass
 #'
-#' @export
 #' @import data.table
+#'
+#' @export
+#'
 suso_get_api_key <- function(api = c("susoServer", "susoUser", "susoPass")) {
 
 
@@ -118,26 +127,57 @@ suso_get_default_key <- function(api = c("susoServer", "susoUser", "susoPass")) 
 
 #' Utility function to check if credentials are correct
 #'
-#' This function returns a 200 status if the correct credentials have been provided.
+#' This function returns a 200 status if the correct credentials have been provided. If credentials are correct but
+#' user is not eligible to access the workspace, then a 403 error is returned.
 #'
 #' @param server Survey Solutions Server
 #' @param apiUser API user
 #' @param apiPass API password
+#' @param workspace server workspace, if nothing provided, defaults to primary
+#' @param token If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored
+#'
 #'
 #' @export
 suso_PwCheck<-function(server=suso_get_api_key("susoServer"),
                        apiUser=suso_get_api_key("susoUser"),
-                       apiPass=suso_get_api_key("susoPass")) {
-  ##  Define the api send GET and use response code
-  server<-ifelse(stringr::str_count(server, "https://")==1,
-                 server, paste0("https://", server))
-  server=paste0(server, "/api/v1/supervisors")
-
+                       apiPass=suso_get_api_key("susoPass"),
+                       workspace = NULL,
+                       token = NULL) {
+  ## workspace default
+  workspace<-.ws_default(ws = workspace)
+  ## Define the api
+  url <- httr::parse_url(url = server)
+  url$scheme <- "https"
+  url$path <- file.path(workspace, "api", "v1", "supervisors")
+  url$query<-"limit=200"
+  ## Authentication
+  auth<-authenticate(apiUser, apiPass, type = "basic")
+  print(build_url(url))
+  ## Request
   test_detail<-tryCatch(
-    {GET(url = paste0(server, "?limit=200"),
-         authenticate(apiUser, apiPass, type = "basic"))},
+    {GET(url = build_url(url),
+         auth)},
     error=function(e) {a<-data.frame(status_code=400); return(a)}
   )
   return(test_detail)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

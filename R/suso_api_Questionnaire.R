@@ -1,32 +1,60 @@
 #' Survey Solutions API call for questionnaire
 #'
 #'
-#' \code{suso_getQuestDetails} implements all Questionnaire API commands. If \emph{operation.type = structure}
-#' the return file will be a list, whith the content of the raw json string containing the questionnaire variables
-#' @param url Survey Solutions server address
+#' \code{suso_getQuestDetails} implements all Questionnaire related API commands. It allows for different operation types,
+#' see details bellow for further clarification.
+#'
+#' @param server Survey Solutions server address
 #' @param usr Survey Solutions API user
 #' @param pass Survey Solutions API password
+#' @param workspace server workspace, if nothing provided, defaults to primary
+#' @param token If Survey Solutions server token is provided \emph{usr} and \emph{pass} will be ignored
 #' @param quid \emph{QuestionnaireId} for which details should be exported
 #' @param version questionnaire version
 #' @param operation.type if \emph{list} is specified a list of all questionnaires on the server. If
 #' \emph{statuses} a vector of all questionnaire statuses. If \emph{structure} is specified, it returns a list
-#' containing the content of the questionnaire's json string. To make use of it, put the output into
-#' \code{suso_transform_fullMeta} and receive a data.table with all questionnaire elements. If \emph{interviews}, all interviews
-#' for a specific questionnaire.
+#' containing all questions, rosters etc. of the specific questionnaire, as well as all validations.
+#' If \emph{interviews} is specified, all interviews for a specific questionnaire. See details bellow.
+#'
+#'
+#' @details
+#'
+#' If list is selected, then list of questionnaires is returned.
+#'
+#' If statuses is selected, a list of all available questionnaire statuses is returned (deprecated).
+#'
+#' In case structure is chosen the return value is a list with two data.table elements:
+#' \itemize{
+#'   \item List element \emph{q} contains all questions, rosters etc.
+#'   \item List element \emph{val} contains all validations
+#' }
+#' In this way it is straightforward to use the returen value for questionnaire manuals and the likes.
+#'
+#' In case interviews is selected, a list of all interviews for the specific questionnaire is returned.
+#'
 #' @export
 #'
 #'
 
-suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_get_api_key("susoUser"), pass = suso_get_api_key("susoPass"),
-                                 quid = NULL, version = NULL, operation.type = c("list", "statuses", "structure", "interviews")) {
+suso_getQuestDetails <- function(server = suso_get_api_key("susoServer"),
+                                 usr = suso_get_api_key("susoUser"),
+                                 pass = suso_get_api_key("susoPass"),
+                                 workspace = NULL,
+                                 token = NULL,
+                                 quid = NULL, version = NULL,
+                                 operation.type = c("list", "statuses", "structure", "interviews")) {
+    ## workspace default
+    workspace<-.ws_default(ws = workspace)
     ## Set temporary file
     aJsonFile <- tempfile(fileext = ".json")
     ## Define the api
-    url <- parse_url(url)
+    url <- httr::parse_url(url = server)
     url$scheme <- "https"
-    url$path <- "/api/v1/questionnaires"
+    url$path <- file.path(workspace, "api", "v1", "questionnaires")#"primary/api/v1/questionnaires"
+    ## Authorization
+    auth<-authenticate(usr, pass, type = "basic")
     ## Default operation type is 'list'
-    operation.type = ifelse(is.null(operation.type), "list", operation.type)
+    operation.type = match.arg(operation.type, c("list", "statuses", "structure", "interviews"))
 
     # 1. Get all Questionnaires on the server
     if (operation.type == "list") {
@@ -43,19 +71,23 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
             repCalls <- ceiling(qTotRest/40)
             for (i in 2:repCalls) {
                 url$query <- list(limit = 40, offset = i)
-                test_detail <- GET(url = build_url(url), authenticate(usr, pass, type = "basic"), write_disk(aJsonFile, overwrite = T))
+                test_detail <- GET(url = build_url(url),
+                                   auth,
+                                   write_disk(aJsonFile, overwrite = T))
                 test_json_tmp <- jsonlite::fromJSON(aJsonFile)
                 test_json$Questionnaires <- rbind(test_json$Questionnaires, test_json_tmp$Questionnaires)
             }
         }
         # Only data.table of interviews is returned
         test_json<-data.table(test_json$Questionnaires)
+        if(nrow(test_json)==0) return("No data available")
         # Set date time to utc with lubridate
         test_json[,LastEntryDate:=as_datetime(LastEntryDate)][]
         return(test_json)
         # 2. Get all STATUS on server
     } else if (operation.type == "statuses") {
-        test_detail <- GET(url = modify_url(url, path = file.path(url$path, "statuses")), authenticate(usr, pass, type = "basic"),
+        test_detail <- GET(url = modify_url(url, path = file.path(url$path, "statuses")),
+                           auth,
                            write_disk(aJsonFile, overwrite = T))
         check_response(test_detail)
         test_json <- jsonlite::fromJSON(aJsonFile)
@@ -64,8 +96,9 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
     } else if (operation.type == "structure") {
         if (is.null(quid) | is.null(version))
             stop("Quid and/or version missing.")
-        test_detail <- GET(url = modify_url(url, path = file.path(url$path, quid, version, "document")), authenticate(usr,
-                                                                                                                      pass, type = "basic"), write_disk(aJsonFile, overwrite = T))
+        test_detail <- GET(url = modify_url(url, path = file.path(url$path, quid, version, "document")),
+                           auth,
+                           write_disk(aJsonFile, overwrite = T))
         check_response(test_detail)
         test_json <- tidyjson::read_json(aJsonFile)
         test_json <- suso_transform_fullMeta(test_json)
@@ -73,10 +106,12 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
     } else if (operation.type == "interviews") {
         if (is.null(quid) | is.null(version))
             stop("Quid and/or version missing.")
-        url$query <- list(limit = 40)
+        url$query <- list(limit = 40,
+                          offset = 1)
         test_detail <- GET(url = modify_url(url, path = file.path(url$path, quid, version, "interviews")),
-                           authenticate(usr, pass, type = "basic"), write_disk(aJsonFile, overwrite = T))
-        check_response(test_detail)
+                           auth,
+                           write_disk(aJsonFile, overwrite = T))
+        #check_response(test_detail)
         test_json <- jsonlite::fromJSON(aJsonFile)
         qTot <- test_json$TotalCount
         ## 1.1. Check if more than 40, append rest
@@ -94,7 +129,7 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
         # Only data.table of interviews is returned
         test_json<-data.table(test_json$Interviews)
         # Set date time to utc with lubridate
-        test_json[,LastEntryDate:=as_datetime(LastEntryDate)][]
+        if(nrow(test_json)!=0) test_json[,LastEntryDate:=as_datetime(LastEntryDate)][]
     }
     return(test_json)
     ########################## F I N#########################################################
@@ -115,12 +150,16 @@ suso_getQuestDetails <- function(url=suso_get_api_key("susoServer"), usr = suso_
 #'
 #' @export
 #' @importFrom tidyjson jstring jnumber jlogical
-#' @importFrom tidyjson bind_rows spread_values enter_object gather_array
+#' @importFrom tidyjson bind_rows spread_values enter_object gather_array spread_all
 
 suso_transform_fullMeta <- function(input = NULL) {
     ##########################################
-    ## v2.0 with tidyjson rewritten
-
+    ## v2.1 with validations
+    ## IDs:
+    ##    L0 = Section, L1=position inside section,
+    ##    L2 = Roster/Subsection Nr, (when missing no roster)
+    ##    L3 = position inside Roster/Subsection,
+    ##    L4 = Roster/Subsection (when missing no roster)
     qfinal <-bind_rows(
         ######################################################
         ## first
@@ -242,19 +281,34 @@ suso_transform_fullMeta <- function(input = NULL) {
         ###########################################################
     ) %>% dplyr::select_if(col_selector)
     qfinal<-data.table(qfinal)
+    ###########################
+    ## dynamic use of sprintf
+    ##  - do.call and eval
+    allSections<-names(qfinal)[grepl("^L[0-7]$", names(qfinal))]
+    sprExpr<-paste(rep("%02d", length(allSections)), collapse = "")
+    allSections<-paste0(".(", paste(allSections, collapse = ","), ")")
+    qfinal[,intID:=do.call(sprintf, c(list(sprExpr), qfinal[,eval(parse(text = allSections))]))]
     qfinal<-qfinal[,document.id:=NULL][]
-    return(qfinal)
+    ## Get Validations
+    valfinal_1<-.suso_transform_fullValid(input = input)
+    if(!is.null(valfinal_1)){
+        ###########################
+        ## dynamic use of sprintf
+        ##  - do.call and eval
+        ##  - to harmonize ID, ID var is created here!!!
+        allSections<-names(valfinal_1)[grepl("^L[0-7]$", names(valfinal_1))]
+        sprExpr<-paste(rep("%02d", length(allSections)), collapse = "")
+        allSections<-paste0(".(", paste(allSections, collapse = ","), ")")
+        ## ID for validations
+        valfinal_1[,intID:=do.call(sprintf, c(list(sprExpr), valfinal_1[,eval(parse(text = allSections))]))]
+        ## ID for questionnaire
+        qfinal[,intID:=do.call(sprintf, c(list(sprExpr), qfinal[,eval(parse(text = allSections))]))]
+        qVar<-qfinal[,.(intID, VariableName)]
+        valfinal_1<-valfinal_1[,.(intID, Expression, Message, Severity)][]
+        setkeyv(valfinal_1, "intID"); setkeyv(qVar, "intID")
+        valfinal_1<-valfinal_1[qVar, nomatch=0]
+    }
+    q_final<-list(q=qfinal, val=valfinal_1)
+    return(q_final)
 }
 
-
-
-
-
-
-################ Testing not run qestStruct<-getQuestDetails(quid = 'b4c78852-c1d7-4532-ba3f-7cc35ead489a', version = 5, operation.type
-################ = 'structure') a<-fullMeta()
-
-# b<-rbindlist(a, idcol = 'section') ## to check q47 qestList<-data.table(getQuestDetails()$Questionnaires)
-# fullMETAlist<-list() for (q in 1:nrow(qestList)) { print(q) tmp_q<-qestList[q] qestStruct<-getQuestDetails(quid =
-# tmp_q$QuestionnaireId, version = tmp_q$Version, operation.type = 'structure')
-# fullMETAlist[[qestStruct$Title]]<-fullMeta(qestStruct) }

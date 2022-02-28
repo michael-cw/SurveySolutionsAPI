@@ -17,7 +17,9 @@
 suso_getAllInterviewQuestionnaire <- function(server= suso_get_api_key("susoServer"),
                                               apiUser=suso_get_api_key("susoUser"),
                                               apiPass=suso_get_api_key("susoPass"),
-                                              questID = "e4de521a-6e32-4ab0-93c5-1fa4e11dc12f", version = 2, status = NULL) {
+                                              questID = "",
+                                              version = 1,
+                                              status = NULL) {
     ## Define API
     server<-httr::parse_url(paste0(server))
     server$scheme<-"https"

@@ -7,6 +7,8 @@
 #' @param server Survey Solutions server address
 #' @param apiUser Survey Solutions API user
 #' @param apiPass Survey Solutions API password
+#' @param workspace server workspace, if nothing provided, defaults to primary
+#' @param token If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored
 #' @param QUID the questionnaire id
 #' @param version the questionnaire version
 #' @details Dataframe needs to be provided with columns
@@ -20,16 +22,21 @@ suso_createASS <- function(df = UPLOADdataCHECK,
                            server = suso_get_api_key("susoServer"),
                            apiUser = suso_get_api_key("susoUser"),
                            apiPass = suso_get_api_key("susoPass"),
+                           workspace = NULL,
+                           token = NULL,
                            QUID = NULL,
                            version = NULL) {
+    ## workspace default
+    workspace<-.ws_default(ws = workspace)
     ############
     # 1. create variables
     ##  BASE URL
     url<-httr::parse_url(paste0(server))
     url$scheme<-"https"
-    url$path<-file.path("api", "v1", "assignments")
-    usr<-apiUser
-    pass<-apiPass
+    url$path<-file.path(workspace,"api", "v1", "assignments")
+    # Set the authentication
+    auth<-authenticate(apiUser, apiPass, type = "basic")
+
     ## Preparation for call
     aJsonFile<-tempfile()
     quid=paste0(QUID,"$", version)
@@ -48,9 +55,11 @@ suso_createASS <- function(df = UPLOADdataCHECK,
                                                Answer=c(unlist(df[i,],
                                                                use.names = F))))
         test_post<-httr::POST(url = build_url(url),
-                              accept_json(),add_headers(charset="utf-8"),
-                              authenticate(usr, pass, type = "basic"),
-                              body=js_ch, encode = "json",
+                              accept_json(),
+                              add_headers(charset="utf-8"),
+                              auth,
+                              body=js_ch,
+                              encode = "json",
                               httr::write_disk(aJsonFile, overwrite = T))
         httr::stop_for_status(test_post, "Assignment creation failed")
         tmp<-fromJSON(aJsonFile)
