@@ -4,11 +4,19 @@
 \alias{suso_get_assignments}
 \title{Survey Solutions API call for assignment list}
 \usage{
-suso_get_assignments(questID = NULL,
+suso_get_assignments(
+  questID = NULL,
   server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
-  apiPass = suso_get_api_key("susoPass"), AssId = NULL,
-  version = NULL, responsibleID = NULL, order.by = "")
+  apiPass = suso_get_api_key("susoPass"),
+  token = NULL,
+  workspace = NULL,
+  AssId = NULL,
+  version = NULL,
+  responsibleID = NULL,
+  order.by = "",
+  operations.type = c("assignmentQuantitySettings", "history", "recordAudio")
+)
 }
 \arguments{
 \item{questID}{only assignments for \emph{QuestionnaireId} are returned,
@@ -20,6 +28,10 @@ requires \code{version} being not NULL}
 
 \item{apiPass}{Survey Solutions API password}
 
+\item{token}{If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored}
+
+\item{workspace}{If workspace name is provide requests are made regarding this specific workspace}
+
 \item{AssId}{if NULL a list of all assignments on the server, if not NULL
 the assignment details for a specific assignment ID}
 
@@ -29,6 +41,9 @@ the assignment details for a specific assignment ID}
 Retrieves all assignments for this user.}
 
 \item{order.by}{determines the column by which the assignment list should be ordered}
+
+\item{operations.type}{specifies the desired operation, one of assignmentQuantitySettings, history, or recordAudio,
+if specified, requires also \emph{AssId} to be specified.}
 }
 \description{
 \code{suso_get_assignments} calls the Survey Solutions assingment API

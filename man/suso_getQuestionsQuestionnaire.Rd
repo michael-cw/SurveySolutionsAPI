@@ -4,10 +4,15 @@
 \alias{suso_getQuestionsQuestionnaire}
 \title{Survey Solutions API call for questions and responses from single questionnaire}
 \usage{
-suso_getQuestionsQuestionnaire(server = suso_get_api_key("susoServer"),
+suso_getQuestionsQuestionnaire(
+  server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
-  apiPass = suso_get_api_key("susoPass"), questID = NULL,
-  version = NULL)
+  apiPass = suso_get_api_key("susoPass"),
+  workspace = NULL,
+  token = NULL,
+  questID = NULL,
+  version = NULL
+)
 }
 \arguments{
 \item{server}{Survey Solutions server address}
@@ -16,10 +21,16 @@ suso_getQuestionsQuestionnaire(server = suso_get_api_key("susoServer"),
 
 \item{apiPass}{Survey Solutions API password}
 
+\item{workspace}{server workspace, if nothing provided, defaults to primary}
+
+\item{token}{If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored}
+
 \item{questID}{only assignments for \emph{QuestionnaireId} are returned, requires \code{version} being not NULL}
 
 \item{version}{version of the questionnaire, only required with \code{questID}}
 }
 \description{
-Returns questions for single questionnaire (if they contain responses)
+Returns all questions for single questionnaire (ONLY if they contain responses), if you require all questions
+from any questionnaire on the server, then you have to use \code{suso_getQuestDetails(...,
+operation.type = "structure")}
 }

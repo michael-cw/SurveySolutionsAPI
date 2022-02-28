@@ -4,9 +4,13 @@
 \alias{suso_getSV}
 \title{Survey Solutions API call for list of supervisors}
 \usage{
-suso_getSV(url = suso_get_api_key("susoServer"),
+suso_getSV(
+  url = suso_get_api_key("susoServer"),
   usr = suso_get_api_key("susoUser"),
-  pass = suso_get_api_key("susoPass"))
+  pass = suso_get_api_key("susoPass"),
+  workspace = NULL,
+  token = NULL
+)
 }
 \arguments{
 \item{url}{Survey Solutions server address}
@@ -14,6 +18,11 @@ suso_getSV(url = suso_get_api_key("susoServer"),
 \item{usr}{Survey Solutions API user}
 
 \item{pass}{Survey Solutions API password}
+
+\item{workspace}{If workspace name is provide requests are made regarding this specific workspace, if
+no workspace is provided defaults to primary workspace.}
+
+\item{token}{If Survey Solutions server token is provided \emph{usr} and \emph{pass} will be ignored}
 }
 \description{
 Gets list of supervisors

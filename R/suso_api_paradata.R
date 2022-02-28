@@ -11,6 +11,8 @@
 #' @param server Survey Solutions server address
 #' @param apiUser Survey Solutions API user
 #' @param apiPass Survey Solutions API password
+#' @param workspace server workspace, if nothing provided, defaults to primary
+#' @param token If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored
 #' @param questID \emph{QuestionnaireId} for which the paradata should be generated
 #' @param version questionnnaire version
 #' @param reloadTimeDiff time difference in hours between last generated file and now
@@ -46,6 +48,8 @@
 suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
                                apiUser=suso_get_api_key("susoUser"),
                                apiPass=suso_get_api_key("susoPass"),
+                               workspace = NULL,
+                               token = NULL,
                                questID="xxxx-xxx-xxxx-xxx-xxx",
                                version=1,
                                reloadTimeDiff=1,
@@ -73,7 +77,7 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
   url$scheme<-"https"
   ##  QUEST ID
   quid=paste0(str_replace_all(questID, "-", ""), "$", version)
-  url$path<-file.path("api", "v1", "export", format_para, quid)
+  url$path<-file.path("api", "v2", "export", format_para, quid)
 
   ###############################################
   ##          CHECK TIME OF LAST FILE

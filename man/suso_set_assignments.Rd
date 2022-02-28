@@ -4,10 +4,17 @@
 \alias{suso_set_assignments}
 \title{Survey Solutions API call for assingment manipulation}
 \usage{
-suso_set_assignments(server = suso_get_api_key("susoServer"),
+suso_set_assignments(
+  server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
-  apiPass = suso_get_api_key("susoPass"), AssId = NULL,
-  responsibleID = NULL)
+  apiPass = suso_get_api_key("susoPass"),
+  token = NULL,
+  workspace = NULL,
+  AssId = NULL,
+  payload = NULL,
+  operations.type = c("recordAudio", "archive", "assign", "changeQuantity", "close",
+    "unarchive")
+)
 }
 \arguments{
 \item{server}{Survey Solutions server address}
@@ -16,11 +23,18 @@ suso_set_assignments(server = suso_get_api_key("susoServer"),
 
 \item{apiPass}{Survey Solutions API password}
 
-\item{AssId}{if NULL a list of all assignments on the server, if not NULL
-the assignment details for a specific assignment ID}
+\item{token}{If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored}
 
-\item{responsibleID}{the ID of the responsible user (Supervisor or Interviewer).
-Retrieves all assignments for this user.}
+\item{workspace}{If workspace name is provide requests are made regarding this specific workspace}
+
+\item{AssId}{the assignment id for which the change is required}
+
+\item{payload}{if NULL a list of all assignments on the server, if not NULL
+the assignment details for a specific assignment ID, if specific operations type is chosen, then requires the
+corresponding values. See details bellow.}
+
+\item{operations.type}{specifies the desired operation, one of recordAudio, archive/unarchive, (re-)assign
+changeQuantity, or close, if specified, requires also \emph{AssId} to be specified.}
 }
 \description{
 \code{suso_set_assignments} allows to (re-)assign, change limits or audio

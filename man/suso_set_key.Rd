@@ -4,7 +4,12 @@
 \alias{suso_set_key}
 \title{Set Credentials}
 \usage{
-suso_set_key(suso_server = "", suso_user = "", suso_password = "")
+suso_set_key(
+  suso_server = "",
+  suso_user = "",
+  suso_password = "",
+  suso_token = ""
+)
 }
 \arguments{
 \item{suso_server}{Survey Solutions server address}
@@ -12,6 +17,8 @@ suso_set_key(suso_server = "", suso_user = "", suso_password = "")
 \item{suso_user}{Survey Solutions API user}
 
 \item{suso_password}{Survey Solutions API password}
+
+\item{suso_token}{If Survey Solutions server token is provided \emph{suso_user} and \emph{suso_password} will be ignored}
 }
 \description{
 Sets API credentials so it's available for all API calls. See details
@@ -19,5 +26,9 @@ Sets API credentials so it's available for all API calls. See details
 \details{
 Use \code{suso_set_key} to make API keys available for all the \code{suso_}
 functions, so you don't need to specify the credentials parameter within those
-functions.
+functions. The server address can be provided with or without https:\\ suffix,
+nevertheless if it is missing, then the suffix will be added.
+
+In case \emph{suso_token} is provided, only token authentication will be attempted. For details on token authentication
+in Survey Solutions please see \url{https://docs.mysurvey.solutions/headquarters/accounts/token-based-authentication/}.
 }

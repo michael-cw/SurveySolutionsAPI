@@ -4,9 +4,14 @@
 \alias{suso_getUSR}
 \title{Survey Solutions API call any user}
 \usage{
-suso_getUSR(url = suso_get_api_key("susoServer"),
+suso_getUSR(
+  url = suso_get_api_key("susoServer"),
   usr = suso_get_api_key("susoUser"),
-  pass = suso_get_api_key("susoPass"), uid = NULL)
+  pass = suso_get_api_key("susoPass"),
+  uid = NULL,
+  workspace = NULL,
+  token = NULL
+)
 }
 \arguments{
 \item{url}{Survey Solutions server address}
@@ -16,6 +21,11 @@ suso_getUSR(url = suso_get_api_key("susoServer"),
 \item{pass}{Survey Solutions API password}
 
 \item{uid}{user id}
+
+\item{workspace}{If workspace name is provide requests are made regarding this specific workspace, if
+no workspace is provided defaults to primary workspace.}
+
+\item{token}{If Survey Solutions server token is provided \emph{usr} and \emph{pass} will be ignored}
 }
 \description{
 Get user info

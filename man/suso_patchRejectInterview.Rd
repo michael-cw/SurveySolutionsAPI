@@ -4,10 +4,13 @@
 \alias{suso_patchRejectInterview}
 \title{Reject interview}
 \usage{
-suso_patchRejectInterview(server = suso_get_api_key("susoServer"),
+suso_patchRejectInterview(
+  server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
-  apiPass = suso_get_api_key("susoPass"), intID = "",
-  comment = "Please check errors and re-submit!")
+  apiPass = suso_get_api_key("susoPass"),
+  intID = "",
+  comment = "Please check errors and re-submit!"
+)
 }
 \arguments{
 \item{server}{Survey Solutions server address}

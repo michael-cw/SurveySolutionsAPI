@@ -4,10 +4,17 @@
 \alias{suso_get_stats}
 \title{Survey Solutions API call for Summary Tables}
 \usage{
-suso_get_stats(server = suso_get_api_key("susoServer"),
+suso_get_stats(
+  server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
-  apiPass = suso_get_api_key("susoPass"), questID = "", version = "",
-  qQuest = "", byTeam = TRUE)
+  apiPass = suso_get_api_key("susoPass"),
+  workspace = NULL,
+  token = NULL,
+  questID = "",
+  version = "",
+  qQuest = "",
+  byTeam = TRUE
+)
 }
 \arguments{
 \item{server}{Survey Solutions server address}
@@ -15,6 +22,10 @@ suso_get_stats(server = suso_get_api_key("susoServer"),
 \item{apiUser}{Survey Solutions API user}
 
 \item{apiPass}{Survey Solutions API password}
+
+\item{workspace}{server workspace, if nothing provided, defaults to primary}
+
+\item{token}{If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored}
 
 \item{questID}{only assignments for \emph{QuestionnaireId} are returned, requires \code{version} being not NULL}
 

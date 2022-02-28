@@ -7,6 +7,8 @@
 #' @param version Questionnaire version
 #' @param apiUser Survey Solutions API user
 #' @param apiPass Survey Solutions API password
+#' @param workspace server workspace, if nothing provided, defaults to primary
+#' @param token If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored
 #' @param workStatus define which statuses the file should inlude (i.e. \emph{Restored,Created,SupervisorAssigned,InterviewerAssigned,
 #' RejectedBySupervisor,ReadyForInterview,
 #' SentToCapi,Restarted,Completed,ApprovedBySupervisor,
@@ -51,6 +53,8 @@
 suso_export<-function(server= suso_get_api_key("susoServer"),
                       apiUser=suso_get_api_key("susoUser"),
                       apiPass=suso_get_api_key("susoPass"),
+                      workspace = NULL,
+                      token = NULL,
                       questID="",
                       version=1,
                       workStatus="Completed",
@@ -61,7 +65,11 @@ suso_export<-function(server= suso_get_api_key("susoServer"),
   ## Check arguments
   ##  - workStatus
   margs<-suso_getQuestDetails(operation.type = "statuses")
-  workStatus<-match.arg(workStatus, margs)
+  if(!is.null(workStatus)) {
+    workStatus<-match.arg(workStatus, margs)
+  } else {
+    workStatus<-"All"
+  }
 
   ########################################
   ## BASE SET-UP
@@ -70,12 +78,14 @@ suso_export<-function(server= suso_get_api_key("susoServer"),
   ## Base file
   dataPath<-file.path(tempdir(),"application_data.zip")
   if (file.exists(dataPath)) file.remove(dataPath)
+  ## workspace default
+  workspace<-.ws_default(ws = workspace)
   ##  BASE URL
   url<-parse_url((server))
   url$scheme<-"https"
   ##  QUEST ID
   quid=paste0(str_replace_all(questID, "-", ""), "$", version)
-  url$path<-file.path("api", "v1", "export", "STATA", quid)
+  url$path<-file.path(workspace,"api", "v2", "export", "STATA", quid)
   ##  CREDENTIALS
   usr<-apiUser
   pass<-apiPass
@@ -100,12 +110,12 @@ suso_export<-function(server= suso_get_api_key("susoServer"),
   ###############################################
   ##          CHECK TIME OF LAST FILE
   ###############################################
-  time_limit<-strptime(suso_details_lastexport(url=server,
-                                               usr=apiUser,
-                                               pass=apiPass,
+  time_limit<-strptime(suso_details_lastexport(server=server,
+                                               apiUser=apiUser,
+                                               apiPass=apiPass,
                                                quid=questID,
                                                version = version,
-                                               format="STATA")$LastUpdateDate, format = "%Y-%m-%dT%H:%M:%S")
+                                               format="STATA")$CompleteDate, format = "%Y-%m-%dT%H:%M:%S")
   ###############################################################################
   ##          START FILE CREATION
   ##              -IFF time diff is larger than treshold,
@@ -124,9 +134,9 @@ suso_export<-function(server= suso_get_api_key("susoServer"),
 
     ##########################
     ##  2. STATUS CHECK
-    test_json<-suso_details_lastexport(url=server,
-                                       usr=apiUser,
-                                       pass=apiPass,
+    test_json<-suso_details_lastexport(server=server,
+                                       apiUser=apiUser,
+                                       apiPass=apiPass,
                                        quid=questID,
                                        version = version,
                                        format="STATA")
@@ -135,9 +145,9 @@ suso_export<-function(server= suso_get_api_key("susoServer"),
     ## 2.1. Wait until finished
     while (!is.null(test_json$RunningProcess)) {
       cat(test_json$RunningProcess$ProgressInPercents, "%\n")
-      test_json<-suso_details_lastexport(url=server,
-                                         usr=apiUser,
-                                         pass=apiPass,
+      test_json<-suso_details_lastexport(server=server,
+                                         apiUser=apiUser,
+                                         apiPass=apiPass,
                                          quid=questID,
                                          version = version,
                                          format="STATA")

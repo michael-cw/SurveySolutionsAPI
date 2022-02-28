@@ -4,9 +4,12 @@
 \alias{suso_get_stats_interview}
 \title{Get statistics for interview}
 \usage{
-suso_get_stats_interview(server = suso_get_api_key("susoServer"),
+suso_get_stats_interview(
+  server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
-  apiPass = suso_get_api_key("susoPass"), intID = "")
+  apiPass = suso_get_api_key("susoPass"),
+  intID = ""
+)
 }
 \arguments{
 \item{server}{Survey Solutions server address}
