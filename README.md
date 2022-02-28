@@ -1,9 +1,15 @@
 # SurveySolutionsAPI
 
-This is a first version of an R package, to access the Survey Solutions RESTful API, it allows you to export data/paradata, manipulate users and 
-questionnaires, as well as to create and manipulate assignments directly out of R. 
+This is the updated version of the comprehensive Survey Solutions R API package, https://docs.mysurvey.solutions/headquarters/api/api-r-package/ It allows you to export data/paradata collected through CAWI, CATI or CAPI operations, manipulate users and questionnaires, create assignemnts, get information about the survey progress etc.. All directly out of R. However it is more than just a simple wraper around the Survey Solutions RESTfull API, which one can easily address through using i.e. the excellent httr package which also constitutes the basis for this package. The main intention of this package though is to be integrated into your own data collection workflow, either through a shiny application or just through a simple script. This allows you to build your own workflows with your own customized userinterfaces for your Survey Solutions data collection operations, no matter if you are dealing with a small scale impact evaluation or a large scale census.
 
-The package is not on CRAN yet, so you have to install it by using 
+Specific changes:
+
+- Workspace inclusion
+- Preparation for token authentication (not active yet)
+- New function: suso_Workspaces()
+
+The package is not on CRAN yet, so you have to install it by using
+
 ```
 devtools::install_github("michael-cw/SurveySolutionsAPI")
 
