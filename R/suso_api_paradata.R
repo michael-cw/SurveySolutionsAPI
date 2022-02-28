@@ -103,7 +103,7 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
   current_time<-strptime(Sys.time(), format = "%Y-%m-%d %H:%M:%S")
   timeDiff<-ceiling(difftime(current_time, time_limit, units = "hours"))
 
-  cat(paste("\nThe last file has been created", timeDiff, "hours ago.\n\n"))
+  cat(paste("\nThe last file has been created", timeDiff[1], "hours ago.\n\n"))
 
   ## Create Request
   js_ch <- list(
@@ -130,19 +130,23 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
 
     ## 2.1. Wait until finished
     while ((test_json$ExportStatus!="Completed")) {
-      cat(test_json$RunningProcess$ProgressInPercents, "%\n")
-      test_json<-suso_details_lastexport(quid=questID,
-                                         version = version,
-                                         format=format_para)
+      cat(test_json$Progress, "%\n")
+      test_json<-suso_details_lastexport(pid = job_id,
+                                         workspace = workspace)
       Sys.sleep(10)
     }
     cat("Finished file generation.\n\n")
+  } else if (timeDiff<=reloadTimeDiff) {
+    job_id<-suso_details_lastexport(quid=questID,
+                                    version = version,
+                                    workspace = workspace,
+                                    format=format_para)$JobId[1]
   }
   ##########################
   ##  3. GET URL AND DOWNLOAD
   cat("Starting download & file extraction. \n\n")
   if (showProgress){
-    test_exp<-GET(url = modify_url(url, path = file.path(url$path, pid, "file")),
+    test_exp<-GET(url = modify_url(url, path = file.path(url$path, job_id, "file")),
                   auth,
                   httr::progress(),
                   write_disk(dataPath, overwrite = TRUE),
@@ -153,8 +157,8 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
                   )
     )
   } else {
-    test_exp<-GET(url = build_url(url),
-                  authenticate(apiUser, apiPass, type = "basic"),
+    test_exp<-GET(url = modify_url(url, path = file.path(url$path, job_id, "file")),
+                  auth,
                   write_disk(dataPath, overwrite = TRUE),
                   config(
                     followlocation = 1L,
@@ -171,7 +175,6 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
   )
   ########################### FILE ############################################
   para_data<-list()
-
   #############################################################################
   uploadFile<-dataPath
   FILE.list<-tryCatch(utils::unzip(uploadFile, list=T), error=function(e) return("No File Found!"))
@@ -192,8 +195,9 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
   if (info$size <=75) stop('\nNo Records yet!', call. = F)
   ## UNPACK
   paradata_files<-unpack(fp=fp, allResponses = allResponses, inShinyServer = inShinyServer)
+  ## STOP when empty
+  if (is.null(paradata_files)) stop('\nNo Records yet!', call. = F)
   if(inShinyServer) incProgress(amount = 0.25, message = "Transformation completed")
-
   ## TRANSFORMATIONS
   ## A add rid if it doesnt exist
   if (length(grep("rid", names(paradata_files)))==0) paradata_files[,rid:=0]
