@@ -52,7 +52,7 @@ suso_details_lastexport <- function(server = suso_get_api_key("susoServer"),
         ## subset on questionnaire
         if(!is.null(quid) & !is.null(version) & nrow(test_json>0)) {
             test_json<-test_json[
-                QuestionnaireId==paste0(str_remove_all(quid, "-"), "$", version)
+                QuestionnaireId==paste0(str_remove_all(quid, "-"), "$", version) & ExportType==format
                 ]
         }
 

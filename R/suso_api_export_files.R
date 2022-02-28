@@ -62,9 +62,12 @@ suso_export<-function(server= suso_get_api_key("susoServer"),
                       inShinyApp=F,
                       n_id_vars=11){
   #######################################
+  ## use stata for labels
+  format_para<-"STATA"
+  #######################################
   ## Check arguments
   ##  - workStatus
-  margs<-suso_getQuestDetails(operation.type = "statuses")
+  margs<-suso_getQuestDetails(operation.type = "statuses", workspace = workspace)
   if(!is.null(workStatus)) {
     workStatus<-match.arg(workStatus, margs)
   } else {
@@ -84,20 +87,20 @@ suso_export<-function(server= suso_get_api_key("susoServer"),
   url<-parse_url((server))
   url$scheme<-"https"
   ##  QUEST ID
-  quid=paste0(str_replace_all(questID, "-", ""), "$", version)
-  url$path<-file.path(workspace,"api", "v2", "export", "STATA", quid)
+  quid=paste0(stringr::str_replace_all(questID, "-", ""), "$", version)
+  url$path<-file.path(workspace,"api", "v2", "export")
   ##  CREDENTIALS
   usr<-apiUser
   pass<-apiPass
-
+  auth<-authenticate(usr, pass, type = "basic")
 
   ######################################################################################
   ##  GET QUESTIONNAIRE NAME FOR FILE SELECTION
   ######################################################################################
   url_quest<-parse_url(server)
-  url_quest$path<-"/api/v1/questionnaires"
+  url_quest$path<-paste0(workspace,"/api/v1/questionnaires")
   test_quest<-GET(url = build_url(url_quest),
-                  authenticate(usr, pass, type = "basic"))
+                  auth)
   stop_for_status(test_quest, status_code(test_quest))
 
   aJsonFile<-tempfile()
@@ -110,12 +113,10 @@ suso_export<-function(server= suso_get_api_key("susoServer"),
   ###############################################
   ##          CHECK TIME OF LAST FILE
   ###############################################
-  time_limit<-strptime(suso_details_lastexport(server=server,
-                                               apiUser=apiUser,
-                                               apiPass=apiPass,
-                                               quid=questID,
+  time_limit<-strptime(suso_details_lastexport(quid=questID,
                                                version = version,
-                                               format="STATA")$CompleteDate, format = "%Y-%m-%dT%H:%M:%S")
+                                               workspace = workspace,
+                                               format=format_para)$StartDate, format = "%Y-%m-%dT%H:%M:%S")
   ###############################################################################
   ##          START FILE CREATION
   ##              -IFF time diff is larger than treshold,
@@ -124,45 +125,57 @@ suso_export<-function(server= suso_get_api_key("susoServer"),
   ##  1. START FILE CREATION --> file is only created when time difference is larger then reloadTimeDiff
   current_time<-strptime(Sys.time(), format = "%Y-%m-%d %H:%M:%S")
   timeDiff<-difftime(current_time, time_limit, units = "hours")
-  cat("The last file has been created", timeDiff, "hours ago.")
-  if(difftime(current_time, time_limit, units = "hours")>reloadTimeDiff){
+  ## reset time difference
+  if(length(timeDiff)==0) timeDiff=reloadTimeDiff+1
+
+    cat("The last file has been created", timeDiff, "hours ago.")
+  if((timeDiff>reloadTimeDiff) | length(time_limit)==0){
     cat("A new file will be generated. This may take a while.\n")
-    url_start<-modify_url(url, path = file.path(url$path, "start"))
-    test_post<-httr::POST(url = url_start, authenticate(usr, pass, type = "basic"))
+    ## Create Request
+    js_ch <- list(
+      ExportType = jsonlite::unbox(format_para),
+      QuestionnaireId = jsonlite::unbox(quid),
+      InterviewStatus = jsonlite::unbox(workStatus)
+    )
+
+
+    url_start<-build_url(url)
+    test_post<-httr::POST(url = url_start,
+                          auth,
+                          body=js_ch,
+                          encode = "json")
     stop_for_status(test_post, "Request Failed")
     job_id<-content(test_post)$JobId
 
     ##########################
     ##  2. STATUS CHECK
-    test_json<-suso_details_lastexport(server=server,
-                                       apiUser=apiUser,
-                                       apiPass=apiPass,
-                                       quid=questID,
-                                       version = version,
-                                       format="STATA")
+    test_json<-suso_details_lastexport(pid = job_id,
+                                       workspace = workspace)
 
 
     ## 2.1. Wait until finished
-    while (!is.null(test_json$RunningProcess)) {
-      cat(test_json$RunningProcess$ProgressInPercents, "%\n")
-      test_json<-suso_details_lastexport(server=server,
-                                         apiUser=apiUser,
-                                         apiPass=apiPass,
-                                         quid=questID,
-                                         version = version,
-                                         format="STATA")
+    while ((test_json$ExportStatus!="Completed")) {
+      cat(test_json$Progress, "\n")
+      test_json<-suso_details_lastexport(pid = job_id,
+                                         workspace = workspace)
       Sys.sleep(10)
     }
+  } else if (timeDiff<=reloadTimeDiff){
+    ## get job id from existing file
+    job_id<-suso_details_lastexport(quid=questID,
+                                    version = version,
+                                    workspace = workspace,
+                                    format=format_para)$JobId[1]
   }
 
   ##########################
   ##  3. GET URL AND DOWNLOAD
-  test_exp<-GET(url = build_url(url),
-                authenticate(usr, pass, type = "basic"),
+  test_exp<-GET(url = modify_url(url, path = file.path(url$path, job_id, "file")),
+                auth,
                 write_disk(dataPath, overwrite = TRUE),
-                config(                                 # use curl options to:
-                  followlocation = 1L,                      # follow redirects
-                  unrestricted_auth = 0L,                    # but not pass auth to redirects
+                config(
+                  followlocation = 1L,
+                  unrestricted_auth = 0L,
                   tcp_keepalive = 1L
                 ))
 
