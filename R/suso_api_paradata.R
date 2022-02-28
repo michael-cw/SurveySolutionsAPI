@@ -13,6 +13,10 @@
 #' @param apiPass Survey Solutions API password
 #' @param workspace server workspace, if nothing provided, defaults to primary
 #' @param token If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored
+#' @param workStatus define which statuses the file should inlude (i.e. \emph{Restored,Created,SupervisorAssigned,InterviewerAssigned,
+#' RejectedBySupervisor,ReadyForInterview,
+#' SentToCapi,Restarted,Completed,ApprovedBySupervisor,
+#' RejectedByHeadquarters,ApprovedByHeadquarters,Deleted}), if NULL all is exported
 #' @param questID \emph{QuestionnaireId} for which the paradata should be generated
 #' @param version questionnnaire version
 #' @param reloadTimeDiff time difference in hours between last generated file and now
@@ -52,6 +56,7 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
                                token = NULL,
                                questID="xxxx-xxx-xxxx-xxx-xxx",
                                version=1,
+                               workStatus="Completed",
                                reloadTimeDiff=1,
                                inShinyServer=FALSE,
                                multiCore = NULL,
@@ -63,6 +68,8 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
   ######################################################################################
   ##          SETUP
   ######################################################################################
+  ## workspace default
+  workspace<-.ws_default(ws = workspace)
   ##  1. options
   format_para="Paradata"
   options(warn = -1)
@@ -73,18 +80,20 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
   para_data<-list()
 
   ##  BASE URL
-  url<-parse_url((server))
+  url<-httr::parse_url((server))
   url$scheme<-"https"
   ##  QUEST ID
-  quid=paste0(str_replace_all(questID, "-", ""), "$", version)
-  url$path<-file.path("api", "v2", "export", format_para, quid)
-
+  quid=paste0(stringr::str_replace_all(questID, "-", ""), "$", version)
+  url$path<-file.path(workspace, "api", "v2", "export")
+  ## Authentication
+  auth<-authenticate(apiUser, apiPass, type = "basic")
   ###############################################
   ##          CHECK TIME OF LAST FILE
   ###############################################
   time_limit<-strptime(suso_details_lastexport(quid=questID,
                                                version = version,
-                                               format=format_para)$LastUpdateDate, format = "%Y-%m-%dT%H:%M:%S")
+                                               workspace = workspace,
+                                               format=format_para)$StartDate, format = "%Y-%m-%dT%H:%M:%S")
   ###############################################################################
   ##          START FILE CREATION
   ##              -IFF time diff is larger than treshold,
@@ -96,22 +105,31 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
 
   cat(paste("\nThe last file has been created", timeDiff, "hours ago.\n\n"))
 
+  ## Create Request
+  js_ch <- list(
+    ExportType = jsonlite::unbox(format_para),
+    QuestionnaireId = jsonlite::unbox(quid),
+    InterviewStatus = jsonlite::unbox(workStatus)
+  )
+
   if(timeDiff>reloadTimeDiff){
     cat("A new file will be generated. This may take a while.\n")
-    url_start<-modify_url(url, path = file.path(url$path, "start"))
-    test_post<-httr::POST(url = url_start, authenticate(apiUser, apiPass, type = "basic"))
+    url_start<-build_url(url)
+    test_post<-httr::POST(url = url_start,
+                          auth,
+                          body=js_ch,
+                          encode = "json")
     stop_for_status(test_post, "Request Failed")
     job_id<-content(test_post)$JobId
 
     ##########################
     ##  2. STATUS CHECK
-    test_json<-suso_details_lastexport(quid=questID,
-                                       version = version,
-                                       format=format_para)
+    test_json<-suso_details_lastexport(pid = job_id,
+                                       workspace = workspace)
 
 
     ## 2.1. Wait until finished
-    while (!is.null(test_json$RunningProcess)) {
+    while ((test_json$ExportStatus!="Completed")) {
       cat(test_json$RunningProcess$ProgressInPercents, "%\n")
       test_json<-suso_details_lastexport(quid=questID,
                                          version = version,
@@ -124,24 +142,26 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
   ##  3. GET URL AND DOWNLOAD
   cat("Starting download & file extraction. \n\n")
   if (showProgress){
-  test_exp<-GET(url = build_url(url),
-                authenticate(apiUser, apiPass, type = "basic"),
-                httr::progress(),
-                write_disk(dataPath, overwrite = TRUE),
-                config(                                 # use curl options to:
-                  followlocation = 1L,                      # follow redirects
-                  unrestricted_auth = 0L,                    # but not pass auth to redirects
-                  tcp_keepalive = 1L
-                ))
+    test_exp<-GET(url = modify_url(url, path = file.path(url$path, pid, "file")),
+                  auth,
+                  httr::progress(),
+                  write_disk(dataPath, overwrite = TRUE),
+                  config(
+                    followlocation = 1L,
+                    unrestricted_auth = 0L,
+                    tcp_keepalive = 1L
+                  )
+    )
   } else {
     test_exp<-GET(url = build_url(url),
                   authenticate(apiUser, apiPass, type = "basic"),
                   write_disk(dataPath, overwrite = TRUE),
-                  config(                                 # use curl options to:
-                    followlocation = 1L,                      # follow redirects
-                    unrestricted_auth = 0L,                    # but not pass auth to redirects
+                  config(
+                    followlocation = 1L,
+                    unrestricted_auth = 0L,
                     tcp_keepalive = 1L
-                  ))
+                  )
+    )
   }
   ## 3.1. Stop by status code
   if (status_code(test_exp)!=200) stop(
@@ -249,7 +269,7 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
   ##  2. GPS extract -->if no name, try identification through grepl
   varNames<-levels(para1_answer$var)
   if(is.na(gpsVarName)) {
-  gpsVarMain<-varNames[grepl("gps", varNames)]
+    gpsVarMain<-varNames[grepl("gps", varNames)]
   } else {
     stopifnot(is.character(gpsVarName), gpsVarName %in% varNames)
     gpsVarMain<-gpsVarName

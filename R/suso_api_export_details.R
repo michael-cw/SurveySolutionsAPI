@@ -38,19 +38,37 @@ suso_details_lastexport <- function(server = suso_get_api_key("susoServer"),
         ## 1. get list of export processes
         url$path <- file.path(workspace, "api", "v2", "export")
 
-    } else {
+        ## BUILD URL
+        url <- build_url(url)
+        ## API CALL
+        test_detail <- GET(url = url, auth)
+        stop_for_status(test_detail, task = url)
+        aJsonFile <- tempfile()
+        writeBin(content(test_detail, "raw"), aJsonFile)
+        test_json <- data.table(fromJSON(aJsonFile))
+        tz<-Sys.timezone(location = TRUE)
+        # if(nrow(test_json)>0) test_json[,StartDate:=as_datetime(StartDate, tz = tz)][,
+        #                                                                                CompleteDate:=as_datetime(CompleteDate, tz=tz)][]
+        ## subset on questionnaire
+        if(!is.null(quid) & !is.null(version) & nrow(test_json>0)) {
+            test_json<-test_json[
+                QuestionnaireId==paste0(str_remove_all(quid, "-"), "$", version)
+                ]
+        }
+
+    } else if(!is.null(pid)) {
         ## 2. get details about specific export processes
         url$path <- file.path(workspace, "api", "v2", "export", pid)
+        ## BUILD URL
+        url <- build_url(url)
+        ## API CALL
+        test_detail <- GET(url = url, auth)
+        stop_for_status(test_detail, task = url)
+        aJsonFile <- tempfile()
+        writeBin(content(test_detail, "raw"), aJsonFile)
+        test_json <- data.table(t(unlist(fromJSON(aJsonFile))))
     }
 
-    ## BUILD URL
-    url <- build_url(url)
-    ## API CALL
-    test_detail <- GET(url = url, auth)
-    stop_for_status(test_detail, task = url)
-    aJsonFile <- tempfile()
-    writeBin(content(test_detail, "raw"), aJsonFile)
-    test_json <- data.table(fromJSON(aJsonFile))
     ## OUTPUT
     return(test_json)
 }

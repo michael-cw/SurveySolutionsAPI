@@ -73,6 +73,7 @@ if(getRversion() >= "3.3.0")  {
     "role",
     "dateTime","tz","wDAY","mDAY","MONTH", "WEEK",
     "UpdatedAtUtc", "InterviewDuration", "intID",
-    "VariableName", "Expression", "Message", "Severity"
+    "VariableName", "Expression", "Message", "Severity",
+    "QuestionnaireId", "StartDate", "CompleteDate", "pid"
   ))
 }

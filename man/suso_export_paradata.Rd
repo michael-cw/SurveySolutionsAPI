@@ -12,6 +12,7 @@ suso_export_paradata(
   token = NULL,
   questID = "xxxx-xxx-xxxx-xxx-xxx",
   version = 1,
+  workStatus = "Completed",
   reloadTimeDiff = 1,
   inShinyServer = FALSE,
   multiCore = NULL,
@@ -36,6 +37,11 @@ suso_export_paradata(
 \item{questID}{\emph{QuestionnaireId} for which the paradata should be generated}
 
 \item{version}{questionnnaire version}
+
+\item{workStatus}{define which statuses the file should inlude (i.e. \emph{Restored,Created,SupervisorAssigned,InterviewerAssigned,
+RejectedBySupervisor,ReadyForInterview,
+SentToCapi,Restarted,Completed,ApprovedBySupervisor,
+RejectedByHeadquarters,ApprovedByHeadquarters,Deleted}), if NULL all is exported}
 
 \item{reloadTimeDiff}{time difference in hours between last generated file and now}
 
