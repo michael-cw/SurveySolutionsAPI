@@ -4,23 +4,36 @@
 \alias{suso_details_lastexport}
 \title{Helper function for details (i.e. date, compilation status etc. )}
 \usage{
-suso_details_lastexport(url = suso_get_api_key("susoServer"),
-  usr = suso_get_api_key("susoUser"),
-  pass = suso_get_api_key("susoPass"), quid = "", version = 1,
-  format = "STATA")
+suso_details_lastexport(
+  server = suso_get_api_key("susoServer"),
+  apiUser = suso_get_api_key("susoUser"),
+  apiPass = suso_get_api_key("susoPass"),
+  token = NULL,
+  workspace = NULL,
+  quid = NULL,
+  version = NULL,
+  pid = NULL,
+  format = "STATA"
+)
 }
 \arguments{
-\item{url}{Survey Solutions server address}
+\item{server}{Survey Solutions server address}
 
-\item{usr}{Survey Solutions API user}
+\item{apiUser}{Survey Solutions API user}
 
-\item{pass}{Survey Solutions API password}
+\item{apiPass}{Survey Solutions API password}
+
+\item{token}{If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored}
+
+\item{workspace}{If workspace name is provide requests are made regarding this specific workspace}
 
 \item{quid}{Questionnaire ID}
 
 \item{version}{Questionnaire version}
 
-\item{format}{one of Tab, Csv or Excel}
+\item{pid}{Export process id, required if \emph{quid} and \emph{version} is NULL.}
+
+\item{format}{one of Tabular, STATA or SPSS}
 }
 \description{
 This function retrieves the details from last file creation and can be used to modify

@@ -5,16 +5,29 @@
 #' @param url Survey Solutions server address
 #' @param usr Survey Solutions API user
 #' @param pass Survey Solutions API password
+#' @param workspace If workspace name is provide requests are made regarding this specific workspace, if
+#' no workspace is provided defaults to primary workspace.
+#' @param token If Survey Solutions server token is provided \emph{usr} and \emph{pass} will be ignored
 #'
 #'
 #' @export
-suso_getSV <- function(url=suso_get_api_key("susoServer"), usr = suso_get_api_key("susoUser"), pass = suso_get_api_key("susoPass")) {
+suso_getSV <- function(url=suso_get_api_key("susoServer"),
+                       usr = suso_get_api_key("susoUser"),
+                       pass = suso_get_api_key("susoPass"),
+                       workspace = NULL,
+                       token = NULL) {
+    ## default workspace
+    workspace<-.ws_default(ws=workspace)
     ##  BASE URL
-    url<-httr::parse_url(paste0(url))
+    url<-parse_url(suso_get_api_key("susoServer"))
     url$scheme<-"https"
-    url$path<-file.path("api", "v1", "supervisors")
+    url$path<-file.path(workspace,"api", "v1", "supervisors")
     url$query<-list(limit = 200)
-    test_detail <- GET(url = build_url(url = url), authenticate(usr, pass, type = "basic"))
+    # Set the authentication
+    auth<-authenticate(usr, pass, type = "basic")
+
+    ## API call
+    test_detail <- GET(url = build_url(url = url), auth)
     check_response(test_detail, 200)
     aJsonFile <- tempfile()
     writeBin(content(test_detail, "raw"), aJsonFile)
@@ -36,18 +49,27 @@ suso_getSV <- function(url=suso_get_api_key("susoServer"), usr = suso_get_api_ke
 #' @param usr Survey Solutions API user
 #' @param pass Survey Solutions API password
 #' @param sv_id supervisor id
+#' @param workspace If workspace name is provide requests are made regarding this specific workspace, if
+#' no workspace is provided defaults to primary workspace.
+#' @param token If Survey Solutions server token is provided \emph{usr} and \emph{pass} will be ignored
 #'
 #' @export
-suso_getINT <- function(url=suso_get_api_key("susoServer"), usr = suso_get_api_key("susoUser"), pass = suso_get_api_key("susoPass"),
-                        sv_id = NULL) {
-    ############
-    # 1. create variables
+suso_getINT <- function(url=suso_get_api_key("susoServer"),
+                        usr = suso_get_api_key("susoUser"),
+                        pass = suso_get_api_key("susoPass"),
+                        sv_id = NULL,
+                        workspace = NULL,
+                        token = NULL) {
+    ## default workspace
+    workspace<-.ws_default(ws = workspace)
     ##  BASE URL
     url<-httr::parse_url(paste0(url))
     url$scheme<-"https"
-    url$path<-file.path("api", "v1", "supervisors", sv_id, "interviewers")
+    url$path<-file.path(workspace, "api", "v1", "supervisors", sv_id, "interviewers")
     url$query<-list(limit = 200)
-    test_detail <- GET(url = build_url(url = url), authenticate(usr, pass, type = "basic"))
+    ## Authentication
+    auth<-authenticate(usr, pass, type = "basic")
+    test_detail <- GET(url = build_url(url = url), auth)
 
     aJsonFile <- tempfile()
     writeBin(content(test_detail, "raw"), aJsonFile)
@@ -71,15 +93,22 @@ suso_getINT <- function(url=suso_get_api_key("susoServer"), usr = suso_get_api_k
 #' @param usr Survey Solutions API user
 #' @param pass Survey Solutions API password
 #' @param int_id interviewer id
+#' @param workspace If workspace name is provide requests are made regarding this specific workspace, if
+#' no workspace is provided defaults to primary workspace.
+#' @param token If Survey Solutions server token is provided \emph{usr} and \emph{pass} will be ignored
+#'
 #'
 #' @export
 suso_getINT_info<-function(url=suso_get_api_key("susoServer"), usr = suso_get_api_key("susoUser"), pass = suso_get_api_key("susoPass"),
-                           int_id = NULL) {
+                           int_id = NULL, workspace = NULL, token = NULL) {
+    ## default workspace
+    workspace<-.ws_default(ws = workspace)
     ##  BASE URL
     url<-httr::parse_url(paste0(url))
     url$scheme<-"https"
-    url$path<-file.path("api", "v1", "interviewers", int_id)
-    test_detail <- GET(url = build_url(url = url), authenticate(usr, pass, type = "basic"))
+    url$path<-file.path(workspace,"api", "v1", "interviewers", int_id)
+    auth<-authenticate(usr, pass, type = "basic")
+    test_detail <- GET(url = build_url(url = url), auth)
     check_response(test_detail, 200)
     aJsonFile <- tempfile()
     writeBin(content(test_detail, "raw"), aJsonFile)
@@ -101,17 +130,23 @@ suso_getINT_info<-function(url=suso_get_api_key("susoServer"), usr = suso_get_ap
 #' @param usr Survey Solutions API user
 #' @param pass Survey Solutions API password
 #' @param int_id interviewer id
+#' @param workspace If workspace name is provide requests are made regarding this specific workspace, if
+#' no workspace is provided defaults to primary workspace.
+#' @param token If Survey Solutions server token is provided \emph{usr} and \emph{pass} will be ignored
 #'
 #' @export
 #'
 #'
 suso_getINT_log<-function(url=suso_get_api_key("susoServer"), usr = suso_get_api_key("susoUser"), pass = suso_get_api_key("susoPass"),
-                           int_id = NULL) {
+                           int_id = NULL, workspace = NULL, token = NULL) {
+    ## default workspace
+    workspace<-.ws_default(ws = workspace)
     ##  BASE URL
     url<-httr::parse_url(paste0(url))
     url$scheme<-"https"
-    url$path<-file.path("api", "v1", "interviewers", int_id, "actions-log")
-    test_detail <- GET(url = build_url(url = url), authenticate(usr, pass, type = "basic"))
+    url$path<-file.path(workspace, "api", "v1", "interviewers", int_id, "actions-log")
+    auth<-authenticate(usr, pass, type = "basic")
+    test_detail <- GET(url = build_url(url = url), auth)
     check_response(test_detail, 200)
     aJsonFile <- tempfile()
     writeBin(content(test_detail, "raw"), aJsonFile)
@@ -132,16 +167,22 @@ suso_getINT_log<-function(url=suso_get_api_key("susoServer"), usr = suso_get_api
 #' @param usr Survey Solutions API user
 #' @param pass Survey Solutions API password
 #' @param uid user id
+#' @param workspace If workspace name is provide requests are made regarding this specific workspace, if
+#' no workspace is provided defaults to primary workspace.
+#' @param token If Survey Solutions server token is provided \emph{usr} and \emph{pass} will be ignored
 #'
 #' @export
 #'
 suso_getUSR<-function(url=suso_get_api_key("susoServer"), usr = suso_get_api_key("susoUser"), pass = suso_get_api_key("susoPass"),
-                          uid = NULL) {
+                          uid = NULL, workspace = NULL, token = NULL) {
+    ## default workspace
+    workspace<-.ws_default(ws = workspace)
     ##  BASE URL
     url<-httr::parse_url(paste0(url))
     url$scheme<-"https"
-    url$path<-file.path("api", "v1", "users", uid)
-    test_detail <- GET(url = build_url(url = url), authenticate(usr, pass, type = "basic"))
+    url$path<-file.path(workspace,"api", "v1", "users", uid)
+    auth<-authenticate(usr, pass, type = "basic")
+    test_detail <- GET(url = build_url(url = url), auth)
     check_response(test_detail, 200)
     aJsonFile <- tempfile()
     writeBin(content(test_detail, "raw"), aJsonFile)
@@ -164,16 +205,21 @@ suso_getUSR<-function(url=suso_get_api_key("susoServer"), usr = suso_get_api_key
 #' @param pass Survey Solutions API password
 #' @param uid user id
 #' @param archive if TRUE user will be archived or statys archived, if FALSE user will be unarchived or stays unarchived
+#' @param workspace If workspace name is provide requests are made regarding this specific workspace, if
+#' no workspace is provided defaults to primary workspace.
+#' @param token If Survey Solutions server token is provided \emph{usr} and \emph{pass} will be ignored
 #'
 #' @export
 #'
 suso_archUSR<-function(url=suso_get_api_key("susoServer"), usr = suso_get_api_key("susoUser"), pass = suso_get_api_key("susoPass"),
-                      uid = NULL, archive = F) {
+                      uid = NULL, archive = F, workspace = NULL, token = NULL) {
+    ## default workspace
+    workspace<-.ws_default(ws = workspace)
     ##  BASE URL
     url<-httr::parse_url(paste0(url))
     url$scheme<-"https"
     arch<-ifelse(archive, "archive", "unarchive")
-    url$path<-file.path("api", "v1", "users", uid, arch)
+    url$path<-file.path(workspace,"api", "v1", "users", uid, arch)
     print(build_url(url = url))
     test_detail <- PATCH(url = build_url(url = url), authenticate(usr, pass, type = "basic"))
     check_response(test_detail, 200)

@@ -4,9 +4,12 @@
 \alias{suso_getAllAnswerInterview}
 \title{Survey Solutions API call to retrieve all answers for a specific interview}
 \usage{
-suso_getAllAnswerInterview(server = suso_get_api_key("susoServer"),
+suso_getAllAnswerInterview(
+  server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
-  apiPass = suso_get_api_key("susoPass"), intID = "")
+  apiPass = suso_get_api_key("susoPass"),
+  intID = ""
+)
 }
 \arguments{
 \item{server}{Survey Solutions server address}

@@ -4,9 +4,12 @@
 \alias{suso_getAllHistoryInterview}
 \title{Get all history for a specific interview}
 \usage{
-suso_getAllHistoryInterview(server = suso_get_api_key("susoServer"),
+suso_getAllHistoryInterview(
+  server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
-  apiPass = suso_get_api_key("susoPass"), intID = "")
+  apiPass = suso_get_api_key("susoPass"),
+  intID = ""
+)
 }
 \arguments{
 \item{server}{Survey Solutions server address}

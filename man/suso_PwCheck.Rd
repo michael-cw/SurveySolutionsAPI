@@ -4,9 +4,13 @@
 \alias{suso_PwCheck}
 \title{Utility function to check if credentials are correct}
 \usage{
-suso_PwCheck(server = suso_get_api_key("susoServer"),
+suso_PwCheck(
+  server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
-  apiPass = suso_get_api_key("susoPass"))
+  apiPass = suso_get_api_key("susoPass"),
+  workspace = NULL,
+  token = NULL
+)
 }
 \arguments{
 \item{server}{Survey Solutions Server}
@@ -14,7 +18,12 @@ suso_PwCheck(server = suso_get_api_key("susoServer"),
 \item{apiUser}{API user}
 
 \item{apiPass}{API password}
+
+\item{workspace}{server workspace, if nothing provided, defaults to primary}
+
+\item{token}{If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored}
 }
 \description{
-This function returns a 200 status if the correct credentials have been provided.
+This function returns a 200 status if the correct credentials have been provided. If credentials are correct but
+user is not eligible to access the workspace, then a 403 error is returned.
 }

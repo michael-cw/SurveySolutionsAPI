@@ -4,11 +4,16 @@
 \alias{suso_createASS}
 \title{Survey Solutions API call for Assignment Creation}
 \usage{
-suso_createASS(df = UPLOADdataCHECK,
+suso_createASS(
+  df = UPLOADdataCHECK,
   server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
-  apiPass = suso_get_api_key("susoPass"), QUID = NULL,
-  version = NULL)
+  apiPass = suso_get_api_key("susoPass"),
+  workspace = NULL,
+  token = NULL,
+  QUID = NULL,
+  version = NULL
+)
 }
 \arguments{
 \item{df}{dataframe with upload data}
@@ -18,6 +23,10 @@ suso_createASS(df = UPLOADdataCHECK,
 \item{apiUser}{Survey Solutions API user}
 
 \item{apiPass}{Survey Solutions API password}
+
+\item{workspace}{server workspace, if nothing provided, defaults to primary}
+
+\item{token}{If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored}
 
 \item{QUID}{the questionnaire id}
 

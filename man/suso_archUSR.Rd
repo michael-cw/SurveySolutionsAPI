@@ -4,9 +4,15 @@
 \alias{suso_archUSR}
 \title{Survey Solutions API call archive user}
 \usage{
-suso_archUSR(url = suso_get_api_key("susoServer"),
+suso_archUSR(
+  url = suso_get_api_key("susoServer"),
   usr = suso_get_api_key("susoUser"),
-  pass = suso_get_api_key("susoPass"), uid = NULL, archive = F)
+  pass = suso_get_api_key("susoPass"),
+  uid = NULL,
+  archive = F,
+  workspace = NULL,
+  token = NULL
+)
 }
 \arguments{
 \item{url}{Survey Solutions server address}
@@ -18,6 +24,11 @@ suso_archUSR(url = suso_get_api_key("susoServer"),
 \item{uid}{user id}
 
 \item{archive}{if TRUE user will be archived or statys archived, if FALSE user will be unarchived or stays unarchived}
+
+\item{workspace}{If workspace name is provide requests are made regarding this specific workspace, if
+no workspace is provided defaults to primary workspace.}
+
+\item{token}{If Survey Solutions server token is provided \emph{usr} and \emph{pass} will be ignored}
 }
 \description{
 (Un-)Archive user

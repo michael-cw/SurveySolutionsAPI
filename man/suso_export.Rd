@@ -4,11 +4,19 @@
 \alias{suso_export}
 \title{Survey Solutions API call to generate and download the data}
 \usage{
-suso_export(server = suso_get_api_key("susoServer"),
+suso_export(
+  server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
-  apiPass = suso_get_api_key("susoPass"), questID = "", version = 1,
-  workStatus = "Completed", reloadTimeDiff = 1, inShinyApp = F,
-  n_id_vars = 11)
+  apiPass = suso_get_api_key("susoPass"),
+  workspace = NULL,
+  token = NULL,
+  questID = "",
+  version = 1,
+  workStatus = "Completed",
+  reloadTimeDiff = 1,
+  inShinyApp = F,
+  n_id_vars = 11
+)
 }
 \arguments{
 \item{server}{Survey Solutions server address}
@@ -16,6 +24,10 @@ suso_export(server = suso_get_api_key("susoServer"),
 \item{apiUser}{Survey Solutions API user}
 
 \item{apiPass}{Survey Solutions API password}
+
+\item{workspace}{server workspace, if nothing provided, defaults to primary}
+
+\item{token}{If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored}
 
 \item{questID}{Questionnaire ID}
 
