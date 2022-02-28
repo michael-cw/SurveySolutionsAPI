@@ -1,10 +1,13 @@
 Package: SurveySolutionsAPI
 Type: Package
-Title: API access to Survey Solutions Server
-Version: 0.2.1
-Author: Michael Wild
-Maintainer: Michael Wild <mwild@worldbank.org>
-Description: This packages implements the Survey Solutions API.
+Title: Comprehensive API access to your Survey Solutions Server
+Version: 0.5.1
+Authors@R: person("Michael", "Wild", email = "mwild@worldbank.org", 
+  role = c("aut", "cre"))
+Description: This packages implements all the currently available POST, GET, and PATCH
+    calls to the Survey Solutions RESTfull API. It contains several convenience functions to
+    facilitate these operations, and can handle small impact evaluations as well as large
+    scale cenuses.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
@@ -28,7 +31,7 @@ Imports:
     progressr
 Depends:
     R (>= 3.3.0)
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.2
 Suggests: 
     knitr,
     rmarkdown
