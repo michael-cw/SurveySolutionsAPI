@@ -1,14 +1,19 @@
 #' Survey Solutions API call to retrieve all interviews for a specific questionnaire
 #'
-#' Returns all interviews for the specific questionnaire.
+#' Returns all interviews for the specified questionnaire and the selected status.
 #'
 #'
 #' @param server Survey Solutions server address
 #' @param apiUser Survey Solutions API user
 #' @param apiPass Survey Solutions API password
+#' @param workspace server workspace, if nothing provided, defaults to primary
+#' @param token If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored
 #' @param questID your Survey Solutions \emph{QuestionnaireId}. Retrieve a list of questionnaires by executing \code{suso_getQuestDetails}
 #' @param version version of the questionnaire
-#' @param status which status, i.e. completed, ...
+#' @param workStatus define which statuses the file should inlude (i.e. \emph{Restored,Created,SupervisorAssigned,InterviewerAssigned,
+#' RejectedBySupervisor,ReadyForInterview,
+#' SentToCapi,Restarted,Completed,ApprovedBySupervisor,
+#' RejectedByHeadquarters,ApprovedByHeadquarters,Deleted}), if NULL only completed interviews will be shown.
 #'
 #'
 #' @export
@@ -17,19 +22,42 @@
 suso_getAllInterviewQuestionnaire <- function(server= suso_get_api_key("susoServer"),
                                               apiUser=suso_get_api_key("susoUser"),
                                               apiPass=suso_get_api_key("susoPass"),
+                                              workspace = NULL,
+                                              token = NULL,
                                               questID = "",
                                               version = 1,
-                                              status = NULL) {
+                                              workStatus = "Completed") {
+    ######################################
+    # Check arguments
+    #  - workStatus
+    margs<-suso_getQuestDetails(operation.type = "statuses", workspace = workspace)
+    if(!is.null(workStatus)) {
+        workStatus<-match.arg(workStatus, margs)
+    } else {
+        workStatus<-"Completed"
+    }
+
+    ## workspace default
+    workspace<-.ws_default(ws = workspace)
     ## Define API
-    server<-httr::parse_url(paste0(server))
+    server<-httr::parse_url((server))
     server$scheme<-"https"
-    server$path<-file.path("api", "v1", "interviews")
+    server$path<-file.path(workspace,"api", "v1", "interviews")
     server$query<-list(questionnaireId = questID,
-                       questionnaireVersion = version)
-    if (!is.null(status))
-        server$query<-append(url$query, c(status = status))
-    test_detail <- GET(url = modify_url(server, query = c(server$query, page = 1)), authenticate(apiUser, apiPass, type = "basic"), progress())
-    print(modify_url(server, query = c(server$query, page = 1)))
+                       questionnaireVersion = version,
+                       status = workStatus,
+                       pageSize = 10,
+                       page = 1)
+
+    ## authentication
+    auth<-authenticate(apiUser, apiPass, type = "basic")
+    ## build url
+    server<-build_url(server)
+    ## request
+    test_detail <- GET(url = server,
+                       auth, progress())
+    check_response(test_detail)
+
     aJsonFile <- tempfile()
     writeBin(content(test_detail, "raw"), aJsonFile)
     test_json <- fromJSON(aJsonFile)
@@ -41,7 +69,9 @@ suso_getAllInterviewQuestionnaire <- function(server= suso_get_api_key("susoServ
         qTotRest <- qTot
         repCalls <- ceiling(qTotRest/nrow(test_json$Interviews))
         for (i in 2:repCalls) {
-            test_detail <- GET(url = modify_url(server, query = c(server$query, page = i)), authenticate(apiUser, apiPass, type = "basic"), progress())
+            test_detail <- GET(url = modify_url(server, query = c(server$query, page = i)),
+                               auth, progress())
+            check_response(test_detail)
             aJsonFile <- tempfile()
             writeBin(content(test_detail, "raw"), aJsonFile)
             test_json_tmp <- fromJSON(aJsonFile)
@@ -51,7 +81,7 @@ suso_getAllInterviewQuestionnaire <- function(server= suso_get_api_key("susoServ
     # Only data.table of interviews is returned
     test_json<-data.table(test_json$Interviews)
     # Set date time to utc with lubridate
-    test_json[,LastEntryDate:=as_datetime(LastEntryDate)]
+    test_json[,LastEntryDate:=as_datetime(LastEntryDate)][]
     return(test_json)
 }
 
@@ -62,6 +92,8 @@ suso_getAllInterviewQuestionnaire <- function(server= suso_get_api_key("susoServ
 #' @param server Survey Solutions server address
 #' @param apiUser Survey Solutions API user
 #' @param apiPass Survey Solutions API password
+#' @param workspace server workspace, if nothing provided, defaults to primary
+#' @param token If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored
 #' @param intID the \emph{InterviewId} of the interview. To get a list of all interview for a specific questionnaire, execute \code{suso_getAllInterviewQuestionnaire}
 #'
 #'
@@ -70,19 +102,26 @@ suso_getAllInterviewQuestionnaire <- function(server= suso_get_api_key("susoServ
 suso_getAllAnswerInterview <- function(server= suso_get_api_key("susoServer"),
                                        apiUser=suso_get_api_key("susoUser"),
                                        apiPass=suso_get_api_key("susoPass"),
+                                       workspace = NULL,
+                                       token = NULL,
                                        intID = "") {
+    ## workspace default
+    workspace<-.ws_default(ws = workspace)
     ## Define API
     server<-httr::parse_url(paste0(server))
     server$scheme<-"https"
-    server$path<-file.path("api", "v1", "interviews", intID)
+    server$path<-file.path(workspace,"api", "v1", "interviews", intID)
+    server<-build_url(server)
+    ## authentication
+    auth<-authenticate(apiUser, apiPass, type = "basic")
     ## Call
-    test_detail <- GET(url = build_url(server), authenticate(apiUser, apiPass, type = "basic"))
-    if (status_code(test_detail)!=200) stop("No data for this interview. Did you specify the correct ID?", call. = F)
+    test_detail <- GET(url = server, auth)
+    check_response(test_detail)
     aJsonFile <- tempfile()
     writeBin(content(test_detail, "raw"), aJsonFile)
     test_json <- fromJSON(aJsonFile)
     # Export only answers: Not data.table!
-    test_json<-(test_json$Answers)
+    test_json<-data.table(test_json$Answers)
     return(test_json)
 }
 
@@ -91,27 +130,36 @@ suso_getAllAnswerInterview <- function(server= suso_get_api_key("susoServer"),
 #' @param server Survey Solutions server address
 #' @param apiUser Survey Solutions API user
 #' @param apiPass Survey Solutions API password
+#' @param workspace server workspace, if nothing provided, defaults to primary
+#' @param token If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored
 #' @param intID the \emph{InterviewId} of the interview.
 #'
 #' @export
 suso_getAllHistoryInterview <- function(server= suso_get_api_key("susoServer"),
                                         apiUser=suso_get_api_key("susoUser"),
                                         apiPass=suso_get_api_key("susoPass"),
+                                        workspace = NULL,
+                                        token = NULL,
                                         intID = "") {
+    ## workspace default
+    workspace<-.ws_default(ws = workspace)
     ## Define API
     server<-httr::parse_url(paste0(server))
     server$scheme<-"https"
-    server$path<-file.path("api", "v1", "interviews", intID, "history")
+    server$path<-file.path(workspace,"api", "v1", "interviews", intID, "history")
+    ## authentication
+    auth<-authenticate(apiUser, apiPass, type = "basic")
+
     ## Call
-    test_detail <- GET(url = build_url(server), authenticate(apiUser, apiPass, type = "basic"))
-    if (status_code(test_detail)!=200) stop("No data for this interview. Did you specify the correct ID?", call. = F)
+    test_detail <- GET(url = build_url(server), auth)
+    check_response(test_detail)
     aJsonFile <- tempfile()
     writeBin(content(test_detail, "raw"), aJsonFile)
     test_json <- fromJSON(aJsonFile)
     # Export only records
     test_json<-data.table(test_json$Records)
     # Set date time to utc with lubridate
-    test_json[,Timestamp:=as_datetime(Timestamp)]
+    test_json[,Timestamp:=as_datetime(Timestamp)][]
     return(test_json)
 }
 
@@ -121,6 +169,8 @@ suso_getAllHistoryInterview <- function(server= suso_get_api_key("susoServer"),
 #' @param server Survey Solutions server address
 #' @param apiUser Survey Solutions API user
 #' @param apiPass Survey Solutions API password
+#' @param workspace server workspace, if nothing provided, defaults to primary
+#' @param token If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored
 #' @param intID a single or multiple \emph{InterviewId}.
 #'
 #' @export
@@ -130,16 +180,23 @@ suso_getAllHistoryInterview <- function(server= suso_get_api_key("susoServer"),
 suso_get_stats_interview<-function(server= suso_get_api_key("susoServer"),
                                    apiUser=suso_get_api_key("susoUser"),
                                    apiPass=suso_get_api_key("susoPass"),
+                                   workspace = NULL,
+                                   token = NULL,
                                    intID = "") {
+    ## workspace default
+    workspace<-.ws_default(ws = workspace)
     ## Define API
     server<-httr::parse_url(paste0(server))
     server$scheme<-"https"
+    ## authentication
+    auth<-authenticate(apiUser, apiPass, type = "basic")
+
     tj<-list()
     for(id in intID){
         server$path<-NULL
-        server$path<-file.path("api", "v1", "interviews", id, "stats")
+        server$path<-file.path(workspace,"api", "v1", "interviews", id, "stats")
         ## Call
-        test_detail <- GET(url = build_url(server), authenticate(apiUser, apiPass, type = "basic"))
+        test_detail <- GET(url = build_url(server), auth)
         if (status_code(test_detail)!=200){
             warning(paste0("No data for interview: " , id,". Did you specify the correct ID?"), call. = F)
             print(id)
@@ -161,14 +218,17 @@ suso_get_stats_interview<-function(server= suso_get_api_key("susoServer"),
     return(tj)
 }
 
-#' Reject interview
+#' Reject interviews either as supervisor or as headquarter. For details please see:
+#' \url{https://docs.mysurvey.solutions/headquarters/interviews/survey-workflow/}
 #'
-#' N.B. under development
 #'
 #' @param server Survey Solutions server address
 #' @param apiUser Survey Solutions API user
 #' @param apiPass Survey Solutions API password
+#' @param workspace server workspace, if nothing provided, defaults to primary
+#' @param token If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored
 #' @param intID the \emph{InterviewId} of the interview.
+#' @param HQ if FALSE, reject as supervisor, if TRUE rejected as headquarters
 #' @param comment comment which should be sent with the questionnaire
 #'
 #' @export
@@ -176,19 +236,29 @@ suso_get_stats_interview<-function(server= suso_get_api_key("susoServer"),
 suso_patchRejectInterview <- function(server= suso_get_api_key("susoServer"),
                                       apiUser=suso_get_api_key("susoUser"),
                                       apiPass=suso_get_api_key("susoPass"),
-                                      intID = "", comment = "Please check errors and re-submit!") {
-    ## Load the libraries
-    server <- ifelse(str_count(server, "https://") == 1, server, paste0("https://", server))
+                                      workspace = NULL,
+                                      token = NULL,
+                                      intID = "",
+                                      HQ = FALSE,
+                                      comment = "Please check errors and re-submit!") {
+    ## select reject
+    reject<-ifelse(HQ, "hqreject", "reject")
+    ## workspace default
+    workspace<-.ws_default(ws = workspace)
     ## Define the api
-    server = paste0(server)
     url <- parse_url(server)
     url$scheme <- "https"
-    url$path <- c("/api/v1/interviews", intID, "reject")
+    url$path<-file.path(workspace,"api", "v1", "interviews", intID, reject)
     url$query <- list(comment = comment)
-    server <- build_url(url)
-    print(server)
-    test_detail <- PATCH(url = server, authenticate(apiUser, apiPass, type = "basic"))
+    ## authentication
+    auth<-authenticate(apiUser, apiPass, type = "basic")
 
+    server <- build_url(url)
+    test_detail <- PATCH(url = server, auth)
+    # check_response(test_detail)
     # aJsonFile<-tempfile() writeBin(content(test_detail, 'raw'), aJsonFile) test_json<-fromJSON(aJsonFile)
-    return(test_detail)
+    return(status_code(test_detail))
 }
+
+
+

@@ -8,6 +8,8 @@ suso_get_stats_interview(
   server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
   apiPass = suso_get_api_key("susoPass"),
+  workspace = NULL,
+  token = NULL,
   intID = ""
 )
 }
@@ -17,6 +19,10 @@ suso_get_stats_interview(
 \item{apiUser}{Survey Solutions API user}
 
 \item{apiPass}{Survey Solutions API password}
+
+\item{workspace}{server workspace, if nothing provided, defaults to primary}
+
+\item{token}{If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored}
 
 \item{intID}{a single or multiple \emph{InterviewId}.}
 }

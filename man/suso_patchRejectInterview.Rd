@@ -2,13 +2,17 @@
 % Please edit documentation in R/suso_api_Interviews.R
 \name{suso_patchRejectInterview}
 \alias{suso_patchRejectInterview}
-\title{Reject interview}
+\title{Reject interviews either as supervisor or as headquarter. For details please see:
+\url{https://docs.mysurvey.solutions/headquarters/interviews/survey-workflow/}}
 \usage{
 suso_patchRejectInterview(
   server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
   apiPass = suso_get_api_key("susoPass"),
+  workspace = NULL,
+  token = NULL,
   intID = "",
+  HQ = FALSE,
   comment = "Please check errors and re-submit!"
 )
 }
@@ -19,10 +23,17 @@ suso_patchRejectInterview(
 
 \item{apiPass}{Survey Solutions API password}
 
+\item{workspace}{server workspace, if nothing provided, defaults to primary}
+
+\item{token}{If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored}
+
 \item{intID}{the \emph{InterviewId} of the interview.}
+
+\item{HQ}{if FALSE, reject as supervisor, if TRUE rejected as headquarters}
 
 \item{comment}{comment which should be sent with the questionnaire}
 }
 \description{
-N.B. under development
+Reject interviews either as supervisor or as headquarter. For details please see:
+\url{https://docs.mysurvey.solutions/headquarters/interviews/survey-workflow/}
 }

@@ -8,9 +8,11 @@ suso_getAllInterviewQuestionnaire(
   server = suso_get_api_key("susoServer"),
   apiUser = suso_get_api_key("susoUser"),
   apiPass = suso_get_api_key("susoPass"),
+  workspace = NULL,
+  token = NULL,
   questID = "",
   version = 1,
-  status = NULL
+  workStatus = "Completed"
 )
 }
 \arguments{
@@ -20,12 +22,19 @@ suso_getAllInterviewQuestionnaire(
 
 \item{apiPass}{Survey Solutions API password}
 
+\item{workspace}{server workspace, if nothing provided, defaults to primary}
+
+\item{token}{If Survey Solutions server token is provided \emph{apiUser} and \emph{apiPass} will be ignored}
+
 \item{questID}{your Survey Solutions \emph{QuestionnaireId}. Retrieve a list of questionnaires by executing \code{suso_getQuestDetails}}
 
 \item{version}{version of the questionnaire}
 
-\item{status}{which status, i.e. completed, ...}
+\item{workStatus}{define which statuses the file should inlude (i.e. \emph{Restored,Created,SupervisorAssigned,InterviewerAssigned,
+RejectedBySupervisor,ReadyForInterview,
+SentToCapi,Restarted,Completed,ApprovedBySupervisor,
+RejectedByHeadquarters,ApprovedByHeadquarters,Deleted}), if NULL only completed interviews will be shown.}
 }
 \description{
-Returns all interviews for the specific questionnaire.
+Returns all interviews for the specified questionnaire and the selected status.
 }
