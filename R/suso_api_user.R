@@ -35,7 +35,7 @@ suso_getSV <- function(url=suso_get_api_key("susoServer"),
     # Export only records
     test_json<-data.table(test_json$Users)
     # Set date time to utc with lubridate
-    test_json[,CreationDate:=as_datetime(CreationDate)][]
+    if(nrow(test_json)>0) test_json[,CreationDate:=as_datetime(CreationDate)][]
     return(test_json)
 }
 
