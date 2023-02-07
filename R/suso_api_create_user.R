@@ -1,7 +1,7 @@
 #' Survey Solutions API call for User Creation
 #'
 #'
-#' Creates Survey Solutions users (interviewers or supervisors).
+#' Creates Survey Solutions users (observers, interviewers or supervisors).
 #'
 #' @param userlist dataframe with upload data
 #' @param server Survey Solutions server address

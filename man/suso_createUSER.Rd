@@ -30,7 +30,7 @@ suso_createUSER(
 \item{showUser}{userName in console}
 }
 \description{
-Creates Survey Solutions users (interviewers or supervisors).
+Creates Survey Solutions users (observers, interviewers or supervisors).
 }
 \details{
 Dataframe needs to be provided with the mandatory columns
