@@ -63,25 +63,29 @@ suso_get_assignments<-function(questID = NULL,
 
     # ii. get the total and the first number
     tot<-test_json$TotalCount
-    first<-test_json$Assignments$Id[1]
 
-    # iii. create a loop to get the rest
-    rest<-tot-100
-    loop.counter<-ceiling(rest/100)
-    for(i in 1:loop.counter){
-      offs<-100*i
-      url$query<-list(order = order.by, limit = 100, offset = offs)
-      test_detail<-GET(url = build_url(url), auth)
-      check_response(test_detail)
-      aJsonFile<-tempfile()
-      writeBin(content(test_detail, "raw"), aJsonFile)
-      test_json<-fromJSON(aJsonFile)
-      listIndex<-i+1
-      full_data[[listIndex]]<-data.table(test_json$Assignments, key = "Id")
+    if(tot>0) {
+      first<-test_json$Assignments$Id[1]
+
+      # iii. create a loop to get the rest
+      rest<-tot-100
+      loop.counter<-ceiling(rest/100)
+      for(i in 1:loop.counter){
+        offs<-100*i
+        url$query<-list(order = order.by, limit = 100, offset = offs)
+        test_detail<-GET(url = build_url(url), auth)
+        check_response(test_detail)
+        aJsonFile<-tempfile()
+        writeBin(content(test_detail, "raw"), aJsonFile)
+        test_json<-fromJSON(aJsonFile)
+        listIndex<-i+1
+        full_data[[listIndex]]<-data.table(test_json$Assignments, key = "Id")
+      }
+      test_json<-rbindlist(full_data)
+      return(test_json)
+    } else if(tot==0) {
+      return(NULL)
     }
-    test_json<-rbindlist(full_data)
-    return(test_json)
-
   } else if (!is.null(AssId)) {
     # 2.2. Single Assignment by Assignment ID
     url$path<-file.path(url$path, AssId)
