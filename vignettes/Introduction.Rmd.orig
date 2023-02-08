@@ -33,14 +33,14 @@ The World Bank's Computer Assisted Survey System (CASS) **Survey Solutions** is 
 
 To further facilitate its integration in a fully automated workflow we have developed this R package, which covers almost all of the available API calls. With this vignette you get a first overview on the different functions, further vignettes are available on survey management, paradata analysis and shiny integration.
 
-The package can be considered as being a API "bare bone", as it implements the basic [Survey Solutions API](https://demo.mysurvey.solutions//apidocs/index#!) calls without substantial modification. However, this is not true for the data export function as well as for the 
+The package can be considered as being a API "bare bone", as it implements the basic [Survey Solutions API](https://demo.mysurvey.solutions//apidocs/index#!) calls without substantial modification. However, this is not true for the data export function as well as for the
 paradata. Modification was necessary to facilitate workflow integration. See the details in the corresponding documentation.
 
 Please be aware, that this package makes heavy use of data.table, and this is also continued in this vignette. In case you are not familiar with it yet, you should probably have a look a this [introduction](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html).
 
 ## API credentials
 
-To use the API you first need to set-up the API user on your Survey Solutions server. See [here](https://support.mysurvey.solutions/headquarters/api/) for details. After this done, you can use the *suso_set_key()* function, to provide your credentials. 
+To use the API you first need to set-up the API user on your Survey Solutions server. See [here](https://support.mysurvey.solutions/headquarters/api/) for details. After this done, you can use the *suso_set_key()* function, to provide your credentials.
 
 ```{r credentials, echo=TRUE, message=FALSE, warning=FALSE}
 library(SurveySolutionsAPI)
@@ -52,7 +52,6 @@ suso_keys()
 ```{r trueCredentials, echo=FALSE, include=FALSE}
 suso_clear_keys()
 #credentials<-readr::read_rds(path = "/srv/shiny-server/SuSo_ListingCheck/helpers/surveysolutionsAPI_testcode/credentials.rds")
-suso_set_key("https://mcw2.mysurvey.solutions", "apiTest", "Nitro2505#")
 ```
 
 After this is done, there is no need to provide the credentials for every API call again. They are stored until the end of your current session. There is also a function to check if your credentials work.
@@ -68,7 +67,7 @@ It calls the supervisor API, and returns the response. If the return value is 20
 These functions are particularly useful for survey management, and more details can be found in the corresponding vignette on survey management. Lets start with getting a list of all supervisors on the server.
 
 ```{r svlist, echo=T, include=T}
-sv<-suso_getSV() 
+sv<-suso_getSV()
 print(sv)
 ```
 
@@ -108,7 +107,7 @@ questlist<-suso_getQuestDetails()
 #print(questlist)
 ```
 
-Specifying *operation.type = status*, you receive a list of statuses. 
+Specifying *operation.type = status*, you receive a list of statuses.
 
 ```{r statlist, echo=T, include=T}
 statlist<-suso_getQuestDetails(operation.type = "statuses")
@@ -118,7 +117,7 @@ print(statlist)
 By taking a particular *QuestionnaireId* and specifying the *operation.type *you can execute further requests. For example,
 
 ```{r questionnaire, echo=T, include=T}
-questionnaire<-suso_getQuestDetails(operation.type = "structure", 
+questionnaire<-suso_getQuestDetails(operation.type = "structure",
                                     quid = questlist[2, QuestionnaireId], version = questlist[2, Version])
 questionnaire<-questionnaire[,.(VariableName, type, QuestionText, Featured, PublicKey)]
 questionnaire<-questionnaire[!is.na(QuestionText)]
@@ -129,7 +128,7 @@ Gives you a data.table which contains all the questions, question texts, etc. wh
 
 You can also get a list of all interviews done for the specific questionnaire.
 ```{r interviews, echo=T, include=T}
-interviews<-suso_getQuestDetails(operation.type = "interviews", 
+interviews<-suso_getQuestDetails(operation.type = "interviews",
                                  quid = questlist[2, QuestionnaireId], version = questlist[2, Version])
 interviews<-interviews[,.(InterviewId, AssignmentId, ResponsibleId, ErrorsCount, Status)]
 head(interviews, 20L)
@@ -140,7 +139,7 @@ head(interviews, 20L)
 To monitor variables of interest, you can use the *suso_get_stats* function.
 
 ```{r statquest, echo=T, include=T, message=F}
-statquest<-suso_get_stats(questID = questlist[2, QuestionnaireId], 
+statquest<-suso_get_stats(questID = questlist[2, QuestionnaireId],
                           version = questlist[2, Version], qQuest = questionnaire[13, PublicKey])
 print(statquest)
 ```
@@ -148,10 +147,10 @@ print(statquest)
 
 ## Full data export
 
-To export the data collected in Survey Solutions, you use *suso_export*. 
+To export the data collected in Survey Solutions, you use *suso_export*.
 
 ```{r, export, echo=F, include=T, message=F}
-allData<-suso_export(questID = questlist[2, QuestionnaireId], 
+allData<-suso_export(questID = questlist[2, QuestionnaireId],
                             version = questlist[2, Version], reloadTimeDiff = 24)
 
 ```
@@ -170,7 +169,7 @@ through the harmonized ID, main and rosterfiles can easily be put together. More
 To retrieve the paradata for a particular interview you use *suso_export_paradata*
 ```{r para_short, echo=T, include=T}
 system.time(
-para1<-suso_export_paradata(questID = questlist[2, QuestionnaireId], 
+para1<-suso_export_paradata(questID = questlist[2, QuestionnaireId],
                            version = questlist[2, Version], reloadTimeDiff = 24, onlyActiveEvents = F, allResponses = T)
 )
 ```
@@ -184,7 +183,7 @@ Running the same call again without passive events and without all responses pro
 
 ```{r, para_long, echo=T, include=T, message=F}
 system.time(
-para2<-suso_export_paradata(questID = questlist[2, QuestionnaireId], 
+para2<-suso_export_paradata(questID = questlist[2, QuestionnaireId],
                            version = questlist[2, Version], reloadTimeDiff = 24, onlyActiveEvents = T, allResponses = F)
 )
 ```
@@ -194,12 +193,12 @@ As you see from the system timings, changing these parameters reduces processing
 - **full data**: `r names(para1)`
 - **reduced data**: `r names(para2)`
 
-There are also tables already inclduded in the file, like: 
+There are also tables already inclduded in the file, like:
 ```{r, para_user, echo=T, include=T, message=F}
 para2[["userDistr"]]
 ```
 
-which gives the distribution of events by user, or: 
+which gives the distribution of events by user, or:
 ```{r, para_action, echo=T, include=T, message=F}
 para2[["actionDistr"]]
 ```
