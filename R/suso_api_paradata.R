@@ -101,6 +101,7 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
   ###############################################################################
   ##  1. START FILE CREATION --> file is only created when time difference is larger then reloadTimeDiff
   current_time<-strptime(Sys.time(), format = "%Y-%m-%d %H:%M:%S")
+  if(length(time_limit)==0) time_limit<- strptime(Sys.time(), format = "%Y-%m-%d %H:%M:%S") - 2000000
   timeDiff<-ceiling(difftime(current_time, time_limit, units = "hours"))
 
   cat(paste("\nThe last file has been created", timeDiff[1], "hours ago.\n\n"))
