@@ -51,7 +51,7 @@ suso_keys()
 
 ```{r trueCredentials, echo=FALSE, include=FALSE}
 suso_clear_keys()
-#credentials<-readr::read_rds(path = "/srv/shiny-server/SuSo_ListingCheck/helpers/surveysolutionsAPI_testcode/credentials.rds")
+
 ```
 
 After this is done, there is no need to provide the credentials for every API call again. They are stored until the end of your current session. There is also a function to check if your credentials work.
@@ -60,38 +60,98 @@ After this is done, there is no need to provide the credentials for every API ca
 suso_PwCheck()
 ```
 
-It calls the supervisor API, and returns the response. If the return value is 200, then your connection and credentials are OK.
+In case no workspace is provided, this call (like all the other calls) will default to the primary workspace. However if a workspace is provided, then the check will be performed on the provided workspace.
+
+```{r checkCredWS, echo=T, include=T}
+suso_PwCheck(workspace = "test")
+```
+
+It calls the supervisor API, and returns the response. If the return value is 200, then your connection and credentials are OK. For further information on API response status codes have a look here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status.
+
+## Workspace Management
+
+You can also manage your workspaces through the API. In particular, you can
+
+- request a list of all workspaces the API user has access to, as well as
+- create new workspaces
+- and assign users to a particular workspace.
+
+However for the latter two operations you require ADMIN credentials. Standard API user credentials would not work.
+
+To receive a list of workspaces to which the current API user has access to, you can just run:
+
+```{r wslist, echo=T, include=T}
+ws<-suso_getWorkspace()
+print(head(ws))
+```
+To receive a list of all workspaces in the system (even those to which the current API user does not have access to) you can do the same, and use the ADMIN password:
+
+```{r wslist_admin, echo=T, include=T}
+ws<-suso_getWorkspace(apiUser = adminUser, apiPass = adminPass)
+print(head(ws))
+```
+For the next two operations, the use of admin credentials is mandatory, they will not work with a standard API user. The first one of these two is the creation of a new workspace:
+
+```{r wscreate, echo=T, include=T}
+ws<-suso_createWorkspace(
+      apiUser = adminUser,
+      apiPass = adminPass,
+      your_workspace = "test",
+      new_workspace = "test11",
+      displayName = "ExtraExtraWorkspace")
+print(head(ws))
+```
+
+The return value from the function already tells you, that the new workspace has been successfully created, however to double check, you can also get the full list again:
+
+```{r wslist_admin1, echo=T, include=T}
+ws<-suso_getWorkspace(apiUser = adminUser, apiPass = adminPass)
+print(head(ws))
+```
+Finally you can also assign a new user to this workspace by using the **suso_assignWorkspace** function.
+
+```{r wsassign, echo=T, include=T}
+ws<-suso_assignWorkspace(
+              your_workspace = "test",
+              assign_workspace = "test11",
+              apiUser = adminUser,
+              apiPass = adminPass,
+              uid = "34c2bc7b-ec33-473b-875b-dc06d269fced",
+              sv_id = "34c2bc7b-ec33-473b-875b-dc06d269fced")
+print(head(ws))
+```
+Further details on workspaces can be found in the dedicated vignette on user management.
 
 ## User Management
 
 These functions are particularly useful for survey management, and more details can be found in the corresponding vignette on survey management. Lets start with getting a list of all supervisors on the server.
 
 ```{r svlist, echo=T, include=T}
-sv<-suso_getSV()
-print(sv)
+sv<-suso_getSV(workspace = "test")
+print(head(sv))
 ```
 
 Your will receive a list of supervisors currently active (not archived) on the server. If you take one of the supervisor's *id* and use the *suso_getINT* function, you will receive all the interviewers in the team.
 
 ```{r intlist, echo=T, include=T}
-int<-suso_getINT(sv_id = sv[3, UserId])
+int<-suso_getINT(sv_id = sv[3, UserId], workspace = "test")
 print(int)
 ```
 
 To receive more information about a particular user, use the *suso_getINT_info* function:
 
 ```{r intinfo, echo=T, include=T}
-intinfo<-suso_getINT_info(int_id = int[1, UserId])
+intinfo<-suso_getINT_info(int_id = int[1, UserId], workspace = "test")
 print(intinfo)
 ```
 
 To get information about any particular user, you can also use the more general function *suso_getUSR*.
 
 ```{r usrinfo, echo=T, include=T}
-usrinfo_int<-suso_getUSR(uid = sv[3, UserId])
+usrinfo_int<-suso_getUSR(uid = sv[3, UserId], workspace = "test")
 print(usrinfo_int)
 
-usrinfo_int<-suso_getUSR(uid = int[1, UserId])
+usrinfo_int<-suso_getUSR(uid = int[1, UserId], workspace = "test")
 print(usrinfo_int)
 ```
 
@@ -103,45 +163,45 @@ The basic questionnaire API calls are handled through the *suso_getQuestDetails*
 If no input is provided, the function returns a list of all questionnaires on the server:
 
 ```{r questlist, echo=T, include=T}
-questlist<-suso_getQuestDetails()
+questlist<-suso_getQuestDetails(workspace = "test")
 #print(questlist)
 ```
 
 Specifying *operation.type = status*, you receive a list of statuses.
 
 ```{r statlist, echo=T, include=T}
-statlist<-suso_getQuestDetails(operation.type = "statuses")
+statlist<-suso_getQuestDetails(operation.type = "statuses", workspace = "test")
 print(statlist)
 ```
 
 By taking a particular *QuestionnaireId* and specifying the *operation.type *you can execute further requests. For example,
 
 ```{r questionnaire, echo=T, include=T}
-questionnaire<-suso_getQuestDetails(operation.type = "structure",
-                                    quid = questlist[2, QuestionnaireId], version = questlist[2, Version])
+questionnaire<-suso_getQuestDetails(operation.type = "structure", workspace = "test",
+                                    quid = questlist[1, QuestionnaireId], version = questlist[1, Version])
 questionnaire<-questionnaire[,.(VariableName, type, QuestionText, Featured, PublicKey)]
 questionnaire<-questionnaire[!is.na(QuestionText)]
-head(questionnaire, 19L)
+head(questionnaire$q, 19L)
 ```
 
 Gives you a data.table which contains all the questions, question texts, etc. which you can use for further processing i.e to render a user manual with rmarkdown. Find details in the manual on questionnaire creation.
 
 You can also get a list of all interviews done for the specific questionnaire.
 ```{r interviews, echo=T, include=T}
-interviews<-suso_getQuestDetails(operation.type = "interviews",
-                                 quid = questlist[2, QuestionnaireId], version = questlist[2, Version])
+interviews<-suso_getQuestDetails(operation.type = "interviews", workspace = "test",
+                                 quid = questlist[1, QuestionnaireId], version = questlist[1, Version])
 interviews<-interviews[,.(InterviewId, AssignmentId, ResponsibleId, ErrorsCount, Status)]
 head(interviews, 20L)
 ```
 
-## Quick statistics
+## Quick statistics --> Attention: this call is currently returning a 500 error, the Survey Solutions team is working on it.
 
 To monitor variables of interest, you can use the *suso_get_stats* function.
 
-```{r statquest, echo=T, include=T, message=F}
-statquest<-suso_get_stats(questID = questlist[2, QuestionnaireId],
-                          version = questlist[2, Version], qQuest = questionnaire[13, PublicKey])
-print(statquest)
+```{r statquest, echo=T, include=T, message=F, eval=F}
+#statquest<-suso_get_stats(questID = questlist[1, QuestionnaireId], workspace = "test",
+#                          version = questlist[1, Version], qQuest = questionnaire[19, PublicKey])
+#print(statquest)
 ```
 
 
@@ -150,8 +210,8 @@ print(statquest)
 To export the data collected in Survey Solutions, you use *suso_export*.
 
 ```{r, export, echo=F, include=T, message=F}
-allData<-suso_export(questID = questlist[2, QuestionnaireId],
-                            version = questlist[2, Version], reloadTimeDiff = 24)
+allData<-suso_export(questID = questlist[1, QuestionnaireId], workspace = "test",
+                            version = questlist[1, Version], reloadTimeDiff = 24)
 
 ```
 
@@ -169,12 +229,12 @@ through the harmonized ID, main and rosterfiles can easily be put together. More
 To retrieve the paradata for a particular interview you use *suso_export_paradata*
 ```{r para_short, echo=T, include=T}
 system.time(
-para1<-suso_export_paradata(questID = questlist[2, QuestionnaireId],
-                           version = questlist[2, Version], reloadTimeDiff = 24, onlyActiveEvents = F, allResponses = T)
+para1<-suso_export_paradata(questID = questlist[1, QuestionnaireId], workspace = "test",
+                           version = questlist[1, Version], reloadTimeDiff = 24, onlyActiveEvents = F, allResponses = T)
 )
 ```
 
-This will return a list of data table, separated by events. Please bear in mind, that paradata files can be fairly big, and processing it may require a large working memory. To decrease the load there are also 3 parameters you can change, these are:
+This will return a list of data.tables, separated by events. Please bear in mind, that paradata files can be fairly big, and processing it may require a large working memory. To decrease the load there are also 3 parameters you can change, these are:
 
 - **onlyActiveEvents**, if TRUE it processes only the active events initiated by users.
 - **allResponses**, if FALSE, does not process all response values, nevertheless they are still included in a single column. Otherwise, they are separated by column.
@@ -183,8 +243,8 @@ Running the same call again without passive events and without all responses pro
 
 ```{r, para_long, echo=T, include=T, message=F}
 system.time(
-para2<-suso_export_paradata(questID = questlist[2, QuestionnaireId],
-                           version = questlist[2, Version], reloadTimeDiff = 24, onlyActiveEvents = T, allResponses = F)
+para2<-suso_export_paradata(questID = questlist[1, QuestionnaireId], workspace = "test",
+                           version = questlist[1, Version], reloadTimeDiff = 24, onlyActiveEvents = T, allResponses = F)
 )
 ```
 
@@ -193,7 +253,7 @@ As you see from the system timings, changing these parameters reduces processing
 - **full data**: `r names(para1)`
 - **reduced data**: `r names(para2)`
 
-There are also tables already inclduded in the file, like:
+There are also tables already included in the file, like:
 ```{r, para_user, echo=T, include=T, message=F}
 para2[["userDistr"]]
 ```

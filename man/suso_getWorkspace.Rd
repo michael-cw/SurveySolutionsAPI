@@ -32,3 +32,21 @@ workspace is requested}
 as well as workspace statuses. Workspaces as well as Workspaces information can only be accessed, if credentials
 are eligible. For more details please read \url{https://docs.mysurvey.solutions/headquarters/accounts/workspaces/}
 }
+\examples{
+\dontrun{
+# This assumes, that suso_PwCheck(workspace = "myworkspace") was
+# sucessful
+
+# shows all workspaces in the system AND the user has access to
+#' suso_createWorkspace(
+          workspace = "myworkspace",
+          status = F)
+
+# shows details for specific workspace myworkspace
+suso_createWorkspace(
+          workspace = "myworkspace",
+          status = F)
+}
+
+
+}

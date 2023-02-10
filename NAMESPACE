@@ -2,9 +2,11 @@
 
 export(suso_PwCheck)
 export(suso_archUSR)
+export(suso_assignWorkspace)
 export(suso_clear_keys)
 export(suso_createASS)
 export(suso_createUSER)
+export(suso_createWorkspace)
 export(suso_details_lastexport)
 export(suso_export)
 export(suso_export_paradata)

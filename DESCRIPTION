@@ -1,7 +1,7 @@
 Package: SurveySolutionsAPI
 Type: Package
 Title: Comprehensive API access to your Survey Solutions Server
-Version: 0.5.3
+Version: 0.6.0
 Authors@R: person("Michael", "Wild", email = "mwild@worldbank.org", 
   role = c("aut", "cre"))
 Description: This packages implements all the currently available POST, GET, and PATCH
