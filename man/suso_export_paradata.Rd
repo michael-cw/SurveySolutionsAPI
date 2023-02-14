@@ -14,7 +14,7 @@ suso_export_paradata(
   version = 1,
   workStatus = "Completed",
   reloadTimeDiff = 1,
-  inShinyServer = FALSE,
+  inShinyApp = FALSE,
   multiCore = NULL,
   onlyActiveEvents = FALSE,
   allResponses = TRUE,
@@ -45,7 +45,7 @@ RejectedByHeadquarters,ApprovedByHeadquarters,Deleted}), if NULL all is exported
 
 \item{reloadTimeDiff}{time difference in hours between last generated file and now}
 
-\item{inShinyServer}{if True, file interacts with shiny progress bar}
+\item{inShinyApp}{if True, file interacts with shiny progress bar}
 
 \item{multiCore}{if not NULL, an integer number specifying the number of cores to use}
 

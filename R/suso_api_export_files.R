@@ -117,6 +117,11 @@ suso_export<-function(server= suso_get_api_key("susoServer"),
                                                version = version,
                                                workspace = workspace,
                                                format=format_para)$StartDate, format = "%Y-%m-%dT%H:%M:%S")
+  # Check if no file has been created
+  if(length(time_limit)==0) time_limit<-strptime(Sys.time(), format = "%Y-%m-%d %H:%M:%S") - lubridate::ddays(28)
+  # Select latest file created if more than 1 file
+  if(length(time_limit)>1) time_limit<-time_limit[1]
+
   ###############################################################################
   ##          START FILE CREATION
   ##              -IFF time diff is larger than treshold,

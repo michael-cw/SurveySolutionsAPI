@@ -20,7 +20,7 @@
 #' @param questID \emph{QuestionnaireId} for which the paradata should be generated
 #' @param version questionnnaire version
 #' @param reloadTimeDiff time difference in hours between last generated file and now
-#' @param inShinyServer if True, file interacts with shiny progress bar
+#' @param inShinyApp if True, file interacts with shiny progress bar
 #' @param multiCore if not NULL, an integer number specifying the number of cores to use
 #' @param onlyActiveEvents if TRUE only active events are exported, decreases processing time and memory requirements
 #' @param allResponses if TRUE all responses will be extracted. Setting it to FALSE may decrease processing time and
@@ -58,7 +58,7 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
                                version=1,
                                workStatus="Completed",
                                reloadTimeDiff=1,
-                               inShinyServer=FALSE,
+                               inShinyApp=FALSE,
                                multiCore = NULL,
                                onlyActiveEvents = FALSE,
                                allResponses = TRUE,
@@ -94,6 +94,11 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
                                                version = version,
                                                workspace = workspace,
                                                format=format_para)$StartDate, format = "%Y-%m-%dT%H:%M:%S")
+  # Check if no file has been created
+  if(length(time_limit)==0) time_limit<-strptime(Sys.time(), format = "%Y-%m-%d %H:%M:%S") - lubridate::ddays(28)
+  # Select latest file created if more than 1 file
+  if(length(time_limit)>1) time_limit<-time_limit[1]
+
   ###############################################################################
   ##          START FILE CREATION
   ##              -IFF time diff is larger than treshold,
@@ -101,7 +106,6 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
   ###############################################################################
   ##  1. START FILE CREATION --> file is only created when time difference is larger then reloadTimeDiff
   current_time<-strptime(Sys.time(), format = "%Y-%m-%d %H:%M:%S")
-  if(length(time_limit)==0) time_limit<- strptime(Sys.time(), format = "%Y-%m-%d %H:%M:%S") - 2000000
   timeDiff<-ceiling(difftime(current_time, time_limit, units = "hours"))
 
   cat(paste("\nThe last file has been created", timeDiff[1], "hours ago.\n\n"))
@@ -195,10 +199,10 @@ suso_export_paradata<-function(server= suso_get_api_key("susoServer"),
   info <- (file.info(fp))
   if (info$size <=75) stop('\nNo Records yet!', call. = F)
   ## UNPACK
-  paradata_files<-unpack(fp=fp, allResponses = allResponses, inShinyServer = inShinyServer)
+  paradata_files<-unpack(fp=fp, allResponses = allResponses, inShinyServer = inShinyApp)
   ## STOP when empty
   if (is.null(paradata_files)) stop('\nNo Records yet!', call. = F)
-  if(inShinyServer) incProgress(amount = 0.25, message = "Transformation completed")
+  if(inShinyApp) incProgress(amount = 0.25, message = "Transformation completed")
   ## TRANSFORMATIONS
   ## A add rid if it doesnt exist
   if (length(grep("rid", names(paradata_files)))==0) paradata_files[,rid:=0]
