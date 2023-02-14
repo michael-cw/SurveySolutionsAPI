@@ -137,7 +137,7 @@ suso_export<-function(server= suso_get_api_key("susoServer"),
 
     cat("The last file has been created", timeDiff, "hours ago.")
   if((timeDiff>reloadTimeDiff) | length(time_limit)==0){
-    cat("A new file will be generated. This may take a while.\n")
+    cat("A new file will be generated. This may take a while.\n\n")
     ## Create Request
     js_ch <- list(
       ExportType = jsonlite::unbox(format_para),
@@ -294,9 +294,12 @@ suso_export<-function(server= suso_get_api_key("susoServer"),
       names(tmp_file)<-tmpName
       tmp.parIDcol<-grep(pattern = "__id", names(tmp_file))
       nesting<-length(tmp.parIDcol)-1
-      print(name)
-      print(nesting)
-      print("****")
+      if(interactive()){
+        cat("\n")
+        cat("FileName:", name, "\n")
+        cat("Nesting Level:", nesting, "\n")
+        cat("****\n")
+      }
       if (nesting==1 & length(tmp.parIDcol)==2 & nrow(tmp_file)!=0){
         ##  4.1. ROSTER LEVEL 1
         tmp.parIDcol<-names(tmp_file)[tmp.parIDcol]
