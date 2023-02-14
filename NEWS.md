@@ -1,3 +1,10 @@
+# SurveySolutionsAPI 0.6.1
+
+* Updated *suso_export* and *suso_export_paradata* to use the same in *inShinyApp* parameter
+
+
 # SurveySolutionsAPI 0.6.0
 
-* Added a `NEWS.md` file to track changes to the package.
+* Updated all workspace functions
+
+

@@ -108,6 +108,8 @@ suso_export<-function(server= suso_get_api_key("susoServer"),
   test_json<-data.table(fromJSON(aJsonFile)$Questionnaires)
   questName<-subset(test_json, QuestionnaireIdentity==quid, Variable)
   questName<-questName$Variable
+  # stop if no questionnaire name
+  if(length(questName)==0) stop("No questionnaire name could be found. Did you choose the correct questionnaire id and version?")
 
 
   ###############################################
