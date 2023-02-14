@@ -10,7 +10,9 @@ suso_getINT_log(
   pass = suso_get_api_key("susoPass"),
   int_id = NULL,
   workspace = NULL,
-  token = NULL
+  token = NULL,
+  startDate = NULL,
+  endDate = NULL
 )
 }
 \arguments{
@@ -23,10 +25,48 @@ suso_getINT_log(
 \item{int_id}{interviewer id}
 
 \item{workspace}{If workspace name is provide requests are made regarding this specific workspace, if
-no workspace is provided defaults to primary workspace.}
+no workspace is provided defaults to primary workspace}
 
 \item{token}{If Survey Solutions server token is provided \emph{usr} and \emph{pass} will be ignored}
+
+\item{startDate}{Start data for the period of interest, date must be provided as character in the format:
+YYYY-MM-DD, and will start at 00:00.00 server time of the specified day}
+
+\item{endDate}{End date for the period of interest, date must be provided ascharacter in the format:
+YYYY-MM-DD, and will end at 23:59:59 server time of the specified day. If not end date is provided, the current
+date will be used.}
 }
 \description{
 Get log of interviewer
+}
+\examples{
+\dontrun{
+# without start or end date, the last 7 days of log file will be shown
+suso_getINT_log(
+          workspace = "myworkspace",
+          int_id = "xxxx-xxxx-xxxx-xxx"
+          )
+# if you want to extent this period beyond the 7 days, just provide a start date
+suso_getINT_log(
+          workspace = "myworkspace",
+          int_id = "xxxx-xxxx-xxxx-xxx",
+          startDate = "2023-01-01"
+          )
+# or if you want it for a specific period, provide start and end date
+suso_getINT_log(
+          workspace = "myworkspace",
+          int_id = "xxxx-xxxx-xxxx-xxx",
+          startDate = "2023-01-01",
+          endDate = "2023-02-01"
+          )
+# if you provide both, start and end date for the same day, you will receive
+# all data for said day, from midnight until the 23:59:59
+suso_getINT_log(
+          workspace = "myworkspace",
+          int_id = "xxxx-xxxx-xxxx-xxx",
+          startDate = "2023-02-14",
+          endDate = "2023-02-14")
+}
+
+
 }

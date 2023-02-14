@@ -27,3 +27,15 @@ no workspace is provided defaults to primary workspace.}
 \description{
 Gets list of supervisors
 }
+\examples{
+\dontrun{
+suso_getSV(
+          workspace = "myworkspace"
+          )
+# or without any workspace and receive the default workspace
+suso_getSV()
+
+}
+
+
+}

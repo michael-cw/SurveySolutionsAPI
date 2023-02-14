@@ -33,3 +33,20 @@ no workspace is provided defaults to primary workspace.}
 \description{
 (Un-)Archive user
 }
+\examples{
+\dontrun{
+# you can archive a user by archive=T
+suso_archUSR(
+          workspace = "myworkspace",
+          uid = "xxxx-xxxx-xxxx-xxx",
+          archive = TRUE
+          )
+# and unarchive a user by archive=F
+suso_archUSR(
+          workspace = "myworkspace",
+          uid = "xxxx-xxxx-xxxx-xxx",
+          archive = FALSE
+          )
+}
+
+}

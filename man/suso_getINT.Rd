@@ -30,3 +30,12 @@ no workspace is provided defaults to primary workspace.}
 \description{
 Get list of all interviewers by supervisor
 }
+\examples{
+\dontrun{
+suso_getINT(
+          workspace = "myworkspace",
+          sv_id = "xxxx-xxxx-xxxx-xxx"
+          )
+}
+
+}

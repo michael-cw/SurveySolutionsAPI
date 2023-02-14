@@ -38,7 +38,7 @@ are eligible. For more details please read \url{https://docs.mysurvey.solutions/
 # sucessful
 
 # shows all workspaces in the system AND the user has access to
-#' suso_createWorkspace(
+suso_createWorkspace(
           workspace = "myworkspace",
           status = F)
 

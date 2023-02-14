@@ -19,7 +19,7 @@
 #' # sucessful
 #'
 #' # shows all workspaces in the system AND the user has access to
-#' #' suso_createWorkspace(
+#' suso_createWorkspace(
 #'           workspace = "myworkspace",
 #'           status = F)
 #'

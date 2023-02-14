@@ -30,3 +30,12 @@ no workspace is provided defaults to primary workspace.}
 \description{
 Get details of interviewers
 }
+\examples{
+\dontrun{
+suso_getINT_info(
+          workspace = "myworkspace",
+          int_id = "xxxx-xxxx-xxxx-xxx"
+          )
+}
+
+}
