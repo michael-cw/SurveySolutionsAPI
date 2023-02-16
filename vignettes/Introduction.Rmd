@@ -1,7 +1,7 @@
 ---
 title: "Introduction To the Survey Solutions API package"
 author: "Michael Wild"
-date: "2023-02-10"
+date: "2023-02-16"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introduction}
@@ -57,7 +57,7 @@ After this is done, there is no need to provide the credentials for every API ca
 suso_PwCheck()
 #> [1] "https://michael-wild-demo.mysurvey.solutions/primary/api/v1/supervisors?limit=200"
 #> Response [https://michael-wild-demo.mysurvey.solutions/primary/api/v1/supervisors?limit=200]
-#>   Date: 2023-02-10 20:25
+#>   Date: 2023-02-16 17:24
 #>   Status: 200
 #>   Content-Type: application/json; charset=utf-8
 #>   Size: 482 B
@@ -70,7 +70,7 @@ In case no workspace is provided, this call (like all the other calls) will defa
 suso_PwCheck(workspace = "test")
 #> [1] "https://michael-wild-demo.mysurvey.solutions/test/api/v1/supervisors?limit=200"
 #> Response [https://michael-wild-demo.mysurvey.solutions/test/api/v1/supervisors?limit=200]
-#>   Date: 2023-02-10 20:25
+#>   Date: 2023-02-16 17:24
 #>   Status: 200
 #>   Content-Type: application/json; charset=utf-8
 #>   Size: 4.54 kB
@@ -104,23 +104,24 @@ To receive a list of all workspaces in the system (even those to which the curre
 
 ```r
 ws <- suso_getWorkspace(apiUser = adminUser, apiPass = adminPass)
+#> Error in stopifnot(is.character(user), length(user) == 1): object 'adminUser' not found
 print(head(ws))
 #>       Name       DisplayName DisabledAtUtc
 #> 1: primary Default Workspace            NA
 #> 2:    test              test            NA
-#> 3:  test10    ExtraWorkspace            NA
-#> 4:   test2             test2            NA
-#> 5:   test3             test3            NA
-#> 6:   test4             test4            NA
+#> 3:   test2             test2            NA
 ```
 For the next two operations, the use of admin credentials is mandatory, they will not work with a standard API user. The first one of these two is the creation of a new workspace:
 
 
 ```r
 ws <- suso_createWorkspace(apiUser = adminUser, apiPass = adminPass, your_workspace = "test", new_workspace = "test11", displayName = "ExtraExtraWorkspace")
+#> Error in stopifnot(is.character(user), length(user) == 1): object 'adminUser' not found
 print(head(ws))
-#>      Name         DisplayName DisabledAtUtc
-#> 1: test11 ExtraExtraWorkspace
+#>       Name       DisplayName DisabledAtUtc
+#> 1: primary Default Workspace            NA
+#> 2:    test              test            NA
+#> 3:   test2             test2            NA
 ```
 
 The return value from the function already tells you, that the new workspace has been successfully created, however to double check, you can also get the full list again:
@@ -128,23 +129,24 @@ The return value from the function already tells you, that the new workspace has
 
 ```r
 ws <- suso_getWorkspace(apiUser = adminUser, apiPass = adminPass)
+#> Error in stopifnot(is.character(user), length(user) == 1): object 'adminUser' not found
 print(head(ws))
-#>       Name         DisplayName DisabledAtUtc
-#> 1: primary   Default Workspace            NA
-#> 2:    test                test            NA
-#> 3:  test10      ExtraWorkspace            NA
-#> 4:  test11 ExtraExtraWorkspace            NA
-#> 5:   test2               test2            NA
-#> 6:   test3               test3            NA
+#>       Name       DisplayName DisabledAtUtc
+#> 1: primary Default Workspace            NA
+#> 2:    test              test            NA
+#> 3:   test2             test2            NA
 ```
 Finally you can also assign a new user to this workspace by using the **suso_assignWorkspace** function.
 
 
 ```r
 ws <- suso_assignWorkspace(your_workspace = "test", assign_workspace = "test11", apiUser = adminUser, apiPass = adminPass, uid = "34c2bc7b-ec33-473b-875b-dc06d269fced", sv_id = "34c2bc7b-ec33-473b-875b-dc06d269fced")
+#> Error in stopifnot(is.character(user), length(user) == 1): object 'adminUser' not found
 print(head(ws))
-#>                                 UserIds Workspace                         SupervisorId                  Status
-#> 1: 34c2bc7b-ec33-473b-875b-dc06d269fced    test11 34c2bc7b-ec33-473b-875b-dc06d269fced Workspaces list updated
+#>       Name       DisplayName DisabledAtUtc
+#> 1: primary Default Workspace            NA
+#> 2:    test              test            NA
+#> 3:   test2             test2            NA
 ```
 Further details on workspaces can be found in the dedicated vignette on user management.
 
@@ -286,27 +288,27 @@ You can also get a list of all interviews done for the specific questionnaire.
 interviews <- suso_getQuestDetails(operation.type = "interviews", workspace = "test", quid = questlist[1, QuestionnaireId], version = questlist[1, Version])
 interviews <- interviews[, .(InterviewId, AssignmentId, ResponsibleId, ErrorsCount, Status)]
 head(interviews, 20L)
-#>                              InterviewId AssignmentId                        ResponsibleId ErrorsCount              Status
-#>  1: 7d04a07e-5c99-44f6-974f-531d8ed5a560          239 366cb1f7-30fa-48bf-9b56-ffa4ec8b0861           0 InterviewerAssigned
-#>  2: 79202304-8ba6-4c87-b45a-3f56529fc6e4          235 366cb1f7-30fa-48bf-9b56-ffa4ec8b0861           0           Completed
-#>  3: a9620548-b1d8-418c-9c1f-a0d64031968a          234 366cb1f7-30fa-48bf-9b56-ffa4ec8b0861           0           Completed
-#>  4: 343da912-5a9f-4875-821b-6f0e1440150b           48 a67d2b82-bf28-40cf-bd1a-7901225c0885           0           Completed
-#>  5: ea10292e-7ac6-4fa3-bf82-d4d24fee98ba            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           0           Completed
-#>  6: 7d91c038-e258-4948-a7a2-566cda5b4dc5            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           0           Completed
-#>  7: 1d9305db-2be3-44d6-baf2-cf560a9ff45d            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           0           Completed
-#>  8: 782d1652-c6f5-4d02-882e-e372e97dfa83            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           0           Completed
-#>  9: 8621b894-43bd-4e4e-bfa3-0e67cdf5abb8            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           0           Completed
-#> 10: beeb70f4-ea94-4eb7-af5c-bc15abcfa9ed            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           0           Completed
-#> 11: 90badf8a-199a-4247-94a9-51a14bf308fa            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1           Completed
-#> 12: d63ced87-589b-4316-8e8f-e247c4779877            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1           Completed
-#> 13: 43045bd2-325c-4649-81b3-4f1841048034            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1           Completed
-#> 14: 1054b136-c94f-4851-b8c2-ca4e003f4358            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1           Completed
-#> 15: a43b0480-8fdb-4d43-b6fe-29420bf8eb71            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           0           Completed
-#> 16: 2f829f02-c844-439b-88a2-326b98412204            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1           Completed
-#> 17: 0dc4f8a1-d740-440f-bdc6-2e34df997d00            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1           Completed
-#> 18: ccc03ee9-1974-4356-98f0-648e0395e932            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1           Completed
-#> 19: a02bd8fa-e048-43f2-88ad-f5e43c2cc67b            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1           Completed
-#> 20: 605afedd-19e6-4941-b51c-b12d885274eb            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1           Completed
+#>                              InterviewId AssignmentId                        ResponsibleId ErrorsCount               Status
+#>  1: 7d91c038-e258-4948-a7a2-566cda5b4dc5            1 3b0c6e09-d606-4914-9e20-2abc048d5bea           0 ApprovedBySupervisor
+#>  2: 343da912-5a9f-4875-821b-6f0e1440150b           48 a67d2b82-bf28-40cf-bd1a-7901225c0885           0 RejectedBySupervisor
+#>  3: a9620548-b1d8-418c-9c1f-a0d64031968a          234 3b0c6e09-d606-4914-9e20-2abc048d5bea           0 RejectedBySupervisor
+#>  4: 79202304-8ba6-4c87-b45a-3f56529fc6e4          235 366cb1f7-30fa-48bf-9b56-ffa4ec8b0861           0 RejectedBySupervisor
+#>  5: 7d04a07e-5c99-44f6-974f-531d8ed5a560          239 366cb1f7-30fa-48bf-9b56-ffa4ec8b0861           0  InterviewerAssigned
+#>  6: ea10292e-7ac6-4fa3-bf82-d4d24fee98ba            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           0            Completed
+#>  7: 1d9305db-2be3-44d6-baf2-cf560a9ff45d            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           0            Completed
+#>  8: 782d1652-c6f5-4d02-882e-e372e97dfa83            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           0            Completed
+#>  9: 8621b894-43bd-4e4e-bfa3-0e67cdf5abb8            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           0            Completed
+#> 10: beeb70f4-ea94-4eb7-af5c-bc15abcfa9ed            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           0            Completed
+#> 11: 90badf8a-199a-4247-94a9-51a14bf308fa            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1            Completed
+#> 12: d63ced87-589b-4316-8e8f-e247c4779877            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1            Completed
+#> 13: 43045bd2-325c-4649-81b3-4f1841048034            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1            Completed
+#> 14: 1054b136-c94f-4851-b8c2-ca4e003f4358            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1            Completed
+#> 15: a43b0480-8fdb-4d43-b6fe-29420bf8eb71            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           0            Completed
+#> 16: 2f829f02-c844-439b-88a2-326b98412204            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1            Completed
+#> 17: 0dc4f8a1-d740-440f-bdc6-2e34df997d00            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1            Completed
+#> 18: ccc03ee9-1974-4356-98f0-648e0395e932            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1            Completed
+#> 19: a02bd8fa-e048-43f2-88ad-f5e43c2cc67b            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1            Completed
+#> 20: 605afedd-19e6-4941-b51c-b12d885274eb            1 a67d2b82-bf28-40cf-bd1a-7901225c0885           1            Completed
 ```
 
 ## Quick statistics --> Attention: this call is currently returning a 500 error, the Survey Solutions team is working on it.
@@ -325,26 +327,26 @@ To export the data collected in Survey Solutions, you use *suso_export*.
 
 
 ```
-#> The last file has been created 25.83 73.84 hours ago.
-#> Warning in if ((timeDiff > reloadTimeDiff) | length(time_limit) == 0) {: the condition has length > 1 and only the first element will be used
-#> A new file will be generated. This may take a while.
-#> 0 
-#> 0 
-#> [1] "assignment__actions"
-#> [1] 0
-#> [1] "****"
-#> [1] "households"
-#> [1] 1
-#> [1] "****"
-#> [1] "interview__actions"
-#> [1] 0
-#> [1] "****"
-#> [1] "interview__diagnostics"
-#> [1] 0
-#> [1] "****"
-#> [1] "interview__errors"
-#> [1] 0
-#> [1] "****"
+#> The last file has been created 0.06833 hours ago.
+#> FileName: assignment__actions 
+#> Nesting Level: 0 
+#> ****
+#> 
+#> FileName: households 
+#> Nesting Level: 1 
+#> ****
+#> 
+#> FileName: interview__actions 
+#> Nesting Level: 0 
+#> ****
+#> 
+#> FileName: interview__diagnostics 
+#> Nesting Level: 0 
+#> ****
+#> 
+#> FileName: interview__errors 
+#> Nesting Level: 0 
+#> ****
 ```
 
 Its return value is a list with the following elememts: main, R1, R2, R3, with
@@ -363,12 +365,7 @@ To retrieve the paradata for a particular interview you use *suso_export_paradat
 ```r
 system.time(para1 <- suso_export_paradata(questID = questlist[1, QuestionnaireId], workspace = "test", version = questlist[1, Version], reloadTimeDiff = 24, onlyActiveEvents = F, allResponses = T))
 #> 
-#> The last file has been created 28 hours ago.
-#> 
-#> A new file will be generated. This may take a while.
-#> 0 %
-#> 0 %
-#> Finished file generation.
+#> The last file has been created 1 hours ago.
 #> 
 #> Starting download & file extraction. 
 #> 
@@ -393,7 +390,7 @@ system.time(para1 <- suso_export_paradata(questID = questlist[1, QuestionnaireId
 #> 
 #> Export & Transformation finished.
 #>    user  system elapsed 
-#>   0.672   0.248  20.886
+#>   0.536   0.036   0.820
 ```
 
 This will return a list of data.tables, separated by events. Please bear in mind, that paradata files can be fairly big, and processing it may require a large working memory. To decrease the load there are also 3 parameters you can change, these are:
@@ -407,7 +404,7 @@ Running the same call again without passive events and without all responses pro
 ```r
 system.time(para2 <- suso_export_paradata(questID = questlist[1, QuestionnaireId], workspace = "test", version = questlist[1, Version], reloadTimeDiff = 24, onlyActiveEvents = T, allResponses = F))
 #> 
-#> The last file has been created 0 hours ago.
+#> The last file has been created 1 hours ago.
 #> 
 #> Starting download & file extraction. 
 #> 
@@ -428,7 +425,7 @@ system.time(para2 <- suso_export_paradata(questID = questlist[1, QuestionnaireId
 #> 
 #> Export & Transformation finished.
 #>    user  system elapsed 
-#>   0.808   0.056   0.935
+#>   0.524   0.028   0.818
 ```
 
 As you see from the system timings, changing these parameters reduces processing time significantly. More details on how to work with paradata can be found in the corresponding vignette. The paradata export is returned as a list, with the following elements:
@@ -441,9 +438,8 @@ There are also tables already included in the file, like:
 ```r
 para2[["userDistr"]]
 #>    responsible count
-#> 1:              1016
-#> 2:        int1   873
-#> 3:     INT0002    38
+#> 1:               918
+#> 2:        int1   804
 ```
 
 which gives the distribution of events by user, or:
@@ -451,21 +447,72 @@ which gives the distribution of events by user, or:
 ```r
 para2[["actionDistr"]]
 #>                      action count
-#>  1:   QuestionDeclaredValid   801
-#>  2:               AnswerSet   721
-#>  3:             VariableSet   167
-#>  4:                 Resumed    29
-#>  5:                  Paused    29
-#>  6:     TranslationSwitched    27
-#>  7:             KeyAssigned    21
-#>  8:        InterviewCreated    21
-#>  9:      SupervisorAssigned    21
-#> 10:    InterviewModeChanged    21
-#> 11:     InterviewerAssigned    21
-#> 12:               Completed    21
-#> 13:    ReceivedBySupervisor    18
+#>  1:   QuestionDeclaredValid   747
+#>  2:               AnswerSet   646
+#>  3:             VariableSet   129
+#>  4:                 Resumed    25
+#>  5:                  Paused    25
+#>  6:     TranslationSwitched    23
+#>  7:             KeyAssigned    17
+#>  8:        InterviewCreated    17
+#>  9:      SupervisorAssigned    17
+#> 10:    InterviewModeChanged    17
+#> 11:     InterviewerAssigned    17
+#> 12:               Completed    17
+#> 13:    ReceivedBySupervisor    16
 #> 14: QuestionDeclaredInvalid     9
 ```
 which gives the distribution by event type.
 
+
+## Map management
+
+Since recently, it is now also possible, to handle maps through the API. This is implemented through the lately introduced GraphQL API.
+
+To upload a map, you can just use the **suso_mapupload** function like this:
+
+
+```r
+suso_mapupload(workspace = "test", path_to_zip = mapPath)
+#>    xMaxVal yMaxVal xMinVal yMinVal wkid             fileName  size maxScale minScale shapeType       importDateUtc                           uploadedBy     users
+#> 1:  -78.39    26.8  -78.62   26.55 4326 checkshapesimple.shp 20467        0        0   Polygon 2023-02-16 17:24:47 961d073f-f316-4353-9e7e-1f00899cb837 <list[0]>
+```
+
+To assign a map you can use the **suso_mapassign** function:
+
+
+```r
+suso_mapassign(workspace = "test", fileName = "checkshapesimple.shp", userName = "INT0004")
+#>                fileName    user shapeType       importDateUtc
+#> 1: checkshapesimple.shp INT0004   Polygon 2023-02-16 17:24:47
+```
+
+And to check the current maps on the server, and to whom they are assigned, you can use:
+
+
+```r
+suso_mapinfo(workspace = "test")
+#>                  fileName maxScale minScale shapeType shapesCount    size       importDateUtc                           uploadedBy userName   xMaxVal     yMaxVal   xMinVal
+#> 1: seg_Lat14701Lon379.shp        0        0   Polygon           4    1558 2023-01-26 16:07:54 25628149-1164-4405-b2a2-41a114700215  INT0004 171407.96 5229062.505 171313.10
+#> 2: seg_Lat14701Lon379.shp        0        0   Polygon           4    1558 2023-01-26 16:07:54 25628149-1164-4405-b2a2-41a114700215  INT0005 171407.96 5229062.505 171313.10
+#> 3: seg_Lat14703Lon375.shp        0        0   Polygon           4    1558 2023-01-26 16:07:55 25628149-1164-4405-b2a2-41a114700215     <NA> 165982.27 5231732.606 165887.31
+#> 4: seg_Lat14706Lon376.shp        0        0   Polygon           4    1558 2023-01-26 16:07:55 25628149-1164-4405-b2a2-41a114700215     <NA> 166739.20 5236147.192 166644.21
+#> 5:   checkshapesimple.shp        0        0   Polygon           1   20467 2023-02-16 17:24:47 961d073f-f316-4353-9e7e-1f00899cb837  INT0004    -78.39      26.798    -78.62
+#> 6:  Lat9260Lon650_ALL.tif        0        0      <NA>          NA 8658427 2023-02-15 22:16:05 25628149-1164-4405-b2a2-41a114700215     <NA>     22.37      -6.681     22.36
+#> 7:  Lat9263Lon605_ALL.tif        0        0      <NA>          NA 8643131 2023-02-15 22:16:06 25628149-1164-4405-b2a2-41a114700215     <NA>     21.96      -6.654     21.95
+#> 8:  Lat9263Lon686_ALL.tif        0        0      <NA>          NA 8663511 2023-02-15 22:16:07 25628149-1164-4405-b2a2-41a114700215     <NA>     22.69      -6.652     22.68
+#> 9:  Lat9264Lon625_ALL.tif        0        0      <NA>          NA 2165023 2023-02-15 22:16:07 25628149-1164-4405-b2a2-41a114700215     <NA>     22.14      -6.645     22.13
+#>        yMinVal wkid
+#> 1: 5228935.260 4326
+#> 2: 5228935.260 4326
+#> 3: 5231605.274 4326
+#> 4: 5236019.808 4326
+#> 5:      26.546 4326
+#> 6:      -6.690 4326
+#> 7:      -6.663 4326
+#> 8:      -6.662 4326
+#> 9:      -6.654 4326
+```
+
 We hope that gave you a short overview on the available functions. For more details on how to use the output, please read the specific vignettes.
+

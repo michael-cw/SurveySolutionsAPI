@@ -27,5 +27,15 @@ suso_get_stats_interview(
 \item{intID}{a single or multiple \emph{InterviewId}.}
 }
 \description{
-Get statistics for interview
+Fetch statistics for a specific interview, vectorized over interview id (int_id)
+}
+\examples{
+\dontrun{
+suso_get_stats_interview(
+          workspace = "myworkspace",
+          intID = "dee7705f-d611-4b12-9b97-2b8e5b80c4ea"
+          )
+
+}
+
 }

@@ -38,3 +38,27 @@ RejectedByHeadquarters,ApprovedByHeadquarters,Deleted}), if NULL only completed 
 \description{
 Returns all interviews for the specified questionnaire and the selected status.
 }
+\details{
+ATTENTION: This function will soon be switched to the GraphQL endpoint, since the REST API is
+already deprecated.
+}
+\examples{
+\dontrun{
+To get all interviews for a specific questionnaire and a specific status
+     suso_getAllInterviewQuestionnaire(
+              workspace = "myworkspace",
+              questID = "dee7705f-d611-4b12-9b97-2b8e5b80c4ea",
+              version = 1,
+              workStatus = "InterviewerAssigned"
+              )
+# or to get all interviews in status completed
+     suso_getAllInterviewQuestionnaire(
+              workspace = "myworkspace",
+              questID = "dee7705f-d611-4b12-9b97-2b8e5b80c4ea",
+              version = 1
+              )
+
+}
+
+
+}

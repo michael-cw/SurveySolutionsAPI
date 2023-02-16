@@ -29,3 +29,14 @@ suso_getAllAnswerInterview(
 \description{
 Returns all responses for a specific interview
 }
+\examples{
+\dontrun{
+suso_getAllAnswerInterview(
+          workspace = "myworkspace",
+          intID = "dee7705f-d611-4b12-9b97-2b8e5b80c4ea"
+          )
+
+}
+
+
+}

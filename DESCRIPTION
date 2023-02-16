@@ -1,7 +1,7 @@
 Package: SurveySolutionsAPI
 Type: Package
 Title: Comprehensive API access to your Survey Solutions Server
-Version: 0.6.2
+Version: 0.6.3
 Authors@R: person("Michael", "Wild", email = "mwild@worldbank.org", 
   role = c("aut", "cre"))
 Description: This packages implements all the currently available POST, GET, and PATCH
@@ -14,7 +14,9 @@ LazyData: true
 Imports: 
     tidyjson, 
     plyr, 
-    dplyr,
+    dplyr, 
+    glue,
+    tidyr,
     httptest (>= 3.0.0),
     stringdist, 
     stringr, 
@@ -28,7 +30,8 @@ Imports:
     zip, future, 
     doFuture, 
     foreach, 
-    progressr
+    progressr,
+    tools
 Depends:
     R (>= 3.3.0)
 RoxygenNote: 7.2.1

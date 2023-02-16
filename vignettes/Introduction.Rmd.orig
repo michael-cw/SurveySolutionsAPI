@@ -51,6 +51,9 @@ suso_keys()
 
 ```{r trueCredentials, echo=FALSE, include=FALSE}
 suso_clear_keys()
+## ALWAYS REMOVE TRUE CREDENTIALS
+
+mapPath<-"/srv/shiny-server/SuSo_ListingCheck/helpers/surveysolutionsAPI_testcode/shapefortest1.zip"
 
 ```
 
@@ -264,4 +267,31 @@ para2[["actionDistr"]]
 ```
 which gives the distribution by event type.
 
+
+## Map management
+
+Since recently, it is now also possible, to handle maps through the API. This is implemented through the lately introduced GraphQL API.
+
+To upload a map, you can just use the **suso_mapupload** function like this:
+
+```{r mapup, echo=T, include=T}
+suso_mapupload(workspace = "test",
+               path_to_zip = mapPath)
+```
+
+To assign a map you can use the **suso_mapassign** function:
+
+```{r mapassign, echo=T, include=T}
+suso_mapassign(workspace = "test", fileName = "checkshapesimple.shp", userName = "INT0004")
+
+```
+
+And to check the current maps on the server, and to whom they are assigned, you can use:
+
+```{r mapinfo, echo=T, include=T}
+suso_mapinfo(workspace = "test")
+
+```
+
 We hope that gave you a short overview on the available functions. For more details on how to use the output, please read the specific vignettes.
+

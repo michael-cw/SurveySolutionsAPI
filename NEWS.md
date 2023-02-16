@@ -1,3 +1,10 @@
+# SurveySolutionsAPI 0.6.3
+
+* Added *suso_patchApproveInterview*, *suso_mapinfo*, *suso_mapassign* and *suso_gql_uploadmap*.
+* Updated *suso_patchRejectInterview* to work with re-assignment of interview.
+
+
+
 # SurveySolutionsAPI 0.6.2
 
 * Added start and end date to *suso_getINT_log*.

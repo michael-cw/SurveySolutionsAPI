@@ -29,3 +29,13 @@ suso_getAllHistoryInterview(
 \description{
 Get all history for a specific interview
 }
+\examples{
+\dontrun{
+suso_getAllHistoryInterview(
+          workspace = "myworkspace",
+          intID = "dee7705f-d611-4b12-9b97-2b8e5b80c4ea"
+          )
+
+}
+
+}
