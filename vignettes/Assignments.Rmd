@@ -1,0 +1,378 @@
+---
+title: "Assignment Management"
+author: "Michael Wild"
+date: "2023-02-19"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Assignment}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+
+## Assignment Management
+
+For details on the assignment "philosophy" in Survey Solutions please see the corresponding sections on the support website. In the following i will show you, how you can effeciently carry out this task it the functions available in this package.
+
+Assignment functions return an S3 object of class *assignmentClass*. This class is an extension of the data regular *data.table* class, which has additonal methods defined. For details on class and methods consult the corresponding documentation
+
+
+
+```r
+# ?assignmentClass ?getinfo
+
+```
+
+## API credentials
+
+API credentials need to be provided in the usual way as outlined in the introductory vignette.
+
+
+
+
+## Receive a list of all assignments by questionnaire
+
+First get the questionnaires in the system by using
+
+
+```r
+questlist <- suso_getQuestDetails(workspace = "test")
+print(questlist)
+#>                 QuestionnaireIdentity                      QuestionnaireId Version                                     Title                        Variable       LastEntryDate
+#> 1: dee7705fd6114b129b972b8e5b80c4ea$1 dee7705f-d611-4b12-9b97-2b8e5b80c4ea       1       JDC KASAI  - LISTING DWELLING LEVEL                  kasai_listing1 2022-07-15 17:56:56
+#> 2: ef0b852995f44db59772700a0cfc2219$1 ef0b8529-95f4-4db5-9772-700a0cfc2219       1 Copy of CPV_CAPI_VP_PCensal_VivCon_230127 CPV_CAPI_VP_PCensal_VCon_230127 2023-01-27 19:13:15
+#> 3: 5839a5947b3b498bb3ee32c0921b64a3$1 5839a594-7b3b-498b-b3ee-32c0921b64a3       1 Copy of CPV_CAPI_VP_PCensal_VivNva_230127 CPV_CAPI_VP_PCensal_VNva_230127 2023-01-27 19:15:43
+#>    IsAudioRecordingEnabled WebModeEnabled
+#> 1:                   FALSE          FALSE
+#> 2:                   FALSE          FALSE
+#> 3:                   FALSE          FALSE
+```
+
+To retrieve all assignements for a selected questionnaire, just use:
+
+
+```r
+asslist <- suso_get_assignments(workspace = "test", questID = questlist$QuestionnaireId[1], version = questlist$Version[1])
+
+asslist
+#>       Id                        ResponsibleId ResponsibleName                    QuestionnaireId InterviewsCount Quantity Archived        CreatedAtUtc        UpdatedAtUtc Email
+#>   1: 163 04b5a8f0-cba4-4190-89f6-08c2b5fe0474         INT0016 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:44:20 2023-02-19 17:44:20    NA
+#>   2: 164 04b5a8f0-cba4-4190-89f6-08c2b5fe0474         INT0016 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:44:20 2023-02-19 17:44:20    NA
+#>   3: 165 04b5a8f0-cba4-4190-89f6-08c2b5fe0474         INT0016 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:44:20 2023-02-19 17:44:20    NA
+#>   4: 166 04b5a8f0-cba4-4190-89f6-08c2b5fe0474         INT0016 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:44:20 2023-02-19 17:44:20    NA
+#>   5: 167 04b5a8f0-cba4-4190-89f6-08c2b5fe0474         INT0016 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:44:20 2023-02-19 17:44:20    NA
+#>  ---                                                                                                                                                                            
+#> 258:  58 99311e56-d2c7-4243-a7df-71c4ab866400         INT0015 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:39 2023-02-19 17:43:39    NA
+#> 259:  59 99311e56-d2c7-4243-a7df-71c4ab866400         INT0015 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:39 2023-02-19 17:43:39    NA
+#> 260:  60 99311e56-d2c7-4243-a7df-71c4ab866400         INT0015 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:39 2023-02-19 17:43:39    NA
+#> 261:  61 99311e56-d2c7-4243-a7df-71c4ab866400         INT0015 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:39 2023-02-19 17:43:39    NA
+#> 262:  62 99311e56-d2c7-4243-a7df-71c4ab866400         INT0015 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:39 2023-02-19 17:43:39    NA
+#>      Password WebMode ReceivedByTabletAtUtc IsAudioRecordingEnabled
+#>   1:       NA   FALSE                  <NA>                   FALSE
+#>   2:       NA   FALSE                  <NA>                   FALSE
+#>   3:       NA   FALSE                  <NA>                   FALSE
+#>   4:       NA   FALSE                  <NA>                   FALSE
+#>   5:       NA   FALSE                  <NA>                   FALSE
+#>  ---                                                               
+#> 258:       NA   FALSE                  <NA>                   FALSE
+#> 259:       NA   FALSE                  <NA>                   FALSE
+#> 260:       NA   FALSE                  <NA>                   FALSE
+#> 261:       NA   FALSE                  <NA>                   FALSE
+#> 262:       NA   FALSE                  <NA>                   FALSE
+```
+As we can see, a data.table is returned, however since we also use the *assignmentClass* we can make use of it.
+
+
+```r
+class(asslist)
+#> [1] "assignmentClass" "data.table"      "data.frame"
+
+getinfo(asslist, "arglist")
+#> [1] "limit"      "totalcount" "offset"
+
+getinfo(asslist, "totalcount")
+#> [1] 262
+```
+
+Currently there are 262 assignments created for this questionnaire, and the total count attribute shows us 262. Let have a look on the required quantitiy distribution of these assignments.
+
+
+```r
+table(asslist$Quantity)
+#> 
+#>   1 
+#> 262
+```
+And if we want to learn about the survey mode we can just do
+
+
+```r
+table(asslist$WebMode)
+#> 
+#> FALSE 
+#>   262
+```
+
+## Receive a list of all assignments for single interviewer
+
+To receive a list of all assignments for a specific interviewer you require the uid, you can retrieve the uid easily by using the user functions, *suso_getSV* and *suso_getINT*.
+
+
+```r
+sv <- suso_getSV(workspace = "test")
+sv
+#>    IsLocked        CreationDate                               UserId UserName
+#> 1:    FALSE 2023-02-19 17:36:36 16066f44-5b5e-447c-8665-57f42cde66f3   SV0002
+#> 2:    FALSE 2023-02-19 17:36:36 77f52e98-8b13-4633-a920-d33d62e46f78   SV0004
+```
+Gives the list of supervisors, and
+
+
+```r
+int <- suso_getINT(workspace = "test", sv_id = sv$UserId[2])
+int
+#>    IsLocked        CreationDate                               UserId UserName
+#> 1:    FALSE 2023-02-19 17:36:36 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435  INT0014
+#> 2:    FALSE 2023-02-19 17:36:36 99311e56-d2c7-4243-a7df-71c4ab866400  INT0015
+#> 3:    FALSE 2023-02-19 17:36:36 04b5a8f0-cba4-4190-89f6-08c2b5fe0474  INT0016
+```
+
+gives the list of interviewers in this team.
+
+
+
+```r
+asslist <- suso_get_assignments(workspace = "test", responsibleID = int$UserId[1])
+asslist
+#>     Id                        ResponsibleId ResponsibleName                    QuestionnaireId InterviewsCount Quantity Archived        CreatedAtUtc        UpdatedAtUtc Email
+#>  1:  1 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:09 2023-02-19 17:43:09    NA
+#>  2:  2 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:09 2023-02-19 17:43:09    NA
+#>  3:  3 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:09 2023-02-19 17:43:09    NA
+#>  4:  4 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:09 2023-02-19 17:43:09    NA
+#>  5:  5 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:09 2023-02-19 17:43:09    NA
+#>  6:  6 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:09 2023-02-19 17:43:09    NA
+#>  7:  7 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:09 2023-02-19 17:43:09    NA
+#>  8:  8 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:09 2023-02-19 17:43:09    NA
+#>  9:  9 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:09 2023-02-19 17:43:09    NA
+#> 10: 10 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 11: 11 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 12: 12 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 13: 13 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 14: 14 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 15: 15 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 16: 16 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 17: 17 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 18: 18 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 19: 19 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 20: 20 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 21: 21 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 22: 22 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 23: 23 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 24: 24 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 25: 25 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 26: 26 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 27: 27 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 28: 28 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 29: 29 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 30: 30 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 31: 31 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 32: 32 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 33: 33 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 34: 34 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 35: 35 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 36: 36 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 37: 37 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 38: 38 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:10 2023-02-19 17:43:10    NA
+#> 39: 39 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:11 2023-02-19 17:43:11    NA
+#> 40: 40 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:11 2023-02-19 17:43:11    NA
+#> 41: 41 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:11 2023-02-19 17:43:11    NA
+#> 42: 42 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:11 2023-02-19 17:43:11    NA
+#> 43: 43 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:11 2023-02-19 17:43:11    NA
+#> 44: 44 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:11 2023-02-19 17:43:11    NA
+#> 45: 45 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:11 2023-02-19 17:43:11    NA
+#> 46: 46 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:11 2023-02-19 17:43:11    NA
+#> 47: 47 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:11 2023-02-19 17:43:11    NA
+#> 48: 48 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:11 2023-02-19 17:43:11    NA
+#> 49: 49 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:11 2023-02-19 17:43:11    NA
+#> 50: 50 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435         INT0014 dee7705fd6114b129b972b8e5b80c4ea$1               0        1    FALSE 2023-02-19 17:43:11 2023-02-19 17:43:11    NA
+#>     Id                        ResponsibleId ResponsibleName                    QuestionnaireId InterviewsCount Quantity Archived        CreatedAtUtc        UpdatedAtUtc Email
+#>     Password WebMode ReceivedByTabletAtUtc IsAudioRecordingEnabled
+#>  1:       NA   FALSE                  <NA>                   FALSE
+#>  2:       NA   FALSE                  <NA>                   FALSE
+#>  3:       NA   FALSE                  <NA>                   FALSE
+#>  4:       NA   FALSE                  <NA>                   FALSE
+#>  5:       NA   FALSE                  <NA>                   FALSE
+#>  6:       NA   FALSE                  <NA>                   FALSE
+#>  7:       NA   FALSE                  <NA>                   FALSE
+#>  8:       NA   FALSE                  <NA>                   FALSE
+#>  9:       NA   FALSE                  <NA>                   FALSE
+#> 10:       NA   FALSE                  <NA>                   FALSE
+#> 11:       NA   FALSE                  <NA>                   FALSE
+#> 12:       NA   FALSE                  <NA>                   FALSE
+#> 13:       NA   FALSE                  <NA>                   FALSE
+#> 14:       NA   FALSE                  <NA>                   FALSE
+#> 15:       NA   FALSE                  <NA>                   FALSE
+#> 16:       NA   FALSE                  <NA>                   FALSE
+#> 17:       NA   FALSE                  <NA>                   FALSE
+#> 18:       NA   FALSE                  <NA>                   FALSE
+#> 19:       NA   FALSE                  <NA>                   FALSE
+#> 20:       NA   FALSE                  <NA>                   FALSE
+#> 21:       NA   FALSE                  <NA>                   FALSE
+#> 22:       NA   FALSE                  <NA>                   FALSE
+#> 23:       NA   FALSE                  <NA>                   FALSE
+#> 24:       NA   FALSE                  <NA>                   FALSE
+#> 25:       NA   FALSE                  <NA>                   FALSE
+#> 26:       NA   FALSE                  <NA>                   FALSE
+#> 27:       NA   FALSE                  <NA>                   FALSE
+#> 28:       NA   FALSE                  <NA>                   FALSE
+#> 29:       NA   FALSE                  <NA>                   FALSE
+#> 30:       NA   FALSE                  <NA>                   FALSE
+#> 31:       NA   FALSE                  <NA>                   FALSE
+#> 32:       NA   FALSE                  <NA>                   FALSE
+#> 33:       NA   FALSE                  <NA>                   FALSE
+#> 34:       NA   FALSE                  <NA>                   FALSE
+#> 35:       NA   FALSE                  <NA>                   FALSE
+#> 36:       NA   FALSE                  <NA>                   FALSE
+#> 37:       NA   FALSE                  <NA>                   FALSE
+#> 38:       NA   FALSE                  <NA>                   FALSE
+#> 39:       NA   FALSE                  <NA>                   FALSE
+#> 40:       NA   FALSE                  <NA>                   FALSE
+#> 41:       NA   FALSE                  <NA>                   FALSE
+#> 42:       NA   FALSE                  <NA>                   FALSE
+#> 43:       NA   FALSE                  <NA>                   FALSE
+#> 44:       NA   FALSE                  <NA>                   FALSE
+#> 45:       NA   FALSE                  <NA>                   FALSE
+#> 46:       NA   FALSE                  <NA>                   FALSE
+#> 47:       NA   FALSE                  <NA>                   FALSE
+#> 48:       NA   FALSE                  <NA>                   FALSE
+#> 49:       NA   FALSE                  <NA>                   FALSE
+#> 50:       NA   FALSE                  <NA>                   FALSE
+#>     Password WebMode ReceivedByTabletAtUtc IsAudioRecordingEnabled
+```
+
+Get all available details for this list
+
+
+```r
+
+getinfo(asslist, "arglist")
+#> [1] "limit"      "totalcount" "offset"
+```
+
+Show the total count, which is 50 assignments, of which 50 are for the specific enumerator.
+
+
+```r
+
+getinfo(asslist, "totalcount")
+#> [1] 50
+```
+
+## Receive details for a specific assignment
+
+Finally you can also retrieve details for a specific assignment.
+
+
+
+```r
+
+asslist <- suso_get_assignments(workspace = "test", AssId = 1)
+
+asslist
+#>                            Identity Variable                         Answer
+#> 1: 090249836bc69ad7bdc7cdb6864d1292      q10      -33.467546,-70.518295[0]0
+#> 2: 4af6c880658ab61053fc4a2bdd5cfe2c      q03 NATNANAANTNNGCNCCCTTATCCATGTGC
+#> 3: 95c9e53e6603a96e0deece0584076a16      q02        Mrs. Chelsea Rempel PhD
+#> 4: 59e2b8820b6778cfd08a0760e98d5157      q01                     Tennessine
+```
+
+and get the responsible uid by using
+
+
+```r
+
+getinfo(asslist, "arglist")
+#>  [1] "answers"                 "id"                      "responsibleid"           "responsiblename"         "questionnaireid"         "interviewscount"        
+#>  [7] "quantity"                "archived"                "createdatutc"            "updatedatutc"            "webmode"                 "isaudiorecordingenabled"
+
+getinfo(asslist, "responsibleid")
+#> [1] "96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435"
+```
+
+
+## Use assignment operation.type
+
+*suso_get_assignments* has three operation types, which are for
+
+- the status of the quantiy settings **assignmentQuantitySettings**
+- the history **history** and
+- the status of the audio recording **recordAudio**
+
+### Status of Quantity settings
+
+
+
+
+```r
+
+asslist <- suso_get_assignments(workspace = "test", AssId = 1, operations.type = "assignmentQuantitySettings")
+#> [1] "assignmentQuantitySettings"
+
+asslist
+#> Null data.table (0 rows and 0 cols)
+
+getinfo(asslist, "arglist")
+#> [1] "canchangequantity"
+
+getinfo(asslist, "canchangequantity")
+#> [1] TRUE
+```
+
+### History
+
+
+
+```r
+
+asslist <- suso_get_assignments(workspace = "test", AssId = 1, operations.type = "history")
+#> [1] "history"
+
+asslist
+#>     Action ActorName                      UtcDate AdditionalData.Comment AdditionalData.Responsible AdditionalData.UpgradedFromId
+#> 1: Created      API1 2023-02-19T17:43:09.3509146Z                     NA                    INT0014                            NA
+
+getinfo(asslist, "arglist")
+#> [1] "history"         "recordsfiltered"
+
+getinfo(asslist, "recordsfiltered")
+#> [1] 1
+```
+
+
+
+### Status of audio recording
+
+
+
+```r
+
+asslist <- suso_get_assignments(workspace = "test", AssId = 1, operations.type = "recordAudio")
+#> [1] "recordAudio"
+
+asslist
+#> Null data.table (0 rows and 0 cols)
+
+getinfo(asslist, "arglist")
+#> [1] "enabled"
+
+getinfo(asslist, "enabled")
+#> [1] FALSE
+```
+
+
+
+
+
+

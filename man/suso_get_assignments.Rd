@@ -45,6 +45,47 @@ Retrieves all assignments for this user.}
 \item{operations.type}{specifies the desired operation, one of assignmentQuantitySettings, history, or recordAudio,
 if specified, requires also \emph{AssId} to be specified.}
 }
+\value{
+Returns an S3 object of assignmentClass. If you select any of the operations types, then no data.frame is returned,
+the data.table will be NULL, however any information returned from the API can be retrieved by using the \code{getinfo()}
+function with the corresponding arguments.
+}
 \description{
 \code{suso_get_assignments} calls the Survey Solutions assingment API
+}
+\examples{
+\dontrun{
+
+# get all assignment for specific workspace
+asslist<-suso_get_assignments(
+                   workspace = "myworkspace"
+                   )
+# get all assignment for specific responsible
+asslist<-suso_get_assignments(
+                   workspace = "myworkspace",
+                   responsibleID = "a67d2b82-bf28-40cf-bd1a-7901225c0885"
+                   )
+# get the overall count
+getinfo(asslist, "totalcount")
+
+#get all single assignment details
+asslist<-suso_get_assignments(
+                   workspace = "myworkspace",
+                   AssId = 1
+                   )
+# retrieve the uid of the person responsible
+getinfo(asslist, "responsibleid")
+
+# get the status of the quantitysettings
+asslist<-suso_get_assignments(
+                   workspace = "myworkspace",
+                   AssId = 1,
+                   operations.type = "assignmentQuantitySettings")
+asslist
+Null data.table (0 rows and 0 cols)
+
+getinfo(asslist, "canchangequantity")
+[1] TRUE
+}
+
 }

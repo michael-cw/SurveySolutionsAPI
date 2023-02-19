@@ -75,6 +75,7 @@ if(getRversion() >= "3.3.0")  {
     "UpdatedAtUtc", "InterviewDuration", "intID",
     "VariableName", "Expression", "Message", "Severity",
     "QuestionnaireId", "StartDate", "CompleteDate", "pid",
-    "ExportType", "Time", "importDateUtc"
+    "ExportType", "Time", "importDateUtc", "CreatedAtUtc",
+    "ReceivedByTabletAtUtc"
   ))
 }

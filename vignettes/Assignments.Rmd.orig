@@ -1,0 +1,236 @@
+---
+title: "Assignment Management"
+author: "Michael Wild"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Assignment}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{css, echo=FALSE}
+    body .main-container {
+      max-width: 1280px !important;
+      width: 1280px !important;
+    }
+    body {
+      max-width: 1280px !important;
+    }
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE, tidy=TRUE,
+  comment = "#>"
+)
+
+library("zip")
+```
+## Assignment Management
+
+For details on the assignment "philosophy" in Survey Solutions please see the corresponding sections on the support website. In the following i will show you, how you can effeciently carry out this task it the functions available in this package.
+
+Assignment functions return an S3 object of class *assignmentClass*. This class is an extension of the data regular *data.table* class, which has additonal methods defined. For details on class and methods consult the corresponding documentation
+
+
+```{r assclassinfo, echo=T, include=T}
+# ?assignmentClass
+# ?getinfo
+
+```
+
+## API credentials
+
+API credentials need to be provided in the usual way as outlined in the introductory vignette.
+
+```{r trueCredentials, echo=FALSE, include=FALSE}
+suso_clear_keys()
+## ALWAYS REMOVE TRUE CREDENTIALS
+
+
+```
+
+
+## Receive a list of all assignments by questionnaire
+
+First get the questionnaires in the system by using
+
+```{r questlist, echo=T, include=T}
+questlist<-suso_getQuestDetails(workspace = "test")
+print(questlist)
+```
+
+To retrieve all assignements for a selected questionnaire, just use:
+
+```{r asslist, echo=T, include=T}
+asslist<-suso_get_assignments(workspace = "test", questID = questlist$QuestionnaireId[1], version = questlist$Version[1])
+
+asslist
+```
+As we can see, a data.table is returned, however since we also use the *assignmentClass* we can make use of it.
+
+```{r asslistclass, echo=T, include=T}
+class(asslist)
+
+getinfo(asslist, "arglist")
+
+getinfo(asslist, "totalcount")
+
+```
+
+Currently there are `r nrow(asslist)` assignments created for this questionnaire, and the total count attribute shows us `r getinfo(asslist, "totalcount")`. Let have a look on the required quantitiy distribution of these assignments.
+
+```{r assquantdistri, echo=T, include=T}
+table(asslist$Quantity)
+
+```
+And if we want to learn about the survey mode we can just do
+
+```{r assmode, echo=T, include=T}
+table(asslist$WebMode)
+
+```
+
+## Receive a list of all assignments for single interviewer
+
+To receive a list of all assignments for a specific interviewer you require the uid, you can retrieve the uid easily by using the user functions, *suso_getSV* and *suso_getINT*.
+
+```{r asslistint_getsv, echo=T, include=T}
+sv<-suso_getSV(workspace = "test")
+sv
+
+```
+Gives the list of supervisors, and
+
+```{r asslistint_getint, echo=T, include=T}
+int<-suso_getINT(workspace = "test", sv_id = sv$UserId[2])
+int
+
+```
+
+gives the list of interviewers in this team.
+
+
+```{r asslistint, echo=T, include=T}
+asslist<-suso_get_assignments(
+                   workspace = "test",
+                   responsibleID = int$UserId[1]
+                   )
+asslist
+
+```
+
+Get all available details for this list
+
+```{r asslistintarglist, echo=T, include=T}
+
+getinfo(asslist, "arglist")
+
+```
+
+Show the total count, which is `r nrow(asslist)` assignments, of which `r getinfo(asslist, "totalcount")` are for the specific enumerator.
+
+```{r asslistinttotal, echo=T, include=T}
+
+getinfo(asslist, "totalcount")
+
+```
+
+## Receive details for a specific assignment
+
+Finally you can also retrieve details for a specific assignment.
+
+
+```{r asslistdetails, echo=T, include=T}
+
+asslist<-suso_get_assignments(
+                   workspace = "test",
+                   AssId = 1
+                   )
+
+asslist
+
+```
+
+and get the responsible uid by using
+
+```{r asslistdetails_getresp, echo=T, include=T}
+
+getinfo(asslist, "arglist")
+
+getinfo(asslist, "responsibleid")
+
+```
+
+
+## Use assignment operation.type
+
+*suso_get_assignments* has three operation types, which are for
+
+- the status of the quantiy settings **assignmentQuantitySettings**
+- the history **history** and
+- the status of the audio recording **recordAudio**
+
+### Status of Quantity settings
+
+
+
+```{r assslistops_quant, echo=T, include=T}
+
+asslist<-suso_get_assignments(
+                   workspace = "test",
+                   AssId = 1,
+                   operations.type = "assignmentQuantitySettings")
+
+asslist
+
+getinfo(asslist, "arglist")
+
+getinfo(asslist, "canchangequantity")
+
+```
+
+### History
+
+
+```{r assslistops_hist, echo=T, include=T}
+
+asslist<-suso_get_assignments(
+                   workspace = "test",
+                   AssId = 1,
+                   operations.type = "history")
+
+asslist
+
+getinfo(asslist, "arglist")
+
+getinfo(asslist, "recordsfiltered")
+
+```
+
+
+
+### Status of audio recording
+
+
+```{r assslistops_rec, echo=T, include=T}
+
+asslist<-suso_get_assignments(
+                   workspace = "test",
+                   AssId = 1,
+                   operations.type = "recordAudio")
+
+asslist
+
+getinfo(asslist, "arglist")
+
+getinfo(asslist, "enabled")
+
+```
+
+
+
+
+
+

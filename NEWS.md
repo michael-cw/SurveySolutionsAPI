@@ -1,3 +1,9 @@
+# SurveySolutionsAPI 0.6.4
+
+* Added S3 *assignmentClass*.
+* Added dedicated vignette for assignments
+
+
 # SurveySolutionsAPI 0.6.3
 
 * Added *suso_patchApproveInterview*, *suso_mapinfo*, *suso_mapassign* and *suso_gql_uploadmap*.
