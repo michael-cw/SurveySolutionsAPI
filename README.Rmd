@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 This is the development version of the main [Survey Solutions R API package](https://docs.mysurvey.solutions/headquarters/api/api-r-package/). It allows you to export data/paradata collected through CAWI, CATI or CAPI operations, manipulate users and questionnaires, create assignments, get information about the survey progress etc.. All directly out of R. 
 
-However it is more than just a simple wrapper around the Survey Solutions RESTful API, which one can easily address through using i.e. the excellent httr package which also constitutes the basis for this package. The main intention of this package though is to be integrated into your own data collection workflow, either through a shiny application or just through a simple script. This allows you to build your own workflows with your own customized user interfaces for your Survey Solutions data collection operations, no matter if you are dealing with a small scale impact evaluation or a large scale census. 
+However it is more than just a simple wrapper around the Survey Solutions RESTful API, which one can easily address through using i.e. the excellent httr package which also constitutes the basis for this package. The main intention of this package though, is to be integrated into your own data collection workflow, either through a shiny application or just through a simple script. This allows you to build your own workflows with your own customized user interfaces for your Survey Solutions data collection operations, no matter if you are dealing with a small scale impact evaluation or a large scale census. 
 
 Important to note here is, that the package also makes extensive use of the *data.table* package, which allows for fast (multi-core) processing of large data sets. The individual functions either return a data.table, or a specific S3 extension of data.table, with individual methods defined. In case you are not familiar with it yet, you should probably have a look a this [introduction](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html).
 
@@ -46,7 +46,7 @@ devtools::install_github("michael-cw/SurveySolutionsAPI", build_vignettes = T)
 The included vignettes also contain different examples and further explanations. Bellow you can find a few examples. 
 
 
-## Example
+## Examples
 
 ### Credentials Management
 

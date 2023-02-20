@@ -20,7 +20,7 @@ directly out of R.
 However it is more than just a simple wrapper around the Survey
 Solutions RESTful API, which one can easily address through using
 i.e. the excellent httr package which also constitutes the basis for
-this package. The main intention of this package though is to be
+this package. The main intention of this package though, is to be
 integrated into your own data collection workflow, either through a
 shiny application or just through a simple script. This allows you to
 build your own workflows with your own customized user interfaces for
@@ -56,7 +56,7 @@ devtools::install_github("michael-cw/SurveySolutionsAPI", build_vignettes = T)
 The included vignettes also contain different examples and further
 explanations. Bellow you can find a few examples.
 
-## Example
+## Examples
 
 ### Credentials Management
 
