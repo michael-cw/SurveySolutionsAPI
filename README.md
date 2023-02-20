@@ -9,13 +9,12 @@
 stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
-SurveySolutionsAPI
-
-This is the updated version of the main Survey Solutions R API package,
-<https://docs.mysurvey.solutions/headquarters/api/api-r-package/> It
-allows you to export data/paradata collected through CAWI, CATI or CAPI
-operations, manipulate users and questionnaires, create assignments, get
-information about the survey progress etc.. All directly out of R.
+This is the development version of the main [Survey Solutions R API
+package](https://docs.mysurvey.solutions/headquarters/api/api-r-package/).
+It allows you to export data/paradata collected through CAWI, CATI or
+CAPI operations, manipulate users and questionnaires, create
+assignments, get information about the survey progress etc.. All
+directly out of R.
 
 However it is more than just a simple wrapper around the Survey
 Solutions RESTful API, which one can easily address through using
@@ -37,7 +36,6 @@ have a look a this
 
 Specific changes in version 0.6.X:
 
-  - Work space inclusion
   - Preparation for token authentication (not active yet)
   - Map handling and management: suso\_mapupload(), suso\_mapassign(),
     suso\_mapinfo()
@@ -183,10 +181,13 @@ To export the data collected in Survey Solutions, you use
     #> ****
 
 Its return value is a list with the following elememts: main, R1, R2,
-R3, with - **main** containing the files: interview\_\_comments,
-kasai\_listing1 - **R1** containing all rosters at the first level -
-**R2** containing all rosters at the second level - **R3** containing
-all rosters at the third level
+R3, with
+
+  - **main** containing the files: interview\_\_comments,
+    kasai\_listing1
+  - **R1** containing all rosters at the first level
+  - **R2** containing all rosters at the second level
+  - **R3** containing all rosters at the third level
 
 through the harmonized ID, main and roster files can easily be put
 together. More on this in the specific vignette.
@@ -253,10 +254,21 @@ suso_mapassign(workspace = "test", fileName = "checkshapesimple.shp", userName =
 ## Further information
 
 To find information on the World Bank’s Survey Solutions CASS have a
-look on these pages: - Survey Solutions Support Page:
-<https://support.mysurvey.solutions/> - Survey Solutions Server request:
-<https://mysurvey.solutions/>
+look on these pages:
+
+  - Survey Solutions Support Page: <https://support.mysurvey.solutions/>
+
+  - Survey Solutions Server request: <https://mysurvey.solutions/>
 
 To find information on the API syntax, visit your own servers API
-documentation or got to: -
-<https://demo.mysurvey.solutions/primary/apidocs/index.html#>
+documentation or got to:
+
+  - <https://demo.mysurvey.solutions/primary/apidocs/index.html#>
+
+## Feature requests and bug reports
+
+You can either use the standard GitHub approach by filing a bug
+report/feature request
+[here](https://github.com/michael-cw/SurveySolutionsAPI/issues) or you
+use the Survey Solutions user forum
+[here](https://forum.mysurvey.solutions/c/api/13).
