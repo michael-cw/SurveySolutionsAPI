@@ -265,6 +265,9 @@ documentation or got to:
 
   - <https://demo.mysurvey.solutions/primary/apidocs/index.html#>
 
+And to find more information on the package, check out the package
+vignettes.
+
 ## Feature requests and bug reports
 
 You can either use the standard GitHub approach by filing a bug
