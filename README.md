@@ -7,6 +7,7 @@
 
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![R-CMD-check](https://github.com/michael-cw/SurveySolutionsAPI/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/michael-cw/SurveySolutionsAPI/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 This is the development version of the main [Survey Solutions R API

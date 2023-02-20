@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![R-CMD-check](https://github.com/michael-cw/SurveySolutionsAPI/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/michael-cw/SurveySolutionsAPI/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 This is the development version of the main [Survey Solutions R API package](https://docs.mysurvey.solutions/headquarters/api/api-r-package/). It allows you to export data/paradata collected through CAWI, CATI or CAPI operations, manipulate users and questionnaires, create assignments, get information about the survey progress etc.. All directly out of R. 
