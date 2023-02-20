@@ -1,39 +1,262 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
 # SurveySolutionsAPI
 
-This is the updated version of the comprehensive Survey Solutions R API package, https://docs.mysurvey.solutions/headquarters/api/api-r-package/ It allows you to export data/paradata collected through CAWI, CATI or CAPI operations, manipulate users and questionnaires, create assignments, get information about the survey progress etc.. All directly out of R. However it is more than just a simple wrapper around the Survey Solutions RESTful API, which one can easily address through using i.e. the excellent httr package which also constitutes the basis for this package. The main intention of this package though is to be integrated into your own data collection workflow, either through a shiny application or just through a simple script. This allows you to build your own workflows with your own customized user interfaces for your Survey Solutions data collection operations, no matter if you are dealing with a small scale impact evaluation or a large scale census.
+<!-- badges: start -->
 
-Specific changes:
+[![Lifecycle:
+stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+<!-- badges: end -->
 
-- Work space inclusion
-- Preparation for token authentication (not active yet)
-- New function: suso_Workspaces()
+SurveySolutionsAPI
+
+This is the updated version of the main Survey Solutions R API package,
+<https://docs.mysurvey.solutions/headquarters/api/api-r-package/> It
+allows you to export data/paradata collected through CAWI, CATI or CAPI
+operations, manipulate users and questionnaires, create assignments, get
+information about the survey progress etc.. All directly out of R.
+
+However it is more than just a simple wrapper around the Survey
+Solutions RESTful API, which one can easily address through using
+i.e. the excellent httr package which also constitutes the basis for
+this package. The main intention of this package though is to be
+integrated into your own data collection workflow, either through a
+shiny application or just through a simple script. This allows you to
+build your own workflows with your own customized user interfaces for
+your Survey Solutions data collection operations, no matter if you are
+dealing with a small scale impact evaluation or a large scale census.
+
+Important to note here is, that the package also makes extensive use of
+the *data.table* package, which allows for fast (multi-core) processing
+of large data sets. The individual functions either return a data.table,
+or a specific S3 extension of data.table, with individual methods
+defined. In case you are not familiar with it yet, you should probably
+have a look a this
+[introduction](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html).
+
+Specific changes in version 0.6.X:
+
+  - Work space inclusion
+  - Preparation for token authentication (not active yet)
+  - Map handling and management: suso\_mapupload(), suso\_mapassign(),
+    suso\_mapinfo()
+  - Introduction of S3 classes for return values, such that all
+    information returned from the API can be used efficiently. See news
+    for further details and classes.
+
+## Installation
 
 The package is not on CRAN yet, so you have to install it by using
 
-```
-devtools::install_github("michael-cw/SurveySolutionsAPI")
+``` r
 
-```
-or in case you also want the vignettes include, please use:
-```
 devtools::install_github("michael-cw/SurveySolutionsAPI", build_vignettes = T)
-
 ```
-Besides the API functions, the package also contains a convenience function to store your credentials during an ongoing session. To do this, execute
+
+The included vignettes also contain different examples and further
+explanations. Bellow you can find a few examples.
+
+## Example
+
+### Credentials Management
+
+To use the API you first need to set-up the API user on your Survey
+Solutions server. See
+[here](https://support.mysurvey.solutions/headquarters/api/) for
+details. After this done, you can use the *suso\_set\_key()* function,
+to provide your credentials.
+
+``` r
+library(SurveySolutionsAPI)
+suso_clear_keys()
+suso_set_key("https://xxx.mysurvey.solutions", "xxxxxx", "xxxxxxx")
+suso_keys()
+#> $suso
+#> $suso$susoServer
+#> [1] "https://xxx.mysurvey.solutions"
+#> 
+#> $suso$susoUser
+#> [1] "xxxxxx"
+#> 
+#> $suso$susoPass
+#> [1] "xxxxxxx"
+#> 
+#> 
+#> attr(,"class")
+#> [1] "suso_api"
 ```
-suso_set_key(suso_server = "https://xxx.mysurvey.solutions", suso_user = {api_username}, suso_pass = {api_userpass})
+
+### Workspace Management
+
+You can also manage your workspaces through the API. In particular, you
+can
+
+  - request a list of all workspaces the API user has access to, as well
+    as
+  - create new workspaces
+  - and assign users to a particular workspace.
+
+However for the latter two operations you require ADMIN credentials.
+Standard API user credentials would not work.
+
+To receive a list of workspaces to which the current API user has access
+to, you can just run:
+
+``` r
+ws <- suso_getWorkspace()
+print(head(ws))
+#>       Name       DisplayName DisabledAtUtc
+#> 1: primary Default Workspace            NA
+#> 2:    test              test            NA
+#> 3:   test2             test2            NA
 ```
-After setting your credentials, there's no need to re-type it again with every function call.
 
-Some of the functions (in particular those with long running process) also contain parameters, to facilitate an integration into a shiny application.
+### User Management
 
-As the package is under active development, some variables may change and new functions may be added. Stop by from time to time, to see any updates.
+These functions are particularly useful for survey management, and more
+details can be found in the corresponding vignette on survey management.
+Lets start with getting a list of all supervisors on the server.
 
+``` r
+sv <- suso_getSV(workspace = "test")
+print(head(sv))
+#>    IsLocked        CreationDate                               UserId   UserName
+#> 1:    FALSE 2023-02-07 17:33:40 00d21677-0331-4698-ae7b-908aeac14dd6 somesvuser
+#> 2:    FALSE 2023-02-04 19:05:10 ded27a4a-716d-4bf2-8d54-aedc31fc164b     SV0001
+#> 3:    FALSE 2023-02-04 19:36:03 5753ddde-3c7d-438f-9934-43fdf18fa802     SV0002
+#> 4:    FALSE 2023-02-04 19:36:03 72196c84-8f2f-488a-8d61-f23b8b998d43     SV0003
+#> 5:    FALSE 2023-02-04 19:36:03 1a9d4b10-c92d-401d-af69-2a7d0a391fe6     SV0004
+#> 6:    FALSE 2023-02-04 19:36:03 97e9e4ff-22e1-492f-a102-03c2115903e7     SV0005
+```
 
-To find information on the World Bank's Survey Solutions CASS have a look on these pages:
-- Survey Solutions Support Page: https://support.mysurvey.solutions/
-- Survey Solutions Server request: https://mysurvey.solutions/
+### Questionnaire Management
 
-To find information on the API syntax, visit your own servers API documentation or got to:
-- https://demo.mysurvey.solutions/primary/apidocs/index.html#
+The basic questionnaire API calls are handled through the
+*suso\_getQuestDetails* function.
 
+If no input is provided, the function returns a list of all
+questionnaires on the server:
+
+``` r
+questlist <- suso_getQuestDetails(workspace = "test")
+# print(questlist)
+```
+
+Specifying *operation.type = status*, you receive a list of
+statuses.
+
+``` r
+statlist <- suso_getQuestDetails(operation.type = "statuses", workspace = "test")
+print(statlist)
+#>  [1] "Restored"               "Created"                "SupervisorAssigned"     "InterviewerAssigned"    "RejectedBySupervisor"   "ReadyForInterview"      "SentToCapi"            
+#>  [8] "Restarted"              "Completed"              "ApprovedBySupervisor"   "RejectedByHeadquarters" "ApprovedByHeadquarters" "Deleted"
+```
+
+By taking a particular *QuestionnaireId* and specifying the
+*operation.type *you can execute further requests. For example,
+
+### Data Export
+
+To export the data collected in Survey Solutions, you use
+*suso\_export*.
+
+    #> The last file has been created 0.06833 hours ago.
+    #> FileName: assignment__actions 
+    #> Nesting Level: 0 
+    #> ****
+    #> 
+    #> FileName: households 
+    #> Nesting Level: 1 
+    #> ****
+    #> 
+    #> FileName: interview__actions 
+    #> Nesting Level: 0 
+    #> ****
+    #> 
+    #> FileName: interview__diagnostics 
+    #> Nesting Level: 0 
+    #> ****
+    #> 
+    #> FileName: interview__errors 
+    #> Nesting Level: 0 
+    #> ****
+
+Its return value is a list with the following elememts: main, R1, R2,
+R3, with - **main** containing the files: interview\_\_comments,
+kasai\_listing1 - **R1** containing all rosters at the first level -
+**R2** containing all rosters at the second level - **R3** containing
+all rosters at the third level
+
+through the harmonized ID, main and roster files can easily be put
+together. More on this in the specific vignette.
+
+## Paradata Export
+
+To retrieve the paradata for a particular interview you use
+*suso\_export\_paradata*
+
+``` r
+system.time(para1 <- suso_export_paradata(questID = questlist[1, QuestionnaireId], workspace = "test", version = questlist[1, Version], reloadTimeDiff = 24, onlyActiveEvents = F, allResponses = T))
+#> 
+#> The last file has been created 1 hours ago.
+#> 
+#> Starting download & file extraction. 
+#> 
+#> 
+#> Calculating Response Timings.
+#> 
+#> Extracting GPS variable.
+#> Processing: 
+#>  AnswerSet
+#> 
+#>  AnswerRemoved
+#> 
+#>  ApproveByHeadquarter
+#> 
+#>  Restarted
+#> 
+#>  Reject
+#> 
+#>  QuestionDeclaredInvalid
+#> 
+#>  QuestionDeclaredValid
+#> 
+#> Export & Transformation finished.
+#>    user  system elapsed 
+#>   0.536   0.036   0.820
+```
+
+### Map management
+
+Since recently, it is now also possible, to handle maps through the API.
+This is implemented through the lately introduced GraphQL API.
+
+To upload a map, you can just use the **suso\_mapupload** function like
+this:
+
+``` r
+suso_mapupload(workspace = "test", path_to_zip = mapPath)
+#>    xMaxVal yMaxVal xMinVal yMinVal wkid             fileName  size maxScale minScale shapeType       importDateUtc                           uploadedBy     users
+#> 1:  -78.39    26.8  -78.62   26.55 4326 checkshapesimple.shp 20467        0        0   Polygon 2023-02-16 17:24:47 961d073f-f316-4353-9e7e-1f00899cb837 <list[0]>
+```
+
+To assign a map you can use the **suso\_mapassign**
+function:
+
+``` r
+suso_mapassign(workspace = "test", fileName = "checkshapesimple.shp", userName = "INT0004")
+#>                fileName    user shapeType       importDateUtc
+#> 1: checkshapesimple.shp INT0004   Polygon 2023-02-16 17:24:47
+```
+
+## Further information
+
+To find information on the World Bank’s Survey Solutions CASS have a
+look on these pages: - Survey Solutions Support Page:
+<https://support.mysurvey.solutions/> - Survey Solutions Server request:
+<https://mysurvey.solutions/>
+
+To find information on the API syntax, visit your own servers API
+documentation or got to: -
+<https://demo.mysurvey.solutions/primary/apidocs/index.html#>
