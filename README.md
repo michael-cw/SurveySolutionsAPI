@@ -27,7 +27,7 @@ build your own workflows with your own customized user interfaces for
 your Survey Solutions data collection operations, no matter if you are
 dealing with a small scale impact evaluation or a large scale census.
 For this reason, the API calls return easy to process data tables, and
-in some cases, like paradata, even add additonal variables useful for
+in some cases, like paradata, even add additional variables useful for
 further processing.
 
 Important to note here is, that the package also makes extensive use of
