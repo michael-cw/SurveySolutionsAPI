@@ -15,6 +15,18 @@
 #'
 #' @return Returns a data.table, with information about the uploaded maps
 #'
+#' @examples
+#' \dontrun{
+#' # either upload the content of a folder
+#' suso_mapupload(workspace = "myworkspace",
+#'               path_to_zip = "./mapfiles/")
+#'
+#' # or a zip file with the files included
+#' suso_mapupload(workspace = "myworkspace",
+#'               path_to_zip = "../mapfiles/maps.zip")
+#' }
+#'
+#'
 #'
 #'
 #' @export
@@ -276,6 +288,7 @@ suso_mapinfo <- function(server= suso_get_api_key("susoServer"),
   # get counts and prepare for loop
   tc<-result$data$maps$totalCount
   fc<-result$data$maps$filteredCount
+  if(fc>0){
   rc<-nrow(result$data$maps$nodes)
   resultdt<-result$data$maps$nodes
   # extract user list with tidyr::unnest
@@ -287,6 +300,10 @@ suso_mapinfo <- function(server= suso_get_api_key("susoServer"),
     #resultdt[, users:=gsub("c\\(|\\)", "",sapply(users, paste, collapse=""))]
     resultdt[,importDateUtc:=lubridate::as_datetime(importDateUtc)][]
   }
+  } else if(fc==0) {
+    resultdt<-data.table(NULL)
+  }
+
   return(resultdt)
 }
 

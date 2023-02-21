@@ -1,0 +1,49 @@
+---
+title: "User Management"
+author: "Michael Wild"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Users}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{css, echo=FALSE}
+    body .main-container {
+      max-width: 1280px !important;
+      width: 1280px !important;
+    }
+    body {
+      max-width: 1280px !important;
+    }
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE, tidy=TRUE,
+  comment = "#>"
+)
+
+library("zip")
+```
+## User Management
+
+User management in the *SurveySolutionsAPI* package relies on two main functions:
+
+- the function to receive all supervisors, **suso_getSV()**
+- the function to receive all members for a specific supervisor,  **suso_getINT()**.
+
+These functions allow you to retrieve the required data, to subsequently create assignments, assign or re-assign interviews, maps, workspaces etc.
+
+Besides these two main functions, the package also includes additonal functions to retrieve details on users, retrieve their work history or archive them.
+
+## Create users
+
+
+
+
+## Get table of supervisors
+
+
+## Get table of interviewers

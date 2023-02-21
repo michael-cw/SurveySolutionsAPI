@@ -1,0 +1,180 @@
+---
+title: "Maps Management"
+author: "Michael Wild"
+date: "2023-02-21"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Maps}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+
+## Map Management
+
+Maps, or better spatial resources can be used in Survey Solutions in two principal different ways:
+
+1. As back-ground maps in the form of .tif (GeoTIFF) or .tpk (ESRI's tile package format)
+2. As area boundaries (but also as point locations) in the form of .shp (commonly know as shape files, which also includeds a .shx, .dbf, and most of the times also .prj file)
+
+Throug the API functions described in this vignette, you can
+
+ - upload a zip file or a folder of maps to the server (**suso_mapupload()**)
+ - assign maps to users (**suso_mapassign()**)
+ - receive information about the current maps on the server and their assignment status (**suso_mapinfo()**)
+
+
+## API credentials
+
+API credentials need to be provided in the usual way as outlined in the introductory vignette.
+
+
+
+
+## Receive a list of all maps on the server
+
+Lets have a look which maps are currently on the server:
+
+
+```r
+maplist <- suso_mapinfo(workspace = "test")
+print(maplist)
+#> Null data.table (0 rows and 0 cols)
+```
+
+This tells us, that there are 0 on the server.
+
+## Upload maps
+
+Lets first start with shape file overlays, which can either be in a specific folder, or already packed in a .zip file
+
+
+```r
+maplist <- suso_mapupload(workspace = "test", path_to_zip = pathtozipshape)
+maplist
+#>     xMaxVal  yMaxVal  xMinVal  yMinVal wkid              fileName size maxScale minScale shapeType       importDateUtc                           uploadedBy
+#> 1: -7925788 -4291698 -7927049 -4292965 4326 seg_Lat6020Lon301.shp 1558        0        0   Polygon 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b
+#> 2: -7973521 -4231194 -7974780 -4232459 4326 seg_Lat6068Lon261.shp 1558        0        0   Polygon 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b
+#> 3: -7908335 -4163931 -7909579 -4165181 4326 seg_Lat6124Lon313.shp 1558        0        0   Polygon 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b
+#> 4: -7971204 -4114554 -7972448 -4115804 4326 seg_Lat6163Lon260.shp 1558        0        0   Polygon 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b
+#> 5: -7977524 -4077857 -7978765 -4079104 4326 seg_Lat6193Lon254.shp 1558        0        0   Polygon 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b
+#> 6: -7972900 -4039141 -7974136 -4040383 4326 seg_Lat6225Lon257.shp 1558        0        0   Polygon 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b
+#> 7: -7958976 -4026891 -7960209 -4028130 4326 seg_Lat6236Lon268.shp 1558        0        0   Polygon 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b
+#> 8: -7863051 -3980512 -7864270 -3981737 4326 seg_Lat6276Lon347.shp 1558        0        0   Polygon 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b
+#> 9: -7824086 -3935333 -7825296 -3936549 4326 seg_Lat6314Lon379.shp 1558        0        0   Polygon 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b
+#>        users
+#> 1: <list[0]>
+#> 2: <list[0]>
+#> 3: <list[0]>
+#> 4: <list[0]>
+#> 5: <list[0]>
+#> 6: <list[0]>
+#> 7: <list[0]>
+#> 8: <list[0]>
+#> 9: <list[0]>
+```
+
+To upload base maps, you use the same function, and base maps and shape files can even be packed into a common folder and uploaded at once.
+
+Let's again check the uploade maps, via
+
+
+```r
+maplist <- suso_mapinfo(workspace = "test")
+maplist
+#>                 fileName maxScale minScale shapeType shapesCount size       importDateUtc                           uploadedBy users  xMaxVal  yMaxVal  xMinVal
+#> 1: seg_Lat6020Lon301.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b       -7925788 -4291698 -7927049
+#> 2: seg_Lat6068Lon261.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b       -7973521 -4231194 -7974780
+#> 3: seg_Lat6124Lon313.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b       -7908335 -4163931 -7909579
+#> 4: seg_Lat6163Lon260.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b       -7971204 -4114554 -7972448
+#> 5: seg_Lat6193Lon254.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b       -7977524 -4077857 -7978765
+#> 6: seg_Lat6225Lon257.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b       -7972900 -4039141 -7974136
+#> 7: seg_Lat6236Lon268.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b       -7958976 -4026891 -7960209
+#> 8: seg_Lat6276Lon347.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b       -7863051 -3980512 -7864270
+#> 9: seg_Lat6314Lon379.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b       -7824086 -3935333 -7825296
+#>     yMinVal wkid
+#> 1: -4292965 4326
+#> 2: -4232459 4326
+#> 3: -4165181 4326
+#> 4: -4115804 4326
+#> 5: -4079104 4326
+#> 6: -4040383 4326
+#> 7: -4028130 4326
+#> 8: -3981737 4326
+#> 9: -3936549 4326
+```
+
+## Assign Maps
+
+To assign these maps to indvidual users or complete teams lets first get a user list, through:
+
+
+```r
+svlist <- suso_getSV(workspace = "test")
+svlist
+#>    IsLocked        CreationDate                               UserId UserName
+#> 1:    FALSE 2023-02-19 17:36:36 16066f44-5b5e-447c-8665-57f42cde66f3   SV0002
+#> 2:    FALSE 2023-02-19 17:36:36 77f52e98-8b13-4633-a920-d33d62e46f78   SV0004
+
+intlist <- suso_getINT(workspace = "test", sv_id = svlist$UserId[2])
+intlist
+#>    IsLocked        CreationDate                               UserId UserName
+#> 1:    FALSE 2023-02-19 17:36:36 96c3c88a-b3e9-4a6c-aa2d-bf6187a1e435  INT0014
+#> 2:    FALSE 2023-02-19 17:36:36 99311e56-d2c7-4243-a7df-71c4ab866400  INT0015
+#> 3:    FALSE 2023-02-19 17:36:36 04b5a8f0-cba4-4190-89f6-08c2b5fe0474  INT0016
+```
+
+Maps can be assigned to multiple users, and multiple users can be assigned to the same map. To assign maps, you only require the user name (UserName in the above table) and the map (file) name.
+
+Assigning the first user, INT0014 to the first map, seg_Lat6020Lon301.shp, goes as follows:
+
+
+```r
+maplist <- suso_mapassign(workspace = "test", fileName = maplist$fileName[1], userName = intlist$UserName[1])
+maplist
+#>                 fileName    user shapeType       importDateUtc
+#> 1: seg_Lat6020Lon301.shp INT0014   Polygon 2023-02-21 11:10:40
+```
+
+Assigning another user to the same map, works in the same way:
+
+
+
+```r
+maplist <- suso_mapassign(workspace = "test", fileName = maplist$fileName[1], userName = intlist$UserName[2])
+maplist
+#>                 fileName    user shapeType       importDateUtc
+#> 1: seg_Lat6020Lon301.shp INT0015   Polygon 2023-02-21 11:10:40
+```
+
+By calling *suso_mapinfo* again, you can also retrieve a single data.table, with one map per user, which may facilitate further processing:
+
+
+```r
+suso_mapinfo(workspace = "test")
+#>                  fileName maxScale minScale shapeType shapesCount size       importDateUtc                           uploadedBy userName  xMaxVal  yMaxVal  xMinVal
+#>  1: seg_Lat6020Lon301.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b  INT0014 -7925788 -4291698 -7927049
+#>  2: seg_Lat6020Lon301.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b  INT0015 -7925788 -4291698 -7927049
+#>  3: seg_Lat6068Lon261.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b     <NA> -7973521 -4231194 -7974780
+#>  4: seg_Lat6124Lon313.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b     <NA> -7908335 -4163931 -7909579
+#>  5: seg_Lat6163Lon260.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b     <NA> -7971204 -4114554 -7972448
+#>  6: seg_Lat6193Lon254.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b     <NA> -7977524 -4077857 -7978765
+#>  7: seg_Lat6225Lon257.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b     <NA> -7972900 -4039141 -7974136
+#>  8: seg_Lat6236Lon268.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b     <NA> -7958976 -4026891 -7960209
+#>  9: seg_Lat6276Lon347.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b     <NA> -7863051 -3980512 -7864270
+#> 10: seg_Lat6314Lon379.shp        0        0   Polygon           4 1558 2023-02-21 11:10:40 4c134a4b-55ed-4506-85f4-adc24124388b     <NA> -7824086 -3935333 -7825296
+#>      yMinVal wkid
+#>  1: -4292965 4326
+#>  2: -4292965 4326
+#>  3: -4232459 4326
+#>  4: -4165181 4326
+#>  5: -4115804 4326
+#>  6: -4079104 4326
+#>  7: -4040383 4326
+#>  8: -4028130 4326
+#>  9: -3981737 4326
+#> 10: -3936549 4326
+```
+

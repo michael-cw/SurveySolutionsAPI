@@ -1,0 +1,137 @@
+---
+title: "Maps Management"
+author: "Michael Wild"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Maps}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{css, echo=FALSE}
+    body .main-container {
+      max-width: 1280px !important;
+      width: 1280px !important;
+    }
+    body {
+      max-width: 1280px !important;
+    }
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE, tidy=TRUE,
+  comment = "#>"
+)
+
+library("zip")
+```
+## Map Management
+
+Maps, or better spatial resources can be used in Survey Solutions in two principal different ways:
+
+1. As back-ground maps in the form of .tif (GeoTIFF) or .tpk (ESRI's tile package format)
+2. As area boundaries (but also as point locations) in the form of .shp (commonly know as shape files, which also includeds a .shx, .dbf, and most of the times also .prj file)
+
+Throug the API functions described in this vignette, you can
+
+ - upload a zip file or a folder of maps to the server (**suso_mapupload()**)
+ - assign maps to users (**suso_mapassign()**)
+ - receive information about the current maps on the server and their assignment status (**suso_mapinfo()**)
+
+
+## API credentials
+
+API credentials need to be provided in the usual way as outlined in the introductory vignette.
+
+```{r trueCredentials, echo=FALSE, include=FALSE}
+suso_clear_keys()
+## ALWAYS REMOVE TRUE CREDENTIALS
+
+pathtozipshape
+
+```
+
+
+## Receive a list of all maps on the server
+
+Lets have a look which maps are currently on the server:
+
+```{r maplist, echo=T, include=T}
+maplist<-suso_mapinfo(workspace = "test")
+print(maplist)
+```
+
+This tells us, that there are `r nrow(maplist)` on the server.
+
+## Upload maps
+
+Lets first start with shape file overlays, which can either be in a specific folder, or already packed in a .zip file
+
+```{r mapup, echo=T, include=T}
+maplist<-suso_mapupload(
+                  workspace = "test",
+                  path_to_zip = pathtozipshape
+                  )
+maplist
+
+```
+
+To upload base maps, you use the same function, and base maps and shape files can even be packed into a common folder and uploaded at once.
+
+Let's again check the uploade maps, via
+
+```{r mapupcheck, echo=T, include=T}
+maplist<-suso_mapinfo(workspace = "test")
+maplist
+
+```
+
+## Assign Maps
+
+To assign these maps to indvidual users or complete teams lets first get a user list, through:
+
+```{r mapsv, echo=T, include=T}
+svlist<-suso_getSV(workspace = "test")
+svlist
+
+intlist<-suso_getINT(workspace = "test", sv_id = svlist$UserId[2])
+intlist
+
+```
+
+Maps can be assigned to multiple users, and multiple users can be assigned to the same map. To assign maps, you only require the user name (UserName in the above table) and the map (file) name.
+
+Assigning the first user, `r intlist$UserName[1]` to the first map, `r maplist$fileName[1]`, goes as follows:
+
+```{r mapassign1, echo=T, include=T}
+maplist<-suso_mapassign(
+          workspace = "test",
+          fileName = maplist$fileName[1],
+          userName = intlist$UserName[1])
+maplist
+
+```
+
+Assigning another user to the same map, works in the same way:
+
+
+```{r mapassign2, echo=T, include=T}
+maplist<-suso_mapassign(
+          workspace = "test",
+          fileName = maplist$fileName[1],
+          userName = intlist$UserName[2])
+maplist
+
+```
+
+By calling *suso_mapinfo* again, you can also retrieve a single data.table, with one map per user, which may facilitate further processing:
+
+```{r mapassign2_check, echo=T, include=T}
+suso_mapinfo(
+        workspace = "test"
+        )
+
+```
+

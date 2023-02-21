@@ -37,3 +37,18 @@ Resources for upload must meet the requirements specified under:
 \url{https://docs.mysurvey.solutions/headquarters/mapsmanage/map-formats/},
 Attention: this uses the GraphQL API, not the REST API.
 }
+\examples{
+\dontrun{
+# either upload the content of a folder
+suso_mapupload(workspace = "myworkspace",
+              path_to_zip = "./mapfiles/")
+
+# or a zip file with the files included
+suso_mapupload(workspace = "myworkspace",
+              path_to_zip = "../mapfiles/maps.zip")
+}
+
+
+
+
+}
