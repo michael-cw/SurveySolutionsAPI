@@ -10,7 +10,7 @@ stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecy
 [![R-CMD-check](https://github.com/michael-cw/SurveySolutionsAPI/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/michael-cw/SurveySolutionsAPI/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-This is the development version of the main [Survey Solutions R API
+This is the development version of the [Survey Solutions R API
 package](https://docs.mysurvey.solutions/headquarters/api/api-r-package/).
 It allows you to export data/paradata collected through CAWI, CATI or
 CAPI operations, manipulate users and questionnaires, create
@@ -26,14 +26,24 @@ shiny application or just through a simple script. This allows you to
 build your own workflows with your own customized user interfaces for
 your Survey Solutions data collection operations, no matter if you are
 dealing with a small scale impact evaluation or a large scale census.
+For this reason, the API calls return easy to process data tables, and
+in some cases, like paradata, even add additonal variables useful for
+further processing.
 
 Important to note here is, that the package also makes extensive use of
-the *data.table* package, which allows for fast (multi-core) processing
-of large data sets. The individual functions either return a data.table,
-or a specific S3 extension of data.table, with individual methods
-defined. In case you are not familiar with it yet, you should probably
-have a look a this
+the **data.table** package, which allows for fast (multi-core)
+processing of large data sets. The individual functions either return a
+data.table, or a specific S3 extension of data.table, with individual
+methods defined. In case you are not familiar with it yet, you should
+probably have a look a this
 [introduction](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html).
+
+Nevertheless, in case you don’t require the capacities offered by
+data.table, you can still treat the return objects like a data frame or
+even continue with it in the tidyverse. A package which combines both
+worlds is the [dtplyr](https://github.com/tidyverse/dtplyr) package, and
+for a comparison between the dplyr package and the data.table package
+see [here](https://atrebas.github.io/post/2019-03-03-datatable-dplyr/).
 
 Specific changes in version 0.6.X:
 
