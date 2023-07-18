@@ -99,6 +99,7 @@ suso_mapupload <- function(server= suso_get_api_key("susoServer"),
                          encode = "multipart",
                          httr::user_agent("r api v2"),
                          httr::accept_json(),
+                         httr::add_headers(`GraphQL-Preflight` = 1),
                          auth)
   # check the status code
   if (response$status_code != 200) {
