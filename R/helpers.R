@@ -80,11 +80,20 @@ unpack<-function(fp, allResponses, inShinyServer){
   file[,var:=resps[,.(V1)]]
   if (allResponses) {
     ## Extract all responses if TRUE
-    resps1<-resps[,tstrsplit(V2, "(\\|)|(,)", fixed=F, names = T, fill = "<NA>")][]
-    resps2<-resps[,tstrsplit(V3, "(,)", fixed=F, names = T, fill = "<NA>")][]
-    splits <- (length(resps1))
-    file[,c(paste0("response", 1:(length(resps1)))):=resps1]
-    file[,c(paste0("rid", 1:(length(resps2)))):=resps2]
+    if(length(resps)==2) {
+      resps1<-resps[,tstrsplit(V2, "(\\|)|(,)", fixed=F, names = T, fill = "<NA>")][]
+      splits <- (length(resps1))
+      file[, c("var") := resps[, .(V1)]]
+      file[, c(paste0("response", 1:(length(resps1)))) := resps1]
+      # set roster id to 0
+      file[, c(paste0("rid", 1:(length(resps1)))) := 0]
+    } else if(length(resps)==3){
+      resps1<-resps[,tstrsplit(V2, "(\\|)|(,)", fixed=F, names = T, fill = "<NA>")][]
+      resps2<-resps[,tstrsplit(V3, "(,)", fixed=F, names = T, fill = "<NA>")][]
+      splits <- (length(resps1))
+      file[,c(paste0("response", 1:(length(resps1)))):=resps1]
+      file[,c(paste0("rid", 1:(length(resps2)))):=resps2]
+    }
   } else {
     ## Extract only singel vector-->FASTER
     file[,response:=resps[,.(V2)]]
