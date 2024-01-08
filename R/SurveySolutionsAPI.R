@@ -76,6 +76,6 @@ if(getRversion() >= "3.3.0")  {
     "VariableName", "Expression", "Message", "Severity",
     "QuestionnaireId", "StartDate", "CompleteDate", "pid",
     "ExportType", "Time", "importDateUtc", "CreatedAtUtc",
-    "ReceivedByTabletAtUtc"
+    "ReceivedByTabletAtUtc", "multiprocess"
   ))
 }

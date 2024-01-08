@@ -1,5 +1,5 @@
 ---
-title: "Introduction To the Survey Solutions API package"
+title: "Introduction to the Survey Solutions API package"
 author: "Michael Wild"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
